@@ -1,3 +1,4 @@
+import { supabase } from "./lib/supabase";
 const jurisdictions = [
   {
     name: "Netherlands",
@@ -40,7 +41,13 @@ const questions = [
   "What incidents must be reported?",
 ];
 
-export default function Home() {
+export default async function Home() {
+  const { data, error } = await supabase
+    .from("jurisdictions")
+    .select("*");
+
+  console.log("SUPABASE DATA:", data);
+  console.log("SUPABASE ERROR:", error);
   return (
     <main className="min-h-screen bg-[#f7f7f4] text-[#171717]">
       <header className="border-b border-black/10 bg-[#f7f7f4]">
