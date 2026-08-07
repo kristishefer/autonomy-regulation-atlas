@@ -1,36 +1,4 @@
-import { supabase } from "./lib/supabase";
-const jurisdictions = [
-  {
-    name: "Netherlands",
-    code: "NL",
-    status: "Limited deployment framework",
-    focus: "Testing, exemptions, remote operations",
-  },
-  {
-    name: "Germany",
-    code: "DE",
-    status: "L4 legal framework",
-    focus: "Technical supervision, operating areas",
-  },
-  {
-    name: "United Kingdom",
-    code: "UK",
-    status: "Automated Vehicles Act",
-    focus: "Authorisation, liability, user roles",
-  },
-  {
-    name: "California",
-    code: "US-CA",
-    status: "Commercial driverless deployment",
-    focus: "DMV permits, CPUC, incident reporting",
-  },
-  {
-    name: "China",
-    code: "CN",
-    status: "Evolving national and local regimes",
-    focus: "Testing, demonstrations, commercial pilots",
-  },
-];
+import { supabase } from "@/app/lib/supabase";
 
 const questions = [
   "Can the vehicle operate without a driver?",
@@ -42,12 +10,17 @@ const questions = [
 ];
 
 export default async function Home() {
-  const { data, error } = await supabase
+  const { data: dbJurisdictions, error } = await supabase
     .from("jurisdictions")
-    .select("*");
+    .select("id, name, code, slug")
+    .order("name");
 
-  console.log("SUPABASE DATA:", data);
-  console.log("SUPABASE ERROR:", error);
+  if (error) {
+    console.error("Failed to load jurisdictions:", error);
+  }
+
+  const jurisdictions = dbJurisdictions ?? [];
+
   return (
     <main className="min-h-screen bg-[#f7f7f4] text-[#171717]">
       <header className="border-b border-black/10 bg-[#f7f7f4]">
@@ -95,6 +68,7 @@ export default async function Home() {
             >
               Explore jurisdictions
             </a>
+
             <a
               href="#questions"
               className="rounded-full border border-black/15 px-6 py-3 text-sm font-medium"
@@ -113,45 +87,58 @@ export default async function Home() {
           <div className="mb-10 flex items-end justify-between gap-6">
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-black/40">
-                MVP coverage
+                Atlas coverage
               </div>
+
               <h2 className="mt-3 text-3xl font-semibold tracking-tight">
                 Jurisdictions
               </h2>
             </div>
 
             <div className="hidden text-sm text-black/45 sm:block">
-              5 jurisdictions
+              {jurisdictions.length}{" "}
+              {jurisdictions.length === 1 ? "jurisdiction" : "jurisdictions"}
             </div>
           </div>
 
-          <div className="grid gap-px overflow-hidden rounded-2xl border border-black/10 bg-black/10 md:grid-cols-2 lg:grid-cols-3">
-            {jurisdictions.map((item) => (
-              <article
-                key={item.code}
-                className="min-h-64 bg-white p-7 transition hover:bg-[#fafaf8]"
-              >
-                <div className="flex items-start justify-between">
-                  <span className="text-2xl font-semibold">{item.code}</span>
-                  <span className="text-xs text-black/35">View →</span>
-                </div>
+          {jurisdictions.length === 0 ? (
+            <div className="rounded-2xl border border-black/10 p-8 text-black/50">
+              No jurisdictions have been published yet.
+            </div>
+          ) : (
+            <div className="grid gap-px overflow-hidden rounded-2xl border border-black/10 bg-black/10 md:grid-cols-2 lg:grid-cols-3">
+              {jurisdictions.map((item) => (
+                <a
+                  href={`/${item.slug}`}
+                  key={item.id}
+                  className="block min-h-64 bg-white p-7 transition hover:bg-[#fafaf8]"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="text-2xl font-semibold">{item.code}</span>
+                    <span className="text-xs text-black/35">View →</span>
+                  </div>
 
-                <h3 className="mt-12 text-xl font-semibold">{item.name}</h3>
+                  <h3 className="mt-12 text-xl font-semibold">{item.name}</h3>
 
-                <p className="mt-2 text-sm leading-6 text-black/55">
-                  {item.status}
-                </p>
+                  <p className="mt-2 text-sm leading-6 text-black/55">
+                    Regulatory profile
+                  </p>
 
-                <div className="mt-7 border-t border-black/10 pt-4 text-xs leading-5 text-black/40">
-                  {item.focus}
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="mt-7 border-t border-black/10 pt-4 text-xs leading-5 text-black/40">
+                    Driverless operation · remote operations · responsibility ·
+                    authorisation
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      <section id="questions" className="mx-auto max-w-7xl px-6 py-24 lg:px-10">
+      <section
+        id="questions"
+        className="mx-auto max-w-7xl px-6 py-24 lg:px-10"
+      >
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-black/40">
@@ -172,6 +159,7 @@ export default async function Home() {
                 <span className="text-sm text-black/30">
                   {String(index + 1).padStart(2, "0")}
                 </span>
+
                 <span className="text-base font-medium">{question}</span>
               </div>
             ))}

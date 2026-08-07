@@ -20,74 +20,97 @@ export default async function JurisdictionPage({ params }: PageProps) {
     notFound();
   }
 
-  const { data: claims } = await supabase
+  const { data: claimsData } = await supabase
     .from("claims")
     .select(
       `
-        id,
-        claim_text,
-        operational_impact,
-        topic_id,
-        normalized_status,
-        confidence,
-        reviewed_at
+      id,
+      claim_text,
+      operational_impact,
+      topic_id,
+      normalized_status,
+      confidence,
+      reviewed_at
       `
     )
     .eq("jurisdiction_id", jurisdiction.id)
     .order("id");
 
-  const { data: topics } = await supabase
+  const claims = claimsData ?? [];
+
+  const { data: topicsData } = await supabase
     .from("topics")
     .select("id, name, slug")
     .order("id");
 
-  const claimIds = claims?.map((claim) => claim.id) ?? [];
+  const topics = topicsData ?? [];
 
-  const { data: claimSources } = claimIds.length
-    ? await supabase
-        .from("claim_sources")
-        .select("claim_id, source_id, support_type, provision")
-        .in("claim_id", claimIds)
-    : { data: [] };
+  const claimIds = claims.map((claim) => claim.id);
+
+  let claimSources: {
+    claim_id: number;
+    source_id: number;
+    support_type: string | null;
+    provision: string | null;
+  }[] = [];
+
+  if (claimIds.length > 0) {
+    const { data } = await supabase
+      .from("claim_sources")
+      .select("claim_id, source_id, support_type, provision")
+      .in("claim_id", claimIds);
+
+    claimSources = data ?? [];
+  }
 
   const sourceIds = [
-    ...new Set(claimSources?.map((item) => item.source_id) ?? []),
+    ...new Set(claimSources.map((item) => item.source_id)),
   ];
 
-  const { data: sources } = sourceIds.length
-    ? await supabase
-        .from("sources")
-        .select(
-          `
-            id,
-            title,
-            official_url,
-            authority,
-            source_type,
-            status,
-            effective_at,
-            last_checked
-          `
-        )
-        .in("id", sourceIds)
-    : { data: [] };
+  let sources: {
+    id: number;
+    title: string;
+    official_url: string | null;
+    authority: string | null;
+    source_type: string | null;
+    status: string | null;
+    effective_at: string | null;
+    last_checked: string | null;
+  }[] = [];
+
+  if (sourceIds.length > 0) {
+    const { data } = await supabase
+      .from("sources")
+      .select(
+        `
+        id,
+        title,
+        official_url,
+        authority,
+        source_type,
+        status,
+        effective_at,
+        last_checked
+        `
+      )
+      .in("id", sourceIds);
+
+    sources = data ?? [];
+  }
 
   const topicMap = new Map(
-    topics?.map((topic) => [topic.id, topic]) ?? []
+    topics.map((topic) => [topic.id, topic])
   );
 
   const sourceMap = new Map(
-    sources?.map((source) => [source.id, source]) ?? []
+    sources.map((source) => [source.id, source])
   );
 
   return (
     <main className="min-h-screen bg-[#f7f7f4] text-[#171717]">
       <header className="border-b border-black/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <a
-            href="/"
-            className="text-sm font-semibold tracking-tight"
-          >
+          <a href="/" className="text-sm font-semibold tracking-tight">
             Autonomy Regulation Atlas
           </a>
 
@@ -136,11 +159,12 @@ export default async function JurisdictionPage({ params }: PageProps) {
             </div>
 
             <div className="text-sm text-black/40">
-              {claims?.length ?? 0} findings
+              {claims.length}{" "}
+              {claims.length === 1 ? "finding" : "findings"}
             </div>
           </div>
 
-          {!claims?.length ? (
+          {claims.length === 0 ? (
             <div className="rounded-2xl border border-black/10 p-8 text-black/50">
               No regulatory claims have been published for this jurisdiction yet.
             </div>
@@ -149,10 +173,9 @@ export default async function JurisdictionPage({ params }: PageProps) {
               {claims.map((claim) => {
                 const topic = topicMap.get(claim.topic_id);
 
-                const links =
-                  claimSources?.filter(
-                    (item) => item.claim_id === claim.id
-                  ) ?? [];
+                const links = claimSources.filter(
+                  (item) => item.claim_id === claim.id
+                );
 
                 return (
                   <article
@@ -205,7 +228,9 @@ export default async function JurisdictionPage({ params }: PageProps) {
                           {links.map((link, index) => {
                             const source = sourceMap.get(link.source_id);
 
-                            if (!source) return null;
+                            if (!source) {
+                              return null;
+                            }
 
                             return (
                               <div
