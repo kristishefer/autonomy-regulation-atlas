@@ -1,12 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 
 import { EuropeJurisdictionMap } from "@/app/home/EuropeJurisdictionMap";
 import type { JurisdictionMapPoint } from "@/app/home/EuropeJurisdictionMap";
+import {
+  homeCopy,
+  localeLabels,
+  locales,
+  normalizeLocale,
+  type Locale,
+} from "@/app/home/home-i18n";
 import { supabase } from "@/app/lib/supabase";
 
 export const dynamic = "force-dynamic";
+
+type PageProps = {
+  searchParams: Promise<{
+    lang?: string | string[];
+  }>;
+};
 
 type JurisdictionRow = {
   id: number;
@@ -17,6 +29,11 @@ type JurisdictionRow = {
   map_lng: number | string | null;
   map_status: string | null;
   profile_status: string | null;
+};
+
+type JurisdictionTranslation = {
+  jurisdiction_id: number;
+  name: string | null;
 };
 
 const hiddenMapStatuses = new Set(["disabled", "hidden"]);
@@ -54,47 +71,46 @@ function toMapPoint(row: JurisdictionRow): JurisdictionMapPoint | null {
   };
 }
 
-const modes = [
-  {
-    number: "01",
-    atlasling: "Dog",
-    title: "We want to deploy",
-    description:
-      "Start with the operating jurisdiction, then trace the approvals, operator duties and deployment conditions that matter on the ground.",
-    href: "#jurisdiction-map",
-    action: "Enter the deployment map",
-    accent: "#b97512",
-  },
-  {
-    number: "02",
-    atlasling: "Fox",
-    title: "I need the regulatory landscape",
-    description:
-      "Explore how standards, approvals, institutions and legal regimes connect before they reach a real deployment.",
-    href: "/explore/system-map",
-    action: "Open the System Map",
-    accent: "#147c73",
-  },
-  {
-    number: "03",
-    atlasling: "Cat",
-    title: "I want to learn",
-    description:
-      "Work through the regulatory puzzles that make autonomous mobility different from ordinary product compliance.",
-    href: "#learning-puzzle",
-    action: "Try the featured puzzle",
-    accent: "#10264a",
-  },
-] as const;
+async function translateJurisdictions(
+  jurisdictions: JurisdictionMapPoint[],
+  locale: Locale,
+) {
+  if (locale === "en" || jurisdictions.length === 0) {
+    return jurisdictions;
+  }
 
-const methodology = [
-  "Source proposition",
-  "Atlas legal interpretation",
-  "Operational impact",
-  "Exact source",
-] as const;
+  const { data, error } = await supabase
+    .from("jurisdiction_translations")
+    .select("jurisdiction_id, name")
+    .eq("locale", locale)
+    .eq("published", true)
+    .in(
+      "jurisdiction_id",
+      jurisdictions.map((jurisdiction) => jurisdiction.id),
+    );
 
-export default async function Home() {
+  if (error) {
+    console.warn("Failed to load jurisdiction translations:", error.message);
+    return jurisdictions;
+  }
+
+  const translationMap = new Map(
+    ((data ?? []) as JurisdictionTranslation[]).map((translation) => [
+      translation.jurisdiction_id,
+      translation.name,
+    ]),
+  );
+
+  return jurisdictions.map((jurisdiction) => ({
+    ...jurisdiction,
+    name: translationMap.get(jurisdiction.id) ?? jurisdiction.name,
+  }));
+}
+
+export default async function Home({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const locale = normalizeLocale(params.lang);
+  const t = homeCopy[locale];
   const { data, error } = await supabase
     .from("jurisdictions")
     .select(
@@ -106,198 +122,143 @@ export default async function Home() {
     console.warn("Failed to load jurisdiction map data:", error.message);
   }
 
-  const jurisdictions = ((data ?? []) as JurisdictionRow[])
+  const baseJurisdictions = ((data ?? []) as JurisdictionRow[])
     .map(toMapPoint)
     .filter((item): item is JurisdictionMapPoint => item !== null);
+  const jurisdictions = await translateJurisdictions(
+    baseJurisdictions,
+    locale,
+  );
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fbf7ef] text-[#10264a]">
-      <header className="border-b border-[#10264a]/15 bg-[#fbf7ef]/95">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-12">
+    <main
+      className="min-h-screen overflow-hidden bg-[#fbf7ef] text-[#10264a]"
+      lang={locale}
+    >
+      <header className="sticky top-0 z-50 border-b border-[#10264a]/10 bg-[#fbf7ef]/94 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 sm:px-8 lg:px-10">
           <Link
-            className="font-serif text-lg font-semibold tracking-[-0.02em]"
-            href="/"
+            className="flex min-w-0 items-center gap-3"
+            href={`/?lang=${locale}`}
           >
-            Autonomy Regulation Atlas
+            <span className="grid size-10 shrink-0 place-items-center rounded-full border border-[#10264a]/20 font-serif text-base font-semibold">
+              A
+            </span>
+            <span className="hidden text-xs font-semibold uppercase tracking-[0.08em] sm:inline lg:text-sm">
+              Autonomy Regulation Atlas
+            </span>
           </Link>
 
-          <nav
-            aria-label="Primary navigation"
-            className="hidden items-center gap-7 text-xs font-semibold uppercase tracking-[0.14em] md:flex"
-          >
-            <a className="transition-colors hover:text-[#147c73]" href="#modes">
-              Choose a path
-            </a>
-            <a
-              className="transition-colors hover:text-[#147c73]"
-              href="#jurisdiction-map"
+          <div className="flex items-center gap-5">
+            <nav
+              aria-label="Primary navigation"
+              className="hidden items-center gap-6 text-sm text-[#10264a]/55 lg:flex"
             >
-              Jurisdiction map
-            </a>
-            <Link
-              className="transition-colors hover:text-[#147c73]"
-              href="/explore/system-map"
-            >
-              System Map
-            </Link>
-          </nav>
-
-          <details className="atlas-language relative">
-            <summary className="cursor-pointer list-none border border-[#10264a]/20 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em]">
-              EN <span aria-hidden="true">⌄</span>
-            </summary>
-            <div className="absolute right-0 z-20 mt-2 w-52 border border-[#10264a]/20 bg-[#fbf7ef] p-3 shadow-[6px_6px_0_#10264a]">
-              <p className="mb-3 text-[10px] uppercase tracking-[0.14em] text-[#10264a]/55">
-                Interface language
-              </p>
-              <div
-                aria-label="Language selector"
-                className="grid grid-cols-3 gap-px bg-[#10264a]/15"
-                role="group"
+              <a className="transition hover:text-[#10264a]" href="#map">
+                {t.nav.jurisdictions}
+              </a>
+              <Link
+                className="transition hover:text-[#10264a]"
+                href="/explore/system-map"
               >
-                {[
-                  ["EN", "English"],
-                  ["RU", "Russian"],
-                  ["FR", "French"],
-                  ["DE", "German"],
-                  ["NL", "Dutch"],
-                  ["ES", "Spanish"],
-                ].map(([code, label]) => (
-                  <button
-                    aria-current={code === "EN" ? "true" : undefined}
-                    className="bg-[#fbf7ef] px-2 py-2 text-[11px] font-semibold disabled:cursor-not-allowed disabled:text-[#10264a]/45 [&[aria-current=true]]:bg-[#10264a] [&[aria-current=true]]:text-[#fbf7ef]"
-                    disabled={code !== "EN"}
-                    key={code}
-                    title={code === "EN" ? label : `${label} interface in preparation`}
-                    type="button"
-                  >
-                    {code}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-3 text-[10px] leading-4 text-[#10264a]/55">
-                Primary sources remain in their original language
-              </p>
-            </div>
-          </details>
+                {t.nav.landscape}
+              </Link>
+              <a className="transition hover:text-[#10264a]" href="#learn">
+                {t.nav.learn}
+              </a>
+              <a className="transition hover:text-[#10264a]" href="#method">
+                {t.nav.method}
+              </a>
+            </nav>
+
+            <LanguageSwitcher locale={locale} />
+          </div>
         </div>
       </header>
 
-      <section className="relative border-b border-[#10264a]/15">
-        <div className="atlas-hero-grid absolute inset-0 opacity-40" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-[1440px] gap-14 px-5 pb-20 pt-16 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-12 lg:pb-28 lg:pt-24">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#147c73] sm:text-xs">
-              LAW × AUTONOMY × REAL-WORLD DEPLOYMENT
+      <section className="relative border-b border-[#10264a]/10">
+        <div className="atlas-hero-grid absolute inset-0 opacity-30" aria-hidden="true" />
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-16 pt-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:pb-20 lg:pt-16">
+          <div className="flex flex-col justify-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
+              {t.hero.eyebrow}
             </p>
-            <h1 className="mt-8 max-w-5xl font-serif text-[clamp(3.4rem,7.3vw,7.2rem)] font-semibold leading-[0.86] tracking-[-0.055em]">
-              <span className="block">One technology</span>
-              <span className="block text-[#147c73]">Many legal worlds</span>
-              <span className="block text-[clamp(2.45rem,5vw,5rem)] lg:whitespace-nowrap">
-                Atlas connects the pieces
-              </span>
+
+            <h1 className="mt-5 max-w-3xl font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+              <span className="block">{t.hero.line1}</span>
+              <span className="block">{t.hero.line2}</span>
+              <span className="block text-[#b97512]">{t.hero.line3}</span>
             </h1>
-            <p className="mt-9 max-w-3xl text-base leading-7 text-[#10264a]/72 sm:text-lg sm:leading-8">
-              Atlas connects technical capability and regulatory requirements
-              to the approvals, operating conditions and responsibilities that
-              make autonomous mobility lawful in a particular jurisdiction.
+
+            <p className="mt-7 max-w-xl text-base leading-7 text-[#10264a]/65 sm:text-lg sm:leading-8">
+              {t.hero.body}
             </p>
           </div>
 
-          <aside className="self-end border-l-2 border-[#b97512] pl-6 lg:mb-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#b97512]">
-              The deployment question
-            </p>
-            <p className="mt-4 font-serif text-2xl leading-8 tracking-[-0.025em]">
-              What must be true before the system can operate here?
-            </p>
-            <div className="mt-7 space-y-3 text-xs uppercase tracking-[0.13em] text-[#10264a]/62">
-              <p>Technical capability</p>
-              <div className="h-7 w-px bg-[#10264a]/30" aria-hidden="true" />
-              <p>Regulatory requirements</p>
-              <div className="h-7 w-px bg-[#10264a]/30" aria-hidden="true" />
-              <p className="font-bold text-[#147c73]">Lawful deployment</p>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-24" id="modes">
-        <div className="grid gap-6 border-b border-[#10264a]/15 pb-8 sm:grid-cols-[1fr_auto] sm:items-end">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#b97512]">
-              Three ways into the Atlas
-            </p>
-            <h2 className="mt-3 max-w-3xl font-serif text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
-              Start with what you need to do
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm leading-6 text-[#10264a]/62">
-            The Atlaslings mark distinct tasks. They are guides to the work,
-            not decoration.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-3">
-          {modes.map((mode) => (
-            <Link
-              className="atlas-mode group relative min-h-[380px] border-b border-[#10264a]/15 py-8 lg:border-b-0 lg:border-r lg:px-8 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
-              href={mode.href}
-              key={mode.title}
-              style={{ "--mode-accent": mode.accent } as CSSProperties}
-            >
-              <div className="flex items-start justify-between gap-6">
-                <span className="font-mono text-xs text-[#10264a]/45">{mode.number}</span>
-                <span
-                  className="text-[10px] font-bold uppercase tracking-[0.2em]"
-                  style={{ color: mode.accent }}
-                >
-                  {mode.atlasling}
-                </span>
-              </div>
-
-              {mode.atlasling === "Fox" ? (
-                <Image
-                  alt="Fox Atlasling pointing the way into the regulatory landscape"
-                  className="absolute right-2 top-12 h-24 w-24 object-contain object-bottom sm:h-32 sm:w-32 lg:right-4 lg:top-14 lg:h-36 lg:w-36"
-                  height={1254}
-                  priority
-                  src="/atlaslings/fox-explore-seated.png"
-                  width={1254}
-                />
-              ) : null}
-
-              <div className="absolute inset-x-0 bottom-8 lg:inset-x-8 lg:first:left-0">
-                <h3 className="max-w-xs font-serif text-3xl font-semibold leading-[1.05] tracking-[-0.035em]">
-                  {mode.title}
-                </h3>
-                <p className="mt-5 max-w-sm text-sm leading-6 text-[#10264a]/65">
-                  {mode.description}
+          <div className="rounded-[32px] border border-[#10264a]/10 bg-[#f3ecdf] p-4 shadow-[0_24px_70px_rgba(16,38,74,0.06)] sm:p-6">
+            <div className="mb-5 flex items-end justify-between gap-5 px-1">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
+                  {t.hero.atlaslings}
                 </p>
-                <span className="mt-7 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.14em] transition-[gap] group-hover:gap-5">
-                  {mode.action} <span aria-hidden="true">→</span>
-                </span>
+                <h2 className="mt-2 font-serif text-2xl font-semibold">
+                  {t.modes.title}
+                </h2>
               </div>
-            </Link>
-          ))}
+              <p className="hidden max-w-40 text-right text-xs leading-5 text-[#10264a]/45 sm:block">
+                {t.hero.atlaslingsSub}
+              </p>
+            </div>
+
+            <div className="grid gap-3">
+              <GuideLink
+                body={t.modes.deployBody}
+                cta={t.modes.deployCta}
+                href="#map"
+                image="/atlaslings/dog.png"
+                name="Deploy"
+                title={t.modes.deployTitle}
+                tone="blue"
+              />
+              <GuideLink
+                body={t.modes.exploreBody}
+                cta={t.modes.exploreCta}
+                href="/explore/system-map"
+                image="/atlaslings/fox.png"
+                name="Explore"
+                title={t.modes.exploreTitle}
+                tone="green"
+              />
+              <GuideLink
+                body={t.modes.learnBody}
+                cta={t.modes.learnCta}
+                href="#learn"
+                image="/atlaslings/cat.png"
+                name="Learn"
+                title={t.modes.learnTitle}
+                tone="gold"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="border-y border-[#10264a]/15 bg-[#edf0e7]" id="jurisdiction-map">
-        <div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-24">
-          <div className="mb-10 grid gap-6 lg:grid-cols-[1fr_0.7fr] lg:items-end">
+      <section
+        className="scroll-mt-20 border-b border-[#10264a]/15 bg-[#edf0e7]"
+        id="map"
+      >
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+          <div className="mb-9 grid gap-5 lg:grid-cols-[0.9fr_0.7fr] lg:items-end">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#147c73]">
-                Deployment geography
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
+                {t.map.eyebrow}
               </p>
               <h2 className="mt-3 max-w-3xl font-serif text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
-                Jurisdiction changes the route to the road
+                {t.map.title}
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-6 text-[#10264a]/65 lg:justify-self-end">
-              Choose a beacon to open its jurisdiction profile. Locations and
-              coverage states come from the Atlas database, so the map grows
-              with the research.
+              {t.map.body}
             </p>
           </div>
 
@@ -311,108 +272,260 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-[#10264a] text-[#fbf7ef]" id="learning-puzzle">
-        <div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[360px_1fr] lg:px-12 lg:py-24">
-          <div className="relative min-h-[300px] border border-[#fbf7ef]/18 bg-[#fbf7ef]/5">
-            <p className="absolute left-5 top-5 z-10 text-[10px] font-bold uppercase tracking-[0.2em] text-[#e1a249]">
-              Cat asks the next question
-            </p>
-            <Image
-              alt="Cat Atlasling presenting a regulatory puzzle"
-              className="absolute inset-x-0 bottom-0 mx-auto h-[270px] w-[270px] object-contain object-bottom"
-              height={1254}
-              loading="eager"
-              src="/atlaslings/cat-explain.png"
-              width={1254}
-            />
-          </div>
+      <section
+        className="scroll-mt-20 border-b border-[#10264a]/10 bg-[#fbf7ef]"
+        id="learn"
+      >
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+          <div className="grid gap-5 lg:grid-cols-[1.45fr_0.55fr]">
+            <article className="relative overflow-hidden rounded-[32px] border border-[#10264a]/10 bg-[#f6ecd3] p-7 sm:p-10">
+              <div className="grid min-h-[360px] gap-8 sm:grid-cols-[1fr_230px] sm:items-center">
+                <div className="relative z-10">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#b97512]">
+                    {t.puzzle.eyebrow}
+                  </p>
+                  <h2 className="mt-5 max-w-3xl font-serif text-4xl font-semibold leading-[1.02] tracking-[-0.035em] sm:text-5xl">
+                    {t.puzzle.title}
+                  </h2>
+                  <p className="mt-6 max-w-xl text-base leading-7 text-[#10264a]/60">
+                    {t.puzzle.body}
+                  </p>
 
-          <div className="self-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#e1a249]">
-              Featured learning puzzle
-            </p>
-            <h2 className="mt-4 max-w-4xl font-serif text-4xl font-semibold leading-[0.98] tracking-[-0.04em] sm:text-6xl">
-              Type approved. Why can’t it just drive?
-            </h2>
-            <p className="mt-6 max-w-3xl text-base leading-7 text-[#fbf7ef]/70">
-              Product approval and permission to operate on public roads answer
-              different legal questions. Open the missing layer.
-            </p>
+                  <details className="atlas-puzzle mt-8 border-y border-[#10264a]/15 py-4">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-5 font-serif text-lg font-semibold">
+                      {t.puzzle.reveal}
+                      <span className="text-2xl font-normal text-[#b97512]" aria-hidden="true">
+                        +
+                      </span>
+                    </summary>
+                    <p className="mt-4 border-l border-[#b97512] pl-4 text-sm leading-7 text-[#10264a]/65">
+                      {t.puzzle.answer}
+                    </p>
+                  </details>
+                </div>
 
-            <details className="atlas-puzzle mt-10 max-w-3xl border-y border-[#fbf7ef]/22 py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-serif text-xl font-semibold">
-                Reveal the regulatory hinge
-                <span className="text-2xl font-normal text-[#e1a249]" aria-hidden="true">+</span>
-              </summary>
-              <div className="mt-5 border-l border-[#e1a249] pl-5 text-sm leading-7 text-[#fbf7ef]/72">
-                Type approval can establish that a vehicle or automated driving
-                system satisfies an applicable product-approval regime. It does
-                not, by itself, settle every road-traffic, operator,
-                authorization or geographic condition for deployment. The
-                operating jurisdiction supplies that next layer.
+                <div className="flex items-end justify-center self-stretch">
+                  <Image
+                    alt="Learn Atlasling"
+                    className="max-h-[285px] w-full object-contain object-bottom"
+                    height={360}
+                    loading="eager"
+                    src="/atlaslings/cat.png"
+                    width={360}
+                  />
+                </div>
               </div>
-            </details>
+            </article>
+
+            <div className="grid gap-5">
+              <SmallPuzzle
+                concept={t.puzzle.secondaryOneConcept}
+                number="02"
+                question={t.puzzle.secondaryOne}
+              />
+              <SmallPuzzle
+                concept={t.puzzle.secondaryTwoConcept}
+                number="03"
+                question={t.puzzle.secondaryTwo}
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-24" id="methodology">
-        <div className="grid gap-12 lg:grid-cols-[0.65fr_1.35fr]">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#147c73]">
-              Methodology and trust
-            </p>
-            <h2 className="mt-3 font-serif text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
-              Follow the reasoning back to the source
-            </h2>
-            <p className="mt-6 max-w-md text-sm leading-6 text-[#10264a]/65">
-              Atlas separates what a source says from how it is interpreted and
-              what that interpretation changes for real-world operation.
-              Primary sources remain in their original language.
-            </p>
-          </div>
+      <section
+        className="scroll-mt-20 bg-white"
+        id="method"
+      >
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+          <div className="grid gap-10 lg:grid-cols-[300px_1fr] lg:items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
+                {t.method.eyebrow}
+              </p>
+              <h2 className="mt-3 font-serif text-4xl font-semibold leading-none tracking-[-0.04em]">
+                {t.method.title}
+              </h2>
+              <p className="mt-5 text-sm leading-6 text-[#10264a]/60">
+                {t.method.body}
+              </p>
+            </div>
 
-          <ol className="grid border-y border-[#10264a]/18 sm:grid-cols-2 xl:grid-cols-4">
-            {methodology.map((item, index) => (
-              <li
-                className="relative min-h-40 border-b border-[#10264a]/18 p-5 last:border-b-0 sm:border-r sm:[&:nth-child(2)]:border-r-0 sm:[&:nth-child(3)]:border-b-0 xl:border-b-0 xl:[&:nth-child(2)]:border-r xl:last:border-r-0"
-                key={item}
-              >
-                <span className="font-mono text-[10px] text-[#b97512]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <p className="mt-12 font-serif text-xl font-semibold leading-6">
-                  {item}
-                </p>
-                {index < methodology.length - 1 ? (
-                  <span
-                    className="absolute right-4 top-5 text-[#10264a]/35"
-                    aria-hidden="true"
-                  >
-                    →
+            <ol className="grid border-y border-[#10264a]/15 sm:grid-cols-2 xl:grid-cols-4">
+              {t.method.steps.map((step, index) => (
+                <li
+                  className="relative min-h-36 border-b border-[#10264a]/15 p-5 last:border-b-0 sm:border-r sm:[&:nth-child(2)]:border-r-0 sm:[&:nth-child(3)]:border-b-0 xl:border-b-0 xl:[&:nth-child(2)]:border-r xl:last:border-r-0"
+                  key={step}
+                >
+                  <span className="font-mono text-[10px] text-[#b97512]">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
-                ) : null}
-              </li>
-            ))}
-          </ol>
+                  <p className="mt-10 font-serif text-lg font-semibold leading-6">
+                    {step}
+                  </p>
+                  {index < t.method.steps.length - 1 ? (
+                    <span
+                      aria-hidden="true"
+                      className="absolute right-4 top-5 text-[#10264a]/30"
+                    >
+                      →
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </section>
 
       <footer className="border-t border-[#fbf7ef]/15 bg-[#0b1c36] text-[#fbf7ef]">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-7 px-5 py-10 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-12">
+        <div className="mx-auto flex max-w-7xl flex-col gap-7 px-5 py-10 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-10">
           <div>
-            <p className="font-serif text-2xl font-semibold">Autonomy Regulation Atlas</p>
+            <p className="font-serif text-2xl font-semibold">
+              Autonomy Regulation Atlas
+            </p>
             <p className="mt-2 max-w-xl text-xs leading-5 text-[#fbf7ef]/55">
-              Connecting autonomy law, technical assurance and lawful deployment
+              One technology · many legal worlds · one connected map
             </p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#fbf7ef]/65">
-            <Link href="/explore/system-map">System Map</Link>
-            <a href="#jurisdiction-map">Jurisdictions</a>
-            <a href="#methodology">Methodology</a>
+            <Link href="/explore/system-map">{t.nav.landscape}</Link>
+            <a href="#map">{t.nav.jurisdictions}</a>
+            <a href="#method">{t.nav.method}</a>
           </div>
         </div>
       </footer>
     </main>
+  );
+}
+
+function LanguageSwitcher({ locale }: { locale: Locale }) {
+  return (
+    <details className="atlas-language group relative">
+      <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full border border-[#10264a]/15 bg-white px-3 py-2 text-xs font-semibold tracking-[0.08em] shadow-sm transition hover:border-[#10264a]/30 sm:px-4 sm:py-2.5">
+        <span aria-hidden="true" className="text-sm">
+          ◎
+        </span>
+        <span className="hidden sm:inline">Language</span>
+        <strong>{localeLabels[locale]}</strong>
+        <span className="text-[#10264a]/35" aria-hidden="true">
+          ⌄
+        </span>
+      </summary>
+
+      <div className="absolute right-0 top-[48px] z-[80] grid min-w-[150px] overflow-hidden rounded-2xl border border-[#10264a]/10 bg-white p-1.5 shadow-[0_18px_45px_rgba(16,38,74,.16)]">
+        {locales.map((item) => (
+          <Link
+            aria-current={item === locale ? "page" : undefined}
+            className={`rounded-xl px-3 py-2.5 text-sm transition hover:bg-[#f2eadc] ${
+              item === locale
+                ? "font-semibold text-[#147c73]"
+                : "text-[#10264a]/65"
+            }`}
+            href={`/?lang=${item}`}
+            key={item}
+          >
+            {localeLabels[item]}
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
+
+function GuideLink({
+  href,
+  image,
+  name,
+  title,
+  body,
+  cta,
+  tone,
+}: {
+  href: string;
+  image: string;
+  name: "Deploy" | "Explore" | "Learn";
+  title: string;
+  body: string;
+  cta: string;
+  tone: "blue" | "green" | "gold";
+}) {
+  const tones = {
+    blue: {
+      bg: "bg-[#e9f0fa]",
+      border: "border-[#295ca8]/14",
+      text: "text-[#295ca8]",
+    },
+    green: {
+      bg: "bg-[#e7f1ed]",
+      border: "border-[#147c73]/14",
+      text: "text-[#147c73]",
+    },
+    gold: {
+      bg: "bg-[#f7edd7]",
+      border: "border-[#c98518]/14",
+      text: "text-[#b97512]",
+    },
+  } as const;
+  const color = tones[tone];
+
+  return (
+    <Link
+      className={`group grid min-h-[142px] grid-cols-[92px_1fr] items-center gap-4 rounded-[24px] border p-3 transition hover:-translate-y-0.5 hover:shadow-[0_14px_35px_rgba(16,38,74,.08)] sm:grid-cols-[125px_1fr] sm:gap-5 sm:p-4 ${color.bg} ${color.border}`}
+      href={href}
+    >
+      <div className="flex h-[112px] items-center justify-center overflow-visible">
+        <Image
+          alt={`${name} Atlasling`}
+          className="max-h-[112px] w-full object-contain"
+          height={360}
+          priority
+          src={image}
+          width={360}
+        />
+      </div>
+
+      <div className="min-w-0">
+        <p className={`text-[10px] font-semibold uppercase tracking-[0.14em] ${color.text}`}>
+          {name}
+        </p>
+        <h3 className="mt-1.5 font-serif text-xl font-semibold leading-tight sm:text-2xl">
+          {title}
+        </h3>
+        <p className="mt-2 text-xs leading-5 text-[#10264a]/55 sm:text-sm">
+          {body}
+        </p>
+        <p className={`mt-2 text-xs font-semibold sm:text-sm ${color.text}`}>
+          {cta}{" "}
+          <span className="inline-block transition group-hover:translate-x-1" aria-hidden="true">
+            →
+          </span>
+        </p>
+      </div>
+    </Link>
+  );
+}
+
+function SmallPuzzle({
+  number,
+  question,
+  concept,
+}: {
+  number: string;
+  question: string;
+  concept: string;
+}) {
+  return (
+    <article className="rounded-[28px] border border-[#10264a]/10 bg-white p-7">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#b97512]">
+        Puzzle {number}
+      </p>
+      <h3 className="mt-7 font-serif text-2xl font-semibold leading-snug">
+        {question}
+      </h3>
+      <p className="mt-7 border-t border-[#10264a]/10 pt-4 text-xs font-semibold uppercase tracking-[0.1em] text-[#10264a]/35">
+        {concept}
+      </p>
+    </article>
   );
 }
