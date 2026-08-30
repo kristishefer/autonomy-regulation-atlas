@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbf7ef;
+  --foreground: #10264a;
 }
 
 @theme inline {
@@ -12,15 +12,121 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+button,
+a,
+summary {
+  outline-color: #b97512;
+  outline-offset: 4px;
+}
+
+.atlas-hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(16, 38, 74, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 38, 74, 0.07) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom right, black, transparent 78%);
+}
+
+.atlas-language[open] summary span {
+  display: inline-block;
+  transform: rotate(180deg);
+}
+
+.atlas-mode::before {
+  background: var(--mode-accent);
+  content: "";
+  height: 3px;
+  left: 0;
+  position: absolute;
+  top: -1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+  width: 100%;
+}
+
+.atlas-mode:hover::before,
+.atlas-mode:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.atlas-map-country {
+  fill: #f7f0e3;
+  stroke: rgba(16, 38, 74, 0.26);
+  stroke-linejoin: round;
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.atlas-map-hit-area {
+  fill: transparent;
+}
+
+.atlas-map-beacon {
+  stroke: #fbf7ef;
+  stroke-width: 3;
+  transition: r 160ms ease, filter 160ms ease;
+}
+
+.atlas-map-beacon-available {
+  fill: #147c73;
+}
+
+.atlas-map-beacon-developing {
+  fill: #b97512;
+}
+
+.atlas-map-beacon-core {
+  fill: #fbf7ef;
+  pointer-events: none;
+}
+
+.atlas-map-code {
+  fill: #10264a;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+.atlas-map-link:hover .atlas-map-beacon,
+.atlas-map-link:focus .atlas-map-beacon {
+  filter: drop-shadow(0 0 5px rgba(16, 38, 74, 0.42));
+  r: 12px;
+}
+
+.atlas-map-link:focus {
+  outline: none;
+}
+
+.atlas-puzzle[open] summary span {
+  transform: rotate(45deg);
+}
+
+.atlas-puzzle summary span {
+  transition: transform 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
