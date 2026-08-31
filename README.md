@@ -22,3 +22,15 @@ Before pushing a preview, run:
 npm run lint
 npm run build
 ```
+
+## Rights and reuse
+
+The repository is publicly visible but the original Autonomy Regulation Atlas
+materials are not released under an open-source licence. Copyright © 2026
+Kristina Shefer. All rights reserved. See `LICENSE` for the proprietary rights
+notice and `/terms` for the public Terms of Use.
+
+The Atlas does not claim ownership of legislation, regulatory instruments,
+official publications, standards, third-party software or other third-party
+materials. Those remain subject to their applicable rights, licences and legal
+exceptions.
