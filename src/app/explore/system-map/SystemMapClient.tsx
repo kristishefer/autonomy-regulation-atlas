@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   CLUSTERS,
@@ -81,12 +83,12 @@ export default function SystemMapClient() {
       <header className="sticky top-0 z-40 border-b border-[#10264a]/10 bg-[#fbf7ef]/94 backdrop-blur">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-6 px-5 py-4 lg:px-8">
           <div className="flex items-center gap-4">
-            <a
+            <Link
               href="/"
               className="grid h-9 w-9 place-items-center rounded-full border border-[#10264a]/20 font-serif font-semibold"
             >
               A
-            </a>
+            </Link>
 
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/35">
@@ -102,12 +104,12 @@ export default function SystemMapClient() {
             <span className="rounded-full border border-[#10264a]/10 bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/40">
               EN prototype
             </span>
-            <a
+            <Link
               href="/"
               className="text-sm text-[#10264a]/50 transition hover:text-[#10264a]"
             >
               Back to Atlas
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -116,10 +118,12 @@ export default function SystemMapClient() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
           <div>
             <div className="flex items-center gap-3">
-              <img
+              <Image
                 src="/atlaslings/fox-explore-seated.png"
                 alt=""
                 className="h-20 w-20 object-contain"
+                height={80}
+                width={80}
               />
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
                 Explore mode
@@ -144,10 +148,12 @@ export default function SystemMapClient() {
           </div>
 
           <div className="relative hidden min-h-[300px] lg:block">
-            <img
+            <Image
               src="/atlaslings/fox-autonomous.png"
               alt=""
               className="absolute bottom-[-18px] right-0 h-[305px] w-auto object-contain"
+              height={332}
+              width={305}
             />
 
             <details className="absolute right-0 top-0 z-30">
@@ -186,7 +192,11 @@ export default function SystemMapClient() {
         <div className="mt-8 flex flex-wrap items-center gap-2">
           <ModeButton active label="Explore" icon="🦊" />
           <ModeButton label="Learn" icon="🐱" soon />
-          <ModeButton label="Apply to deployment" icon="🐶" soon />
+          <ModeButton
+            href="/deploy"
+            label="Apply to deployment"
+            icon="🐶"
+          />
         </div>
 
         {/* SEARCH + CONTEXT + FILTERS */}
@@ -608,10 +618,12 @@ function CatTooltip({ node }: { node: SystemNode }) {
       role="tooltip"
     >
       <div className="flex items-start gap-3">
-        <img
+        <Image
           src="/atlaslings/cat-explain.png"
           alt=""
           className="h-14 w-14 shrink-0 object-contain"
+          height={56}
+          width={56}
         />
         <div>
           <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#b97512]">
@@ -692,10 +704,12 @@ function NodeDrawer({
       {node.learning && (
         <details className="mt-5 rounded-2xl border border-[#b97512]/15 bg-[#fff8e8] p-4">
           <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-[#9a6513]">
-            <img
+            <Image
               src="/atlaslings/cat-explain.png"
               alt=""
               className="h-7 w-7 object-contain"
+              height={28}
+              width={28}
             />
             Cat explains this
           </summary>
@@ -878,30 +892,43 @@ function DetailBlock({ label, text }: { label: string; text: string }) {
 
 function ModeButton({
   active = false,
+  href,
   label,
   icon,
   soon = false,
 }: {
   active?: boolean;
+  href?: string;
   label: string;
   icon: string;
   soon?: boolean;
 }) {
-  return (
-    <button
-      type="button"
-      disabled={soon}
-      className={`rounded-full border px-4 py-2.5 text-sm font-semibold ${
-        active
-          ? "border-[#147c73]/30 bg-[#e7f1ed] text-[#147c73]"
-          : "border-[#10264a]/10 bg-white text-[#10264a]/45"
-      } ${soon ? "cursor-not-allowed opacity-55" : ""}`}
-    >
+  const className = `rounded-full border px-4 py-2.5 text-sm font-semibold ${
+    active
+      ? "border-[#147c73]/30 bg-[#e7f1ed] text-[#147c73]"
+      : "border-[#10264a]/10 bg-white text-[#10264a]/45"
+  } ${soon ? "cursor-not-allowed opacity-55" : ""}`;
+  const content = (
+    <>
       <span className="mr-2">{icon}</span>
       {label}
       {soon && (
         <span className="ml-2 text-[9px] uppercase tracking-[0.1em]">Soon</span>
       )}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link className={className} href={href}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" disabled={soon} className={className}>
+      {content}
     </button>
   );
 }

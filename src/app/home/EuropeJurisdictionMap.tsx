@@ -125,9 +125,9 @@ export function EuropeJurisdictionMap({
                   href={`/${item.slug}`}
                   key={item.id}
                 >
-                  <title>
-                    {item.name} — {available ? "profile available" : "coverage developing"}
-                  </title>
+                  <title>{`${item.name} — ${
+                    available ? "profile available" : "coverage developing"
+                  }`}</title>
                   <circle
                     className="atlas-map-hit-area"
                     cx={x}
