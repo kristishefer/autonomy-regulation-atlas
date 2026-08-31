@@ -60,6 +60,14 @@ type HomeCopy = {
     title: string;
     body: string;
     steps: [string, string, string, string];
+    statement: string;
+    uncertainty: string;
+    principles: [
+      { title: string; body: string },
+      { title: string; body: string },
+      { title: string; body: string },
+      { title: string; body: string },
+    ];
   };
 };
 
@@ -110,13 +118,21 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     method: {
       eyebrow: "Source-backed by design",
-      title: "Follow every conclusion back to the source",
+      title: "Built for regulatory clarity",
       body: "Atlas separates what a source says from how it is interpreted and what that interpretation changes for real-world operation. Primary sources remain in their original language.",
       steps: [
         "Source proposition",
         "Atlas legal interpretation",
         "Operational impact",
         "Exact source",
+      ],
+      statement: "The Atlas does not force legal uncertainty into a yes/no answer.",
+      uncertainty: "Where the legal position cannot be established with sufficient confidence, the Atlas says Unclear or Not identified.",
+      principles: [
+        { title: "Source-traceable", body: "Material conclusions link back to the underlying legal authority." },
+        { title: "Status-aware", body: "Current law is separated from proposals, future changes and interpretative materials." },
+        { title: "Scenario-specific", body: "“Permitted” always refers to a defined regulatory scenario." },
+        { title: "No false certainty", body: "Legal ambiguity remains visible instead of being forced into a category." },
       ],
     },
   },
@@ -166,13 +182,21 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     method: {
       eyebrow: "Опора на источники",
-      title: "Проследите каждый вывод до источника",
+      title: "Создан для регуляторной ясности",
       body: "Atlas отделяет содержание источника от юридической интерпретации и её операционного значения. Первичные источники остаются на языке оригинала.",
       steps: [
         "Положение источника",
         "Юридическая интерпретация Atlas",
         "Операционное значение",
         "Точный источник",
+      ],
+      statement: "Atlas не превращает правовую неопределённость в принудительный ответ «да» или «нет».",
+      uncertainty: "Если правовую позицию нельзя установить с достаточной уверенностью, Atlas указывает «Неясно» или «Не выявлено».",
+      principles: [
+        { title: "Связь с источником", body: "Существенные выводы ведут к соответствующему правовому основанию." },
+        { title: "Учёт статуса", body: "Действующее право отделено от предложений, будущих изменений и материалов толкования." },
+        { title: "Конкретный сценарий", body: "Статус «Разрешено» всегда относится к определённому регуляторному сценарию." },
+        { title: "Без ложной определённости", body: "Правовая неоднозначность остаётся видимой и не сводится к удобной категории." },
       ],
     },
   },
@@ -222,13 +246,21 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     method: {
       eyebrow: "Fondé sur les sources",
-      title: "Remontez chaque conclusion à sa source",
+      title: "Conçu pour la clarté réglementaire",
       body: "Atlas sépare le contenu de la source, son interprétation juridique et son impact opérationnel. Les sources primaires restent dans leur langue originale.",
       steps: [
         "Proposition de la source",
         "Interprétation juridique Atlas",
         "Impact opérationnel",
         "Source exacte",
+      ],
+      statement: "Atlas ne force pas l’incertitude juridique dans une réponse oui/non.",
+      uncertainty: "Lorsque la position juridique ne peut être établie avec une confiance suffisante, Atlas indique Incertain ou Non identifié.",
+      principles: [
+        { title: "Traçable à la source", body: "Les conclusions importantes renvoient à l’autorité juridique sous-jacente." },
+        { title: "Sensible au statut", body: "Le droit en vigueur est séparé des propositions, changements futurs et documents interprétatifs." },
+        { title: "Propre au scénario", body: "« Autorisé » renvoie toujours à un scénario réglementaire défini." },
+        { title: "Sans fausse certitude", body: "L’ambiguïté juridique reste visible au lieu d’être forcée dans une catégorie." },
       ],
     },
   },
@@ -278,13 +310,21 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     method: {
       eyebrow: "Quellenbasiert",
-      title: "Verfolgen Sie jede Schlussfolgerung bis zur Quelle",
+      title: "Für regulatorische Klarheit entwickelt",
       body: "Atlas trennt Quellenaussage, rechtliche Auslegung und operative Auswirkung. Primärquellen bleiben in ihrer Originalsprache.",
       steps: [
         "Quellenaussage",
         "Rechtliche Atlas-Auslegung",
         "Operative Auswirkung",
         "Exakte Quelle",
+      ],
+      statement: "Atlas zwingt rechtliche Unsicherheit nicht in eine Ja/Nein-Antwort.",
+      uncertainty: "Lässt sich die Rechtslage nicht mit ausreichender Sicherheit bestimmen, weist Atlas sie als Unklar oder Nicht identifiziert aus.",
+      principles: [
+        { title: "Quellennachweis", body: "Wesentliche Schlussfolgerungen führen zur zugrunde liegenden Rechtsquelle." },
+        { title: "Statusbewusst", body: "Geltendes Recht wird von Vorschlägen, künftigen Änderungen und Auslegungsmaterial getrennt." },
+        { title: "Szenariobezogen", body: "„Zulässig“ bezieht sich immer auf ein definiertes regulatorisches Szenario." },
+        { title: "Keine Scheinsicherheit", body: "Rechtliche Mehrdeutigkeit bleibt sichtbar, statt in eine Kategorie gezwungen zu werden." },
       ],
     },
   },
@@ -334,13 +374,21 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     method: {
       eyebrow: "Brongebaseerd",
-      title: "Volg elke conclusie terug naar de bron",
+      title: "Gebouwd voor regelgevingsduidelijkheid",
       body: "Atlas scheidt de bronstelling, juridische interpretatie en operationele impact. Primaire bronnen blijven in hun oorspronkelijke taal.",
       steps: [
         "Bronstelling",
         "Juridische Atlas-interpretatie",
         "Operationele impact",
         "Exacte bron",
+      ],
+      statement: "Atlas dwingt juridische onzekerheid niet in een ja/nee-antwoord.",
+      uncertainty: "Wanneer de juridische positie niet met voldoende zekerheid kan worden vastgesteld, vermeldt Atlas Onduidelijk of Niet geïdentificeerd.",
+      principles: [
+        { title: "Herleidbaar tot de bron", body: "Materiële conclusies verwijzen naar de onderliggende juridische autoriteit." },
+        { title: "Statusbewust", body: "Geldend recht staat los van voorstellen, toekomstige wijzigingen en interpretatief materiaal." },
+        { title: "Scenariospecifiek", body: "‘Toegestaan’ verwijst altijd naar een bepaald regelgevingsscenario." },
+        { title: "Geen schijnzekerheid", body: "Juridische dubbelzinnigheid blijft zichtbaar en wordt niet in een categorie gedwongen." },
       ],
     },
   },
@@ -390,13 +438,21 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     method: {
       eyebrow: "Basado en fuentes",
-      title: "Rastrea cada conclusión hasta su fuente",
+      title: "Diseñado para la claridad regulatoria",
       body: "Atlas separa la proposición de la fuente, la interpretación jurídica y el impacto operativo. Las fuentes primarias permanecen en su idioma original.",
       steps: [
         "Proposición de la fuente",
         "Interpretación jurídica de Atlas",
         "Impacto operativo",
         "Fuente exacta",
+      ],
+      statement: "Atlas no fuerza la incertidumbre jurídica a una respuesta de sí o no.",
+      uncertainty: "Cuando la posición jurídica no puede establecerse con suficiente confianza, Atlas indica No está claro o No identificado.",
+      principles: [
+        { title: "Trazable a la fuente", body: "Las conclusiones sustantivas enlazan con la autoridad jurídica subyacente." },
+        { title: "Consciente del estado", body: "El derecho vigente se separa de propuestas, cambios futuros y materiales interpretativos." },
+        { title: "Específico del escenario", body: "«Permitido» siempre se refiere a un escenario regulatorio definido." },
+        { title: "Sin falsa certeza", body: "La ambigüedad jurídica permanece visible en vez de forzarse en una categoría." },
       ],
     },
   },

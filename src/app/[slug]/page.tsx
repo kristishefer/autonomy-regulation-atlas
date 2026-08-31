@@ -1,5 +1,8 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
+import { JurisdictionProfileView } from "@/app/explore/JurisdictionProfileView";
+import { getJurisdictionProfile } from "@/app/explore/regulatory-data";
 
 type PageProps = {
   params: Promise<{
@@ -9,6 +12,11 @@ type PageProps = {
 
 export default async function JurisdictionPage({ params }: PageProps) {
   const { slug } = await params;
+  const curatedProfile = getJurisdictionProfile(slug);
+
+  if (curatedProfile) {
+    return <JurisdictionProfileView profile={curatedProfile} />;
+  }
 
   const { data: jurisdiction, error: jurisdictionError } = await supabase
     .from("jurisdictions")
@@ -34,6 +42,8 @@ export default async function JurisdictionPage({ params }: PageProps) {
       `
     )
     .eq("jurisdiction_id", jurisdiction.id)
+    .eq("published", true)
+    .eq("research_status", "verified")
     .order("id");
 
   const claims = claimsData ?? [];
@@ -110,9 +120,9 @@ export default async function JurisdictionPage({ params }: PageProps) {
     <main className="min-h-screen bg-[#f7f7f4] text-[#171717]">
       <header className="border-b border-black/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <a href="/" className="text-sm font-semibold tracking-tight">
+          <Link href="/" className="text-sm font-semibold tracking-tight">
             Autonomy Regulation Atlas
-          </a>
+          </Link>
 
           <span className="text-sm text-black/45">
             {jurisdiction.code}
@@ -122,12 +132,12 @@ export default async function JurisdictionPage({ params }: PageProps) {
 
       <section className="mx-auto max-w-7xl px-6 pb-16 pt-16 lg:px-10 lg:pb-20 lg:pt-20">
         <div className="max-w-4xl">
-          <a
+          <Link
             href="/"
             className="text-xs font-medium uppercase tracking-[0.16em] text-black/40"
           >
             ← Jurisdictions
-          </a>
+          </Link>
 
           <div className="mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-black/40">
             {jurisdiction.code} · Regulatory profile

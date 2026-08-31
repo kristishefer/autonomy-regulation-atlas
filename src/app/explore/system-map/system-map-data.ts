@@ -1,3 +1,8 @@
+import {
+  getLearningNote,
+  type LearningNote,
+} from "@/app/explore/learning-concepts";
+
 export type NodeType =
   | "standard"
   | "concept"
@@ -28,12 +33,6 @@ export type JurisdictionKey =
   | "us"
   | "ca"
   | "cn";
-
-export type LearningNote = {
-  plain: string;
-  why: string;
-  confusion: string;
-};
 
 export type SystemNode = {
   id: string;
@@ -178,11 +177,7 @@ export const NODES: SystemNode[] = [
     relevance: { EU: "◐", US: "◐", China: "◐" },
     takeaway: "ODD says where and under what conditions the ADS is designed to operate. A regulator or road authority may authorize a narrower, different or separately defined operating domain.",
     source: "https://www.sae.org/standards/j3016-taxonomy-definitions-terms-related-driving-automation-systems-road-motor-vehicles",
-    learning: {
-      plain: "An ODD describes the conditions an automated driving system is designed to handle, such as road type, geography, weather, lighting, traffic and speed range.",
-      why: "The ODD bounds the situations in which ADS behavior and safety performance need to be specified, evaluated and monitored.",
-      confusion: "An ODD is a technical design domain, not automatically a legal operating permit or the same boundary as an authorized service area.",
-    },
+    learning: getLearningNote("odd"),
   },
   {
     id: "iso-26262",
@@ -196,11 +191,7 @@ export const NODES: SystemNode[] = [
     relevance: { EU: "◐", US: "◐", China: "◐" },
     takeaway: "Functional Safety addresses hazards associated with malfunctioning behaviour of E/E systems.",
     source: "https://www.iso.org/standard/68383.html",
-    learning: {
-      plain: "ISO 26262 is a functional-safety standard for automotive electrical and electronic systems.",
-      why: "It gives teams a structured way to identify malfunction-related hazards and determine how rigorous the safety process needs to be.",
-      confusion: "Functional Safety is not the same as SOTIF: ISO 26262 focuses on malfunctioning behaviour.",
-    },
+    learning: getLearningNote("iso-26262"),
   },
   {
     id: "hara",

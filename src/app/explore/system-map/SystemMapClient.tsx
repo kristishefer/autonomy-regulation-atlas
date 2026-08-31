@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
+import { ExplainDetails, ExplainTooltip } from "@/app/explore/Explain";
 import {
   CLUSTERS,
   EDGES,
@@ -81,12 +84,12 @@ export default function SystemMapClient() {
       <header className="sticky top-0 z-40 border-b border-[#10264a]/10 bg-[#fbf7ef]/94 backdrop-blur">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-6 px-5 py-4 lg:px-8">
           <div className="flex items-center gap-4">
-            <a
+            <Link
               href="/"
               className="grid h-9 w-9 place-items-center rounded-full border border-[#10264a]/20 font-serif font-semibold"
             >
               A
-            </a>
+            </Link>
 
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/35">
@@ -102,12 +105,12 @@ export default function SystemMapClient() {
             <span className="rounded-full border border-[#10264a]/10 bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/40">
               EN prototype
             </span>
-            <a
+            <Link
               href="/"
               className="text-sm text-[#10264a]/50 transition hover:text-[#10264a]"
             >
               Back to Atlas
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -116,10 +119,12 @@ export default function SystemMapClient() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
           <div>
             <div className="flex items-center gap-3">
-              <img
+              <Image
                 src="/atlaslings/fox-explore-seated.png"
                 alt=""
                 className="h-20 w-20 object-contain"
+                height={160}
+                width={160}
               />
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
                 Explore mode
@@ -144,10 +149,12 @@ export default function SystemMapClient() {
           </div>
 
           <div className="relative hidden min-h-[300px] lg:block">
-            <img
+            <Image
               src="/atlaslings/fox-autonomous.png"
               alt=""
               className="absolute bottom-[-18px] right-0 h-[305px] w-auto object-contain"
+              height={610}
+              width={480}
             />
 
             <details className="absolute right-0 top-0 z-30">
@@ -593,59 +600,9 @@ function NodeButton({
         </div>
       </button>
 
-      {node.learning && <CatTooltip node={node} />}
-    </div>
-  );
-}
-
-function CatTooltip({ node }: { node: SystemNode }) {
-  const note = node.learning;
-  if (!note) return null;
-
-  return (
-    <div
-      className="pointer-events-none invisible absolute left-3 right-3 top-[calc(100%+8px)] z-[80] translate-y-1 rounded-[20px] border border-[#b97512]/18 bg-[#fffaf0] p-4 opacity-0 shadow-[0_18px_45px_rgba(16,38,74,.16)] transition duration-150 group-hover/node:visible group-hover/node:translate-y-0 group-hover/node:opacity-100 group-focus-within/node:visible group-focus-within/node:translate-y-0 group-focus-within/node:opacity-100 sm:left-auto sm:right-0 sm:w-[360px]"
-      role="tooltip"
-    >
-      <div className="flex items-start gap-3">
-        <img
-          src="/atlaslings/cat-explain.png"
-          alt=""
-          className="h-14 w-14 shrink-0 object-contain"
-        />
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#b97512]">
-            Cat explains
-          </div>
-          <div className="mt-1 font-serif text-lg font-semibold">
-            What is {node.name}?
-          </div>
-        </div>
-      </div>
-
-      <p className="mt-3 text-xs leading-5 text-[#10264a]/65">
-        {note.plain}
-      </p>
-
-      <div className="mt-3 border-t border-[#10264a]/8 pt-3">
-        <div className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/35">
-          Why it matters
-        </div>
-        <p className="mt-1 text-xs leading-5 text-[#10264a]/60">{note.why}</p>
-      </div>
-
-      <div className="mt-3 rounded-xl bg-[#f4ead3] p-3">
-        <div className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#9a6513]">
-          Common confusion
-        </div>
-        <p className="mt-1 text-xs leading-5 text-[#10264a]/65">
-          {note.confusion}
-        </p>
-      </div>
-
-      <div className="mt-3 text-[10px] font-semibold text-[#147c73]">
-        Click the node to open the full regulatory detail.
-      </div>
+      {node.learning ? (
+        <ExplainTooltip note={node.learning} title={`What is ${node.name}?`} />
+      ) : null}
     </div>
   );
 }
@@ -689,27 +646,9 @@ function NodeDrawer({
         </button>
       </div>
 
-      {node.learning && (
-        <details className="mt-5 rounded-2xl border border-[#b97512]/15 bg-[#fff8e8] p-4">
-          <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-[#9a6513]">
-            <img
-              src="/atlaslings/cat-explain.png"
-              alt=""
-              className="h-7 w-7 object-contain"
-            />
-            Cat explains this
-          </summary>
-          <p className="mt-3 text-sm leading-6 text-[#10264a]/65">
-            {node.learning.plain}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[#10264a]/55">
-            <strong>Why it matters:</strong> {node.learning.why}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[#10264a]/55">
-            <strong>Common confusion:</strong> {node.learning.confusion}
-          </p>
-        </details>
-      )}
+      {node.learning ? (
+        <ExplainDetails note={node.learning} title={node.name} />
+      ) : null}
 
       <DetailBlock label="What it is" text={node.whatItIs} />
       <DetailBlock label="Issued by" text={node.issuingBody} />

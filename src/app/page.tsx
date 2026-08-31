@@ -349,6 +349,12 @@ export default async function Home({ searchParams }: PageProps) {
               <p className="mt-5 text-sm leading-6 text-[#10264a]/60">
                 {t.method.body}
               </p>
+              <p className="mt-5 font-serif text-lg font-semibold leading-7">
+                {t.method.statement}
+              </p>
+              <p className="mt-3 text-xs leading-5 text-[#10264a]/50">
+                {t.method.uncertainty}
+              </p>
             </div>
 
             <ol className="grid border-y border-[#10264a]/15 sm:grid-cols-2 xl:grid-cols-4">
@@ -374,6 +380,19 @@ export default async function Home({ searchParams }: PageProps) {
                 </li>
               ))}
             </ol>
+          </div>
+
+          <div className="mt-10 grid gap-px overflow-hidden rounded-[20px] border border-[#10264a]/10 bg-[#10264a]/10 sm:grid-cols-2 xl:grid-cols-4">
+            {t.method.principles.map((principle) => (
+              <div className="bg-[#fbf7ef] p-5" key={principle.title}>
+                <h3 className="text-xs font-semibold text-[#147c73]">
+                  {principle.title}
+                </h3>
+                <p className="mt-2 text-xs leading-5 text-[#10264a]/52">
+                  {principle.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
