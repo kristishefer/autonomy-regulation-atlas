@@ -154,6 +154,9 @@ export default async function Home({ searchParams }: PageProps) {
               aria-label="Primary navigation"
               className="hidden items-center gap-6 text-sm text-[#10264a]/55 lg:flex"
             >
+              <Link className="transition hover:text-[#10264a]" href="/deploy">
+                {t.nav.deploy}
+              </Link>
               <a className="transition hover:text-[#10264a]" href="#map">
                 {t.nav.jurisdictions}
               </a>
@@ -214,7 +217,7 @@ export default async function Home({ searchParams }: PageProps) {
               <GuideLink
                 body={t.modes.deployBody}
                 cta={t.modes.deployCta}
-                href="#map"
+                href="/deploy"
                 image="/atlaslings/dog.png"
                 name="Deploy"
                 title={t.modes.deployTitle}
@@ -389,6 +392,7 @@ export default async function Home({ searchParams }: PageProps) {
             </p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#fbf7ef]/65">
+            <Link href="/deploy">{t.nav.deploy}</Link>
             <Link href="/explore/system-map">{t.nav.landscape}</Link>
             <a href="#map">{t.nav.jurisdictions}</a>
             <a href="#method">{t.nav.method}</a>
