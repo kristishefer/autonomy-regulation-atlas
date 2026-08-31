@@ -36,6 +36,29 @@ const EUROPE_BOUNDS: Polygon = {
   ],
 };
 
+const CORE_JURISDICTIONS: JurisdictionMapPoint[] = [
+  {
+    id: -1,
+    name: "Netherlands",
+    code: "NL",
+    slug: "netherlands",
+    mapLat: 52.1326,
+    mapLng: 5.2913,
+    mapStatus: "active",
+    profileStatus: "ready",
+  },
+  {
+    id: -2,
+    name: "Germany",
+    code: "DE",
+    slug: "germany",
+    mapLat: 51.1657,
+    mapLng: 10.4515,
+    mapStatus: "active",
+    profileStatus: "ready",
+  },
+];
+
 const visibleProfileStatuses = new Set([
   "active",
   "available",
@@ -55,11 +78,24 @@ function isProfileAvailable(item: JurisdictionMapPoint) {
   return visibleProfileStatuses.has(status);
 }
 
+function withCoreJurisdictions(jurisdictions: JurisdictionMapPoint[]) {
+  const bySlug = new Map(
+    CORE_JURISDICTIONS.map((jurisdiction) => [jurisdiction.slug, jurisdiction]),
+  );
+
+  jurisdictions.forEach((jurisdiction) => {
+    bySlug.set(jurisdiction.slug, jurisdiction);
+  });
+
+  return Array.from(bySlug.values());
+}
+
 export function EuropeJurisdictionMap({
   jurisdictions,
 }: {
   jurisdictions: JurisdictionMapPoint[];
 }) {
+  const mappedJurisdictions = withCoreJurisdictions(jurisdictions);
   const topology = world as unknown as WorldTopology;
   const countries = feature(
     topology,
@@ -87,7 +123,7 @@ export function EuropeJurisdictionMap({
     <div className="overflow-hidden border border-[#10264a]/15 bg-[#dceae5]">
       <div className="relative aspect-[3/2] w-full">
         <svg
-          aria-label={`Map of Europe with ${jurisdictions.length} Atlas jurisdiction ${jurisdictions.length === 1 ? "beacon" : "beacons"}`}
+          aria-label={`Map of Europe with ${mappedJurisdictions.length} Atlas jurisdiction ${mappedJurisdictions.length === 1 ? "beacon" : "beacons"}`}
           className="h-full w-full"
           role="img"
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
@@ -109,7 +145,7 @@ export function EuropeJurisdictionMap({
           </g>
 
           <g>
-            {jurisdictions.map((item) => {
+            {mappedJurisdictions.map((item) => {
               const projected = projection([item.mapLng, item.mapLat]);
 
               if (!projected) return null;
@@ -123,7 +159,7 @@ export function EuropeJurisdictionMap({
                   aria-label={`Open ${item.name} jurisdiction profile`}
                   className="atlas-map-link"
                   href={`/${item.slug}`}
-                  key={item.id}
+                  key={item.slug}
                 >
                   <title>{`${item.name} — ${
                     available ? "profile available" : "coverage developing"
@@ -164,7 +200,7 @@ export function EuropeJurisdictionMap({
           </g>
         </svg>
 
-        {jurisdictions.map((item) => {
+        {mappedJurisdictions.map((item) => {
           const projected = projection([item.mapLng, item.mapLat]);
 
           if (!projected) return null;
@@ -176,7 +212,7 @@ export function EuropeJurisdictionMap({
               aria-label={`Open ${item.name} jurisdiction profile`}
               className="absolute z-10 size-14 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#b97512]"
               href={`/${item.slug}`}
-              key={`html-hit-${item.id}`}
+              key={`html-hit-${item.slug}`}
               style={{
                 left: `${(x / WIDTH) * 100}%`,
                 top: `${(y / HEIGHT) * 100}%`,
@@ -187,18 +223,11 @@ export function EuropeJurisdictionMap({
             </a>
           );
         })}
-
-        {jurisdictions.length === 0 ? (
-          <div className="pointer-events-none absolute inset-x-5 bottom-5 border border-[#10264a]/15 bg-[#fbf7ef]/95 px-4 py-3 text-xs leading-5 text-[#10264a]/65 sm:inset-x-auto sm:bottom-7 sm:left-7 sm:max-w-xs">
-            Jurisdiction beacons appear here when published map coordinates are
-            available
-          </div>
-        ) : null}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#10264a]/15 bg-[#fbf7ef] px-5 py-4 text-[11px] uppercase tracking-[0.14em] text-[#10264a]/60 sm:px-7">
         <span>
-          {jurisdictions.length} mapped {jurisdictions.length === 1 ? "profile" : "profiles"}
+          {mappedJurisdictions.length} mapped {mappedJurisdictions.length === 1 ? "profile" : "profiles"}
         </span>
         <span className="flex flex-wrap gap-x-5 gap-y-2">
           <span className="inline-flex items-center gap-2">
