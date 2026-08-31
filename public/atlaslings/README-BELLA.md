@@ -1,0 +1,1 @@
+Bella Deploy mascot: use the exact user-approved uploaded image. Do not regenerate or crop.
