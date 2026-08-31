@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Autonomy Regulation Atlas
 
-## Getting Started
+Autonomy Regulation Atlas is an independent legal-tech project mapping how autonomous-mobility regulation translates into operational deployment requirements across jurisdictions.
 
-First, run the development server:
+The project focuses on questions such as driverless operation, remote assistance and remote driving, authorisation, responsibility, insurance, incident reporting, technical regulation, and the relationship between legal and engineering concepts.
+
+## Status
+
+The Atlas is under active development. Content is research-oriented and may change as sources are reviewed and jurisdictions are expanded.
+
+## Development
+
+This is a Next.js application.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+For a production build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Rights and reuse
 
-## Learn More
+The repository is publicly visible but is **not an open-source project**. Original Atlas source code, commentary, taxonomy, data models, selection and arrangement of regulatory materials, learning content, graphics, and other original materials are proprietary unless expressly stated otherwise.
 
-To learn more about Next.js, take a look at the following resources:
+Limited quotation and reference use is permitted as described in the [LICENSE](./LICENSE) and the Atlas [Terms of Use](./src/app/terms/page.tsx). Official legislation, regulatory instruments, standards, source documents, third-party software, trademarks, and other third-party materials remain subject to their respective rights and licences.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copyright © 2026 Kristina Shefer. All rights reserved.
