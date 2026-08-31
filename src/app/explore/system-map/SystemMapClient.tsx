@@ -123,8 +123,8 @@ export default function SystemMapClient() {
                 src="/atlaslings/fox-explore-seated.png"
                 alt=""
                 className="h-20 w-20 object-contain"
-                height={160}
-                width={160}
+                height={80}
+                width={80}
               />
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
                 Explore mode
@@ -153,8 +153,8 @@ export default function SystemMapClient() {
               src="/atlaslings/fox-autonomous.png"
               alt=""
               className="absolute bottom-[-18px] right-0 h-[305px] w-auto object-contain"
-              height={610}
-              width={480}
+              height={332}
+              width={305}
             />
 
             <details className="absolute right-0 top-0 z-30">
@@ -193,7 +193,11 @@ export default function SystemMapClient() {
         <div className="mt-8 flex flex-wrap items-center gap-2">
           <ModeButton active label="Explore" icon="🦊" />
           <ModeButton label="Learn" icon="🐱" soon />
-          <ModeButton label="Apply to deployment" icon="🐶" soon />
+          <ModeButton
+            href="/deploy"
+            label="Apply to deployment"
+            icon="🐶"
+          />
         </div>
 
         {/* SEARCH + CONTEXT + FILTERS */}
@@ -817,30 +821,43 @@ function DetailBlock({ label, text }: { label: string; text: string }) {
 
 function ModeButton({
   active = false,
+  href,
   label,
   icon,
   soon = false,
 }: {
   active?: boolean;
+  href?: string;
   label: string;
   icon: string;
   soon?: boolean;
 }) {
-  return (
-    <button
-      type="button"
-      disabled={soon}
-      className={`rounded-full border px-4 py-2.5 text-sm font-semibold ${
-        active
-          ? "border-[#147c73]/30 bg-[#e7f1ed] text-[#147c73]"
-          : "border-[#10264a]/10 bg-white text-[#10264a]/45"
-      } ${soon ? "cursor-not-allowed opacity-55" : ""}`}
-    >
+  const className = `rounded-full border px-4 py-2.5 text-sm font-semibold ${
+    active
+      ? "border-[#147c73]/30 bg-[#e7f1ed] text-[#147c73]"
+      : "border-[#10264a]/10 bg-white text-[#10264a]/45"
+  } ${soon ? "cursor-not-allowed opacity-55" : ""}`;
+  const content = (
+    <>
       <span className="mr-2">{icon}</span>
       {label}
       {soon && (
         <span className="ml-2 text-[9px] uppercase tracking-[0.1em]">Soon</span>
       )}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link className={className} href={href}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" disabled={soon} className={className}>
+      {content}
     </button>
   );
 }

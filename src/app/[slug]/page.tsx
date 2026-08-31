@@ -28,30 +28,28 @@ export default async function JurisdictionPage({ params }: PageProps) {
     notFound();
   }
 
-  const { data: claimsData } = await supabase
-    .from("claims")
-    .select(
-      `
-      id,
-      claim_text,
-      operational_impact,
-      topic_id,
-      normalized_status,
-      confidence,
-      reviewed_at
-      `
-    )
-    .eq("jurisdiction_id", jurisdiction.id)
-    .eq("published", true)
-    .eq("research_status", "verified")
-    .order("id");
+  const [{ data: claimsData }, { data: topicsData }] = await Promise.all([
+    supabase
+      .from("claims")
+      .select(
+        `
+        id,
+        claim_text,
+        operational_impact,
+        topic_id,
+        normalized_status,
+        confidence,
+        reviewed_at
+        `
+      )
+      .eq("jurisdiction_id", jurisdiction.id)
+      .eq("published", true)
+      .eq("research_status", "verified")
+      .order("id"),
+    supabase.from("topics").select("id, name, slug").order("id"),
+  ]);
 
   const claims = claimsData ?? [];
-
-  const { data: topicsData } = await supabase
-    .from("topics")
-    .select("id, name, slug")
-    .order("id");
 
   const topics = topicsData ?? [];
 
