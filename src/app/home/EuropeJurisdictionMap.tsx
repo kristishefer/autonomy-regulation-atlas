@@ -164,6 +164,30 @@ export function EuropeJurisdictionMap({
           </g>
         </svg>
 
+        {jurisdictions.map((item) => {
+          const projected = projection([item.mapLng, item.mapLat]);
+
+          if (!projected) return null;
+
+          const [x, y] = projected;
+
+          return (
+            <a
+              aria-label={`Open ${item.name} jurisdiction profile`}
+              className="absolute z-10 size-14 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#b97512]"
+              href={`/${item.slug}`}
+              key={`html-hit-${item.id}`}
+              style={{
+                left: `${(x / WIDTH) * 100}%`,
+                top: `${(y / HEIGHT) * 100}%`,
+              }}
+              title={`Open ${item.name} jurisdiction profile`}
+            >
+              <span className="sr-only">Open {item.name} jurisdiction profile</span>
+            </a>
+          );
+        })}
+
         {jurisdictions.length === 0 ? (
           <div className="pointer-events-none absolute inset-x-5 bottom-5 border border-[#10264a]/15 bg-[#fbf7ef]/95 px-4 py-3 text-xs leading-5 text-[#10264a]/65 sm:inset-x-auto sm:bottom-7 sm:left-7 sm:max-w-xs">
             Jurisdiction beacons appear here when published map coordinates are
