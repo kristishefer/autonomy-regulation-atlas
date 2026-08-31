@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
+import { JurisdictionProfileView } from "@/app/explore/JurisdictionProfileView";
+import { getJurisdictionProfile } from "@/app/explore/regulatory-data";
 
 type PageProps = {
   params: Promise<{
@@ -10,6 +12,11 @@ type PageProps = {
 
 export default async function JurisdictionPage({ params }: PageProps) {
   const { slug } = await params;
+  const curatedProfile = getJurisdictionProfile(slug);
+
+  if (curatedProfile) {
+    return <JurisdictionProfileView profile={curatedProfile} />;
+  }
 
   const { data: jurisdiction, error: jurisdictionError } = await supabase
     .from("jurisdictions")
@@ -21,27 +28,30 @@ export default async function JurisdictionPage({ params }: PageProps) {
     notFound();
   }
 
-  const [{ data: claimsData }, { data: topicsData }] = await Promise.all([
-    supabase
-      .from("claims")
-      .select(
-        `
-        id,
-        claim_text,
-        operational_impact,
-        topic_id,
-        normalized_status,
-        confidence,
-        reviewed_at
-        `
-      )
-      .eq("jurisdiction_id", jurisdiction.id)
-      .eq("published", true)
-      .order("id"),
-    supabase.from("topics").select("id, name, slug").order("id"),
-  ]);
+  const { data: claimsData } = await supabase
+    .from("claims")
+    .select(
+      `
+      id,
+      claim_text,
+      operational_impact,
+      topic_id,
+      normalized_status,
+      confidence,
+      reviewed_at
+      `
+    )
+    .eq("jurisdiction_id", jurisdiction.id)
+    .eq("published", true)
+    .eq("research_status", "verified")
+    .order("id");
 
   const claims = claimsData ?? [];
+
+  const { data: topicsData } = await supabase
+    .from("topics")
+    .select("id, name, slug")
+    .order("id");
 
   const topics = topicsData ?? [];
 
