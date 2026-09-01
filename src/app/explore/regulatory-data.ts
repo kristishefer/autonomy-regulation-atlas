@@ -84,14 +84,34 @@ export type SnapshotItem = {
   scope?: string;
 };
 
+export type DeploymentAnswerItem = {
+  label: string;
+  answer: string;
+  detail: string;
+  tone: StatusTone;
+};
+
+export type ScenarioScopeItem = {
+  label: string;
+  value: string;
+};
+
+export type PageNavigationItem = {
+  label: string;
+  href: `#${string}`;
+};
+
 export type JurisdictionProfile = {
   slug: "netherlands" | "germany";
   name: string;
   code: string;
   scenario: string;
+  scenarioScope: ScenarioScopeItem[];
   verifiedLabel: string;
   primaryMessage: string;
+  deploymentAnswers: DeploymentAnswerItem[];
   snapshot: SnapshotItem[];
+  pageNavigation: PageNavigationItem[];
   architectureLayers: {
     label: string;
     body: string;
@@ -1244,34 +1264,64 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
     name: "Netherlands",
     code: "NL",
     scenario: "Driverless passenger vehicles · public roads",
+    scenarioScope: [
+      { label: "Vehicle", value: "Passenger vehicle" },
+      { label: "Road environment", value: "Public roads" },
+      { label: "Automation target", value: "Driverless target scenario" },
+    ],
     verifiedLabel: "Substantive legal verification · 31 Aug 2026",
     primaryMessage:
       "Testing with the driver outside the vehicle is expressly supported under Dutch law. A general Dutch road-use regime for operation without a legally relevant human driver has not been identified.",
+    deploymentAnswers: [
+      {
+        label: "General driverless deployment",
+        answer: "No general regime identified",
+        detail:
+          "No general Dutch public-road regime has been identified for this scenario without a legally relevant human driver.",
+        tone: "neutral",
+      },
+      {
+        label: "Testing / experimental route",
+        answer: "Available with specific permit",
+        detail:
+          "Article 149aa supports a defined public-road experiment, including where the legally relevant driver is outside the vehicle.",
+        tone: "positive",
+      },
+    ],
     snapshot: [
       {
-        label: "Testing with driver outside vehicle",
-        status: "Permitted with specific permit",
+        label: "Road access",
+        status: "Permit-specific",
         tone: "positive",
-        scope: "Article 149aa public-road experiment",
+        scope: "Article 149aa experimental permit route",
       },
       {
-        label: "EU type approval for fully automated vehicles",
-        status: "Available",
-        tone: "positive",
-        scope: "Within the use cases covered by EU 2022/1426",
+        label: "Human role",
+        status: "Required",
+        tone: "conditional",
+        scope: "A legally relevant driver remains part of the Article 149aa model",
       },
       {
-        label: "General regime without a legally relevant human driver",
+        label: "General driverless deployment",
         status: "Not identified",
         tone: "neutral",
         scope: "Dutch public-road operation beyond the experimental model",
       },
       {
-        label: "Dedicated AV liability regime",
-        status: "No dedicated comprehensive regime identified",
-        tone: "neutral",
-        scope: "Civil liability and motor insurance",
+        label: "EU ADS type approval",
+        status: "Available",
+        tone: "positive",
+        scope: "Within the use cases covered by EU 2022/1426",
       },
+    ],
+    pageNavigation: [
+      { label: "Access & testing", href: "#testing" },
+      { label: "Human role", href: "#driver" },
+      { label: "Traffic & ODD", href: "#traffic-rules" },
+      { label: "Approval & safety", href: "#approval" },
+      { label: "Liability & data", href: "#liability" },
+      { label: "Deployment reality", href: "#deployment-reality" },
+      { label: "Sources", href: "#official-sources" },
     ],
     architectureLayers: [
       {
@@ -1459,9 +1509,30 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
     name: "Germany",
     code: "DE",
     scenario: "Driverless passenger vehicles · public roads",
+    scenarioScope: [
+      { label: "Vehicle", value: "Passenger vehicle" },
+      { label: "Road environment", value: "Public roads" },
+      { label: "Automation target", value: "Driverless target scenario" },
+    ],
     verifiedLabel: "Substantive legal verification · 31 Aug 2026",
     primaryMessage:
       "Germany has a dedicated statutory framework for autonomous vehicles operating on public roads without a person performing the driving task. Operation is permitted within an officially approved defined operating area where the statutory conditions are satisfied.",
+    deploymentAnswers: [
+      {
+        label: "General driverless deployment",
+        answer: "Available conditionally",
+        detail:
+          "Operation is possible within an approved defined operating area when the statutory vehicle, registration, insurance and organizational conditions are satisfied.",
+        tone: "conditional",
+      },
+      {
+        label: "Testing / experimental route",
+        answer: "Separate authorization",
+        detail:
+          "Testing and development on public roads use the distinct KBA authorization route under StVG § 1i and AFGBV § 16.",
+        tone: "conditional",
+      },
+    ],
     snapshot: [
       {
         label: "Autonomous operation without vehicle-driving person",
@@ -1505,6 +1576,15 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         tone: "positive",
         scope: "StVG § 1g",
       },
+    ],
+    pageNavigation: [
+      { label: "Access & testing", href: "#approval-path" },
+      { label: "Human role", href: "#supervisor" },
+      { label: "Traffic & ODD", href: "#operating-area" },
+      { label: "Approval & safety", href: "#safety" },
+      { label: "Liability & data", href: "#data" },
+      { label: "Deployment reality", href: "#deployment-reality" },
+      { label: "Sources", href: "#official-sources" },
     ],
     architectureLayers: [
       {

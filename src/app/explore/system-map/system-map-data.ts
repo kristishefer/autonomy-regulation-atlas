@@ -1,3 +1,6 @@
+import type { LearningConceptId } from "@/app/explore/learning-concepts";
+import type { CompareFieldId } from "@/app/explore/regulatory-data";
+
 export type NodeType =
   | "standard"
   | "concept"
@@ -53,6 +56,7 @@ export type SystemNode = {
   takeaway: string;
   source?: string;
   learning?: LearningNote;
+  learningConceptId?: LearningConceptId;
 };
 
 export type SystemEdge = {
@@ -60,6 +64,32 @@ export type SystemEdge = {
   to: string;
   kind: "structural" | "framework" | "related";
   label?: string;
+};
+
+export type RegulatoryConceptId =
+  | "road-access"
+  | "vehicle-approval"
+  | "operating-domain"
+  | "human-roles"
+  | "traffic-rules"
+  | "safety-assurance"
+  | "operations"
+  | "data-incidents"
+  | "liability-insurance";
+
+export type SystemMapContextJurisdiction = "netherlands" | "germany";
+
+export type RegulatoryConcept = {
+  id: RegulatoryConceptId;
+  title: string;
+  description: string;
+};
+
+export type JurisdictionContextBinding = {
+  conceptId: RegulatoryConceptId;
+  fieldId: CompareFieldId;
+  sectionId: string;
+  learningConceptId?: LearningConceptId;
 };
 
 export const CLUSTERS: {
@@ -105,6 +135,91 @@ export const CLUSTERS: {
     description: "WP.29's distinct treaty branches: the 1958 Agreement and UN Regulations, and the 1998 Agreement and UN Global Technical Regulations.",
   },
 ];
+
+export const REGULATORY_CONCEPTS: RegulatoryConcept[] = [
+  {
+    id: "road-access",
+    title: "Road access",
+    description:
+      "The legal route that permits testing or operation on public roads. Product approval alone does not answer this question.",
+  },
+  {
+    id: "vehicle-approval",
+    title: "Vehicle / ADS approval",
+    description:
+      "The technical approval gate for the vehicle, ADS or vehicle type, kept distinct from permission to operate in a place or service.",
+  },
+  {
+    id: "operating-domain",
+    title: "Operating domain",
+    description:
+      "The relationship between the ADS technical ODD and any route, area or conditions separately authorized by law.",
+  },
+  {
+    id: "human-roles",
+    title: "Human roles",
+    description:
+      "The legally assigned functions of a driver, supervisor, remote operator or other responsible person in the operating model.",
+  },
+  {
+    id: "traffic-rules",
+    title: "Traffic rules",
+    description:
+      "How ordinary road rules apply, whether targeted exemptions exist, and who or what must perform driving-rule compliance.",
+  },
+  {
+    id: "safety-assurance",
+    title: "Safety assurance",
+    description:
+      "The regime-specific reasoning, evidence, testing and assessment used to demonstrate acceptable safety.",
+  },
+  {
+    id: "operations",
+    title: "Operations",
+    description:
+      "Continuing duties for the holder or operator, including maintenance, qualified personnel and organizational controls.",
+  },
+  {
+    id: "data-incidents",
+    title: "Data & incidents",
+    description:
+      "Operational-data recording, incident or event reporting, and regulator access are related but legally distinct questions.",
+  },
+  {
+    id: "liability-insurance",
+    title: "Liability & insurance",
+    description:
+      "The allocation of loss and compulsory insurance, including whether ordinary frameworks are adapted for autonomous operation.",
+  },
+];
+
+export const JURISDICTION_CONTEXT_BINDINGS: Record<
+  SystemMapContextJurisdiction,
+  JurisdictionContextBinding[]
+> = {
+  netherlands: [
+    { conceptId: "road-access", fieldId: "testing_regime", sectionId: "testing", learningConceptId: "experimental-permit" },
+    { conceptId: "vehicle-approval", fieldId: "separate_operational_authorization", sectionId: "approval", learningConceptId: "type-approval" },
+    { conceptId: "operating-domain", fieldId: "odd_legal_relevance", sectionId: "odd", learningConceptId: "odd" },
+    { conceptId: "human-roles", fieldId: "primary_human_role", sectionId: "driver", learningConceptId: "driver-outside-vehicle" },
+    { conceptId: "traffic-rules", fieldId: "traffic_rules_model", sectionId: "traffic-rules", learningConceptId: "rvv-1990" },
+    { conceptId: "safety-assurance", fieldId: "safety_assurance_model", sectionId: "safety", learningConceptId: "iso-26262" },
+    { conceptId: "operations", fieldId: "holder_operator_duties", sectionId: "monitoring" },
+    { conceptId: "data-incidents", fieldId: "incident_event_reporting", sectionId: "monitoring" },
+    { conceptId: "liability-insurance", fieldId: "av_liability_model", sectionId: "liability" },
+  ],
+  germany: [
+    { conceptId: "road-access", fieldId: "deployment_regime", sectionId: "approval-path", learningConceptId: "testing-vs-deployment" },
+    { conceptId: "vehicle-approval", fieldId: "approval_routes", sectionId: "approval-path", learningConceptId: "type-approval" },
+    { conceptId: "operating-domain", fieldId: "separate_operating_area_approval", sectionId: "operating-area", learningConceptId: "betriebsbereich" },
+    { conceptId: "human-roles", fieldId: "primary_human_role", sectionId: "supervisor", learningConceptId: "technical-supervisor" },
+    { conceptId: "traffic-rules", fieldId: "ads_rule_compliance", sectionId: "traffic-rules", learningConceptId: "minimum-risk-condition" },
+    { conceptId: "safety-assurance", fieldId: "safety_assurance_model", sectionId: "safety", learningConceptId: "iso-26262" },
+    { conceptId: "operations", fieldId: "holder_operator_duties", sectionId: "holder", learningConceptId: "holder-obligations" },
+    { conceptId: "data-incidents", fieldId: "incident_event_reporting", sectionId: "data" },
+    { conceptId: "liability-insurance", fieldId: "av_liability_model", sectionId: "liability" },
+  ],
+};
 
 export const JURISDICTIONS: {
   key: JurisdictionKey;
@@ -178,11 +293,7 @@ export const NODES: SystemNode[] = [
     relevance: { EU: "◐", US: "◐", China: "◐" },
     takeaway: "ODD says where and under what conditions the ADS is designed to operate. A regulator or road authority may authorize a narrower, different or separately defined operating domain.",
     source: "https://www.sae.org/standards/j3016-taxonomy-definitions-terms-related-driving-automation-systems-road-motor-vehicles",
-    learning: {
-      plain: "An ODD describes the conditions an automated driving system is designed to handle, such as road type, geography, weather, lighting, traffic and speed range.",
-      why: "The ODD bounds the situations in which ADS behavior and safety performance need to be specified, evaluated and monitored.",
-      confusion: "An ODD is a technical design domain, not automatically a legal operating permit or the same boundary as an authorized service area.",
-    },
+    learningConceptId: "odd",
   },
   {
     id: "iso-26262",
@@ -196,11 +307,7 @@ export const NODES: SystemNode[] = [
     relevance: { EU: "◐", US: "◐", China: "◐" },
     takeaway: "Functional Safety addresses hazards associated with malfunctioning behaviour of E/E systems.",
     source: "https://www.iso.org/standard/68383.html",
-    learning: {
-      plain: "ISO 26262 is a functional-safety standard for automotive electrical and electronic systems.",
-      why: "It gives teams a structured way to identify malfunction-related hazards and determine how rigorous the safety process needs to be.",
-      confusion: "Functional Safety is not the same as SOTIF: ISO 26262 focuses on malfunctioning behaviour.",
-    },
+    learningConceptId: "iso-26262",
   },
   {
     id: "hara",
