@@ -2,6 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { LearningNote } from "@/app/explore/learning-concepts";
+import {
+  TERM_STATUS_LABELS,
+  getUniversalAtlasConcept,
+  type JurisdictionTerm,
+} from "@/app/explore/regulatory-terminology";
+import {
+  getRegulatorySource,
+  legalStatusLabel,
+} from "@/app/explore/regulatory-data";
 
 type ExplainProps = {
   note: LearningNote;
@@ -72,6 +81,10 @@ export function ExplainDetails({
           </p>
         </div>
 
+        {note.terminology?.length ? (
+          <TerminologyDetails terms={note.terminology} />
+        ) : null}
+
         {deeperHref ? (
           <Link
             className="mt-4 inline-flex rounded-sm text-xs font-semibold text-[#147c73] underline decoration-[#147c73]/30 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-4"
@@ -126,8 +139,123 @@ export function ExplainTooltip({
           {note.confusion}
         </p>
       </div>
+      {note.terminology?.[0] ? (
+        <div className="mt-3 border-t border-[#10264a]/8 pt-3">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9a6513]">
+            Official terminology
+          </div>
+          <p className="mt-1 text-xs leading-5 text-[#10264a]/68">
+            <span
+              className="font-semibold text-[#10264a]"
+              lang={note.terminology[0].originalLanguage.tag}
+            >
+              {note.terminology[0].officialTerm}
+            </span>{" "}
+            · {note.terminology[0].englishGloss}
+            {note.terminology.length > 1
+              ? ` · +${note.terminology.length - 1} related term${note.terminology.length > 2 ? "s" : ""}`
+              : ""}
+          </p>
+        </div>
+      ) : null}
       <div className="mt-3 text-[11px] font-semibold text-[#147c73]">
         Click the node to open the full regulatory detail.
+      </div>
+    </div>
+  );
+}
+
+function TerminologyDetails({ terms }: { terms: JurisdictionTerm[] }) {
+  return (
+    <div className="mt-5 border-t border-[#10264a]/10 pt-5">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#147c73]">
+        Jurisdiction-native terminology
+      </div>
+      <p className="mt-2 text-xs leading-5 text-[#10264a]/55">
+        These source terms are mapped to Atlas concepts without assuming literal
+        legal equivalence.
+      </p>
+
+      <div className="mt-4 divide-y divide-[#10264a]/10 border-y border-[#10264a]/10">
+        {terms.map((term) => {
+          const concept = getUniversalAtlasConcept(term.conceptId);
+
+          return (
+            <article className="py-4" key={term.id}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <div>
+                  <div
+                    className="font-serif text-lg font-semibold text-[#10264a]"
+                    lang={term.originalLanguage.tag}
+                  >
+                    {term.officialTerm}
+                  </div>
+                  <div className="mt-1 text-xs font-semibold text-[#147c73]">
+                    {term.englishGloss}
+                  </div>
+                </div>
+                <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#10264a]/45">
+                  {term.originalLanguage.label} · {TERM_STATUS_LABELS[term.termStatus]}
+                </div>
+              </div>
+
+              <dl className="mt-3 grid gap-3 text-xs leading-5 text-[#10264a]/62 sm:grid-cols-2">
+                <div>
+                  <dt className="font-semibold text-[#10264a]/75">
+                    Atlas concept
+                  </dt>
+                  <dd className="mt-1">{concept.analyticalLabel}</dd>
+                </div>
+                <div>
+                  <dt className="font-semibold text-[#10264a]/75">Scope</dt>
+                  <dd className="mt-1">{term.scope}</dd>
+                </div>
+              </dl>
+
+              <p className="mt-3 text-xs leading-5 text-[#10264a]/62">
+                {term.explanation}
+              </p>
+              <p className="mt-2 text-xs leading-5 text-[#10264a]/62">
+                <strong className="text-[#10264a]/78">
+                  Why this term matters:
+                </strong>{" "}
+                {term.whyItMatters}
+              </p>
+
+              {term.relationships.length ? (
+                <ul className="mt-3 space-y-1.5 border-l border-[#b97512]/40 pl-3 text-[11px] leading-5 text-[#10264a]/55">
+                  {term.relationships.map((relationship, index) => (
+                    <li key={`${relationship.type}-${index}`}>
+                      <span className="font-semibold text-[#8b5a10]">
+                        {relationship.type.replaceAll("-", " ")}:
+                      </span>{" "}
+                      {relationship.explanation}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+
+              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+                {term.sources.map((reference, index) => {
+                  const source = getRegulatorySource(reference.sourceId);
+                  return (
+                    <a
+                      className="rounded-sm text-[11px] font-semibold text-[#147c73] underline decoration-[#147c73]/25 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-2"
+                      href={reference.officialLanguageUrl ?? source.url}
+                      key={`${reference.sourceId}-${reference.provision ?? index}`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {source.shortTitle}
+                      {reference.provision ? ` · ${reference.provision}` : ""}
+                      {` · ${legalStatusLabel(source.legalStatus)}`}
+                    </a>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import type { LearningConceptId } from "@/app/explore/learning-concepts";
 import type { CompareFieldId } from "@/app/explore/regulatory-data";
+import type { RegulatoryQuestionId } from "@/app/explore/regulatory-terminology";
 
 export type NodeType =
   | "standard"
@@ -66,16 +67,7 @@ export type SystemEdge = {
   label?: string;
 };
 
-export type RegulatoryConceptId =
-  | "road-access"
-  | "vehicle-approval"
-  | "operating-domain"
-  | "human-roles"
-  | "traffic-rules"
-  | "safety-assurance"
-  | "operations"
-  | "data-incidents"
-  | "liability-insurance";
+export type RegulatoryConceptId = RegulatoryQuestionId;
 
 export type SystemMapContextJurisdiction = "netherlands" | "germany";
 
@@ -153,13 +145,13 @@ export const REGULATORY_CONCEPTS: RegulatoryConcept[] = [
     id: "operating-domain",
     title: "Operating domain",
     description:
-      "The relationship between the ADS technical ODD and any route, area or conditions separately authorized by law.",
+      "The relationship between the ADS technical ODD and source-native legal concepts for routes, areas or operating conditions; those terms are not assumed to be equivalent.",
   },
   {
     id: "human-roles",
     title: "Human roles",
     description:
-      "The legally assigned functions of a driver, supervisor, remote operator or other responsible person in the operating model.",
+      "The legally assigned functions of regime-specific human roles. Driver, technical supervision and remote-operation terms are comparison categories, not presumed equivalents.",
   },
   {
     id: "traffic-rules",
@@ -177,7 +169,7 @@ export const REGULATORY_CONCEPTS: RegulatoryConcept[] = [
     id: "operations",
     title: "Operations",
     description:
-      "Continuing duties for the holder or operator, including maintenance, qualified personnel and organizational controls.",
+      "Continuing duties assigned to the regime-specific responsible party, including maintenance, qualified personnel and organizational controls.",
   },
   {
     id: "data-incidents",

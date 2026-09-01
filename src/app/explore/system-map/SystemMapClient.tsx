@@ -759,6 +759,9 @@ function JurisdictionContextLayer({
           const learningConcept = binding.learningConceptId
             ? LEARNING_CONCEPTS[binding.learningConceptId]
             : null;
+          const learningNote = learningConcept
+            ? getLearningNote(learningConcept.id, profile.slug)
+            : null;
 
           return (
             <article
@@ -789,9 +792,25 @@ function JurisdictionContextLayer({
                 {conclusion.scopeLabel}
               </p>
 
-              {learningConcept ? (
+              {learningNote?.terminology?.length ? (
+                <p className="mt-3 text-xs leading-5 text-[#9ce0d6]/82">
+                  <strong className="text-[#9ce0d6]">
+                    Official terminology:
+                  </strong>{" "}
+                  {learningNote.terminology.map((term, index) => (
+                    <span key={term.id}>
+                      {index > 0 ? " · " : ""}
+                      <span lang={term.originalLanguage.tag}>
+                        {term.officialTerm}
+                      </span>
+                    </span>
+                  ))}
+                </p>
+              ) : null}
+
+              {learningConcept && learningNote ? (
                 <ExplainDetails
-                  note={getLearningNote(learningConcept.id, profile.slug)}
+                  note={learningNote}
                   tone="dark"
                   title={learningConcept.name}
                 />

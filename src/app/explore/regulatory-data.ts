@@ -549,15 +549,15 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   testing_regime: established({
     key: "testing_regime",
     label: "Testing regime",
-    status: "Permitted with specific permit",
+    status: "Permitted with specific vergunning",
     tone: "positive",
     summary:
-      "Experiments with the driver outside the vehicle may be authorized through the Article 149aa permit route.",
+      "Experiments with a bestuurder outside the vehicle may be authorized through the Article 149aa vergunning route.",
     legalBasis: [
       { sourceId: "nl-wvw", provision: "Article 149aa" },
       { sourceId: "nl-experiment-regulation", provision: "Articles 2–6" },
     ],
-    scopeLabel: "Permit-defined public-road experiment · driver outside vehicle",
+    scopeLabel: "Article 149aa vergunning · bestuurder outside vehicle",
   }),
   deployment_regime: established({
     key: "deployment_regime",
@@ -566,7 +566,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     summary:
       "The dedicated national route is structured around a defined experiment rather than unrestricted ordinary deployment.",
     legalBasis: [{ sourceId: "nl-wvw", provision: "Articles 149aa–149ab" }],
-    scopeLabel: "Experiment-specific authorization",
+    scopeLabel: "Experiment-specific vergunning",
   }),
   commercial_use: unclear({
     key: "commercial_use",
@@ -584,16 +584,19 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   primary_human_role: established({
     key: "primary_human_role",
     label: "Primary human role",
-    status: "Vehicle driver",
+    status: "Bestuurder",
     summary:
-      "The relevant Dutch experiment retains a human driver even when that person is physically outside the vehicle.",
+      "The relevant Dutch experiment retains a bestuurder even when that person is physically outside the vehicle.",
     legalBasis: [
       { sourceId: "nl-wvw", provision: "Article 149aa" },
       { sourceId: "nl-history-34838-3", provision: "General explanation and Article 149aa notes" },
       { sourceId: "nl-history-34838-4", provision: "Section 1 — De bestuurder" },
     ],
     scopeLabel: "Article 149aa out-of-vehicle-driver experiment",
-    scope: { ...passengerRoadScope, humanRole: "Driver outside the vehicle" },
+    scope: {
+      ...passengerRoadScope,
+      humanRole: "bestuurder buiten het motorrijtuig",
+    },
   }),
   human_performs_driving_task: established({
     key: "human_performs_driving_task",
@@ -619,9 +622,9 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   remote_driving_framework: established({
     key: "remote_driving_framework",
     label: "Remote driving framework",
-    status: "Permit-specific",
+    status: "Vergunning-specific",
     summary:
-      "Remote control and supervision arrangements are addressed through the experimental permit, including driver location and number of vehicles controlled.",
+      "The experimental vergunning addresses the location of the bestuurder, the number of vehicles controlled and the proposed monitoring arrangements; those elements do not create one generic remote-operator role.",
     legalBasis: [
       { sourceId: "nl-experiment-regulation", provision: "Article 4(1)(a)(5), (c) and (i)" },
     ],
@@ -630,9 +633,9 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   operating_scope_model: established({
     key: "operating_scope_model",
     label: "Operating scope model",
-    status: "Permit-defined route / operational domain",
+    status: "Vergunning-defined route / Operationeel Domein",
     summary:
-      "The application identifies route, dates, times, duration, operating environment and Operational Domain risks.",
+      "The application identifies route, dates, times, duration, operating environment and risks relating to the Operationeel Domein.",
     legalBasis: [{ sourceId: "nl-experiment-regulation", provision: "Article 4(1)(a), (c) and (d)" }],
     scopeLabel: "Individual experimental permit",
   }),
@@ -641,7 +644,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     label: "Separate operating-area approval",
     status: "Route assessed in permit",
     summary:
-      "The proposed route and Operational Domain are assessed as part of the experiment authorization; this is not a German-style standalone Betriebsbereich regime.",
+      "The proposed route and Operationeel Domein are assessed within the experimental vergunning; this is not a German-style standalone Betriebsbereich regime.",
     legalBasis: [{ sourceId: "nl-experiment-regulation", provision: "Article 4(1)(a)(4) and (d)" }],
     scopeLabel: "Permit-defined experiment route",
   }),
@@ -650,14 +653,14 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     label: "ODD legal relevance",
     status: "Part of permit assessment",
     summary:
-      "Operational Domain information and environmental/route risk analysis form part of the required application package.",
+      "Operationeel Domein information and environmental/route risk analysis form part of the required application package. Atlas relates this source term to ODD without treating the two as literal equivalents.",
     legalBasis: [{ sourceId: "nl-experiment-regulation", provision: "Article 4(1)(d)" }],
     scopeLabel: "Dutch experimental authorization",
   }),
   traffic_rules_model: established({
     key: "traffic_rules_model",
     label: "Traffic-rules model",
-    status: "Ordinary rules with targeted exemptions",
+    status: "Ordinary rules + targeted ontheffing",
     summary:
       "WVW 1994 and RVV 1990 remain the starting point, with only legally available experiment-specific departures.",
     legalBasis: [
@@ -671,7 +674,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     label: "Availability of exemptions",
     status: "Targeted and permit-specific",
     summary:
-      "The permit may include necessary exemptions where the statute allows them; WVW Articles 5 and 6 cannot be displaced through Article 149aa.",
+      "The vergunning may include a targeted ontheffing where the statute allows it; vergunning, ontheffing and vrijstelling are distinct mechanisms, and WVW Articles 5 and 6 cannot be displaced through Article 149aa.",
     legalBasis: [{ sourceId: "nl-wvw", provision: "Article 149aa(3)" }],
     scopeLabel: "Only requirements within the statutory exemption power",
   }),
@@ -707,7 +710,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     status: "Available",
     tone: "positive",
     summary:
-      "Regulation 2022/1426, as amended, provides uniform procedures and technical specifications for ADS type approval within its stated use cases.",
+      "Regulation 2022/1426, as amended, provides uniform procedures and technical specifications for ADS type approval—typegoedkeuring in the official Dutch text—within its stated use cases.",
     legalBasis: [
       { sourceId: "eu-2022-1426", provision: "Article 1 and annexes" },
       { sourceId: "eu-2026-481" },
@@ -719,7 +722,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     label: "Separate operational authorization",
     status: "Required for the experiment",
     summary:
-      "Technical approval does not replace the Dutch permit required for an out-of-vehicle-driver public-road experiment.",
+      "Technical typegoedkeuring does not replace the Dutch vergunning required for a bestuurder-outside-the-vehicle public-road experiment.",
     legalBasis: [
       { sourceId: "nl-wvw", provision: "Article 149aa" },
       { sourceId: "eu-2022-1426" },
@@ -747,7 +750,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   }),
   holder_operator_duties: established({
     key: "holder_operator_duties",
-    label: "Holder / operator duties",
+    label: "Applicant / permit duties",
     status: "Permit-specific",
     summary:
       "The applicant must describe the operating system, control of risks, driver arrangements, monitoring and evaluation for the proposed experiment.",
@@ -828,7 +831,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   }),
   holder_liability: established({
     key: "holder_liability",
-    label: "Holder liability",
+    label: "Ordinary liability allocation",
     status: "General framework remains relevant",
     summary:
       "Liability allocation remains fact- and claim-specific under the ordinary Dutch motor-vehicle and civil-liability architecture.",
@@ -867,7 +870,7 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   competent_authorities: established({
     key: "competent_authorities",
     label: "Competent authorities",
-    status: "Minister + RDW permit process",
+    status: "Minister + RDW vergunning process",
     summary:
       "The ministerial permit follows consultation required by Article 149aa, with the application submitted through RDW under the ministerial regulation.",
     legalBasis: [
@@ -945,13 +948,13 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   primary_human_role: established({
     key: "primary_human_role",
     label: "Primary human role",
-    status: "Technical Supervisor",
+    status: "Technische Aufsicht",
     tone: "positive",
     summary:
       "The autonomous system performs the driving task; the legally defined human role is the Technische Aufsicht.",
     legalBasis: [{ sourceId: "de-stvg", provision: "§ 1d(3), § 1f(2)" }],
     scopeLabel: "Ordinary operation under §§ 1d–1g StVG",
-    scope: { ...passengerRoadScope, humanRole: "Technical Supervisor" },
+    scope: { ...passengerRoadScope, humanRole: "Technische Aufsicht" },
   }),
   human_performs_driving_task: established({
     key: "human_performs_driving_task",
@@ -969,7 +972,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     status: "Not required in ordinary operation",
     tone: "positive",
     summary:
-      "The autonomous function must operate without the journey being permanently monitored by the Technical Supervisor.",
+      "The autonomous function must operate without the journey being permanently monitored by the Technische Aufsicht.",
     legalBasis: [{ sourceId: "de-stvg", provision: "§ 1e(2)(1)" }],
     scopeLabel: "Ordinary operational regime · not § 1i testing",
   }),
@@ -978,7 +981,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     label: "Remote driving framework",
     status: "Not the role in this regime",
     summary:
-      "The Technical Supervisor may release or deactivate defined functions but is not the remote driver performing the dynamic driving task.",
+      "The Technische Aufsicht may release or deactivate defined functions but is not a generic remote operator or the remote driver performing the dynamic driving task.",
     legalBasis: [{ sourceId: "de-stvg", provision: "§ 1d(3), § 1e(2)–(3), § 1f(2)" }],
     scopeLabel: "Autonomous operation under §§ 1d–1g StVG",
     atlasAnalysis: "Technical supervision is not remote driving.",
@@ -1002,12 +1005,12 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     status: "Required",
     tone: "positive",
     summary:
-      "The holder proposes the operating area and the competent authority approves it after assessing vehicle capability, infrastructure, safety and public interests.",
+      "The Halter defines the proposed Betriebsbereich, and the competent authority decides on the Genehmigung des festgelegten Betriebsbereichs after assessing vehicle capability, infrastructure, safety and public interests.",
     legalBasis: [
       { sourceId: "de-stvg", provision: "§ 1e(1)(3)" },
       { sourceId: "de-afgbv", provision: "§§ 7–9" },
     ],
-    scopeLabel: "Each defined operating area",
+    scopeLabel: "Each festgelegter Betriebsbereich",
   }),
   odd_legal_relevance: established({
     key: "odd_legal_relevance",
@@ -1062,7 +1065,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     label: "Vehicle / ADS approval routes",
     status: "National, EU or comparable route",
     summary:
-      "Current § 1e recognizes a German operating approval, EU type approval under Regulation 2022/1426, or another comparable approval under applicable law.",
+      "Current § 1e separately recognizes a German Betriebserlaubnis, an EU Typgenehmigung under Regulation 2022/1426, or another comparable approval under applicable law.",
     legalBasis: [{ sourceId: "de-stvg", provision: "§ 1e(1)(2), § 1e(4)" }],
     scopeLabel: "Eligible vehicle / ADS approval",
   }),
@@ -1086,7 +1089,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     status: "Required",
     tone: "positive",
     summary:
-      "Technical approval is followed by operating-area approval and vehicle registration before autonomous public-road operation.",
+      "An eligible vehicle approval is followed by the Genehmigung des festgelegten Betriebsbereichs and the vehicle's Zulassung before autonomous public-road operation.",
     legalBasis: [
       { sourceId: "de-stvg", provision: "§ 1e(1)" },
       { sourceId: "de-afgbv", provision: "§§ 7–11" },
@@ -1119,11 +1122,11 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   }),
   holder_operator_duties: established({
     key: "holder_operator_duties",
-    label: "Holder / operator duties",
+    label: "Halter duties",
     status: "Dedicated statutory duties",
     tone: "positive",
     summary:
-      "The holder must maintain road safety and environmental compliance, maintain systems, ensure non-driving obligations and provide Technical Supervisor functions.",
+      "The Halter must maintain road safety and environmental compliance, maintain systems, ensure non-driving obligations and ensure that the functions of the Technische Aufsicht are performed.",
     legalBasis: [
       { sourceId: "de-stvg", provision: "§ 1f(1)" },
       { sourceId: "de-afgbv", provision: "§ 13" },
@@ -1148,7 +1151,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     summary:
       "AFGBV specifies qualifications, manufacturer training, reliability and licence requirements for relevant operational roles.",
     legalBasis: [{ sourceId: "de-afgbv", provision: "§§ 13–14" }],
-    scopeLabel: "Holder personnel and Technical Supervisor",
+    scopeLabel: "Halter personnel and Technische Aufsicht",
   }),
   operational_data_recording: established({
     key: "operational_data_recording",
@@ -1199,10 +1202,10 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   }),
   holder_liability: established({
     key: "holder_liability",
-    label: "Holder liability",
+    label: "Halter liability",
     status: "Remains applicable",
     summary:
-      "Statutory holder liability under § 7 StVG remains part of the liability architecture.",
+      "Statutory Halter liability under § 7 StVG remains part of the liability architecture; Halter is retained as the source-native role rather than treated as a synonym for owner or operator.",
     legalBasis: [{ sourceId: "de-stvg", provision: "§ 7" }],
     scopeLabel: "Subject to the statutory conditions and defences",
   }),
@@ -1222,10 +1225,10 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   av_insurance_adaptation: established({
     key: "av_insurance_adaptation",
     label: "AV-specific insurance adaptation",
-    status: "Technical Supervisor expressly covered",
+    status: "Technische Aufsicht expressly covered",
     tone: "positive",
     summary:
-      "Current PflVG expressly includes the person acting as Technical Supervisor within the required liability coverage.",
+      "Current PflVG expressly includes the person acting as Technische Aufsicht within the required liability coverage.",
     legalBasis: [{ sourceId: "de-pflvg", provision: "§ 4(3)(4)" }],
     scopeLabel: "Autonomous vehicle within § 1d StVG",
   }),
@@ -1271,7 +1274,7 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
     ],
     verifiedLabel: "Substantive legal verification · 31 Aug 2026",
     primaryMessage:
-      "Testing with the driver outside the vehicle is expressly supported under Dutch law. A general Dutch road-use regime for operation without a legally relevant human driver has not been identified.",
+      "Testing with a bestuurder buiten het motorrijtuig is expressly supported under Dutch law. A general Dutch road-use regime for operation without a legally relevant human driver has not been identified.",
     deploymentAnswers: [
       {
         label: "General driverless deployment",
@@ -1282,24 +1285,24 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
       },
       {
         label: "Testing / experimental route",
-        answer: "Available with specific permit",
+        answer: "Available with specific vergunning",
         detail:
-          "Article 149aa supports a defined public-road experiment, including where the legally relevant driver is outside the vehicle.",
+          "Article 149aa supports a defined public-road experiment, including where the legally relevant bestuurder is outside the vehicle.",
         tone: "positive",
       },
     ],
     snapshot: [
       {
         label: "Road access",
-        status: "Permit-specific",
+        status: "Vergunning-specific",
         tone: "positive",
-        scope: "Article 149aa experimental permit route",
+        scope: "Article 149aa experimental vergunning route",
       },
       {
         label: "Human role",
         status: "Required",
         tone: "conditional",
-        scope: "A legally relevant driver remains part of the Article 149aa model",
+        scope: "A legally relevant bestuurder remains part of the Article 149aa model",
       },
       {
         label: "General driverless deployment",
@@ -1308,7 +1311,7 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         scope: "Dutch public-road operation beyond the experimental model",
       },
       {
-        label: "EU ADS type approval",
+        label: "EU ADS type approval · typegoedkeuring",
         status: "Available",
         tone: "positive",
         scope: "Within the use cases covered by EU 2022/1426",
@@ -1326,32 +1329,32 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
     architectureLayers: [
       {
         label: "EU layer",
-        body: "Vehicle and ADS technical/type approval, including the current Regulation 2022/1426 framework for fully automated vehicles within its scope.",
+        body: "Vehicle and ADS technical/type approval—typegoedkeuring in the official Dutch EU text—including the current Regulation 2022/1426 framework within its scope.",
       },
       {
         label: "Dutch layer",
-        body: "Public-road use, ordinary traffic law and experiment-specific authorization under WVW 1994 and the ministerial permit regulation.",
+        body: "Public-road use, ordinary traffic law and the experiment-specific vergunning under WVW 1994 and the ministerial regulation.",
       },
     ],
     architectureConclusion:
-      "The Netherlands does not regulate automated driving through one autonomous-vehicle statute. EU type approval and Dutch road access answer different regulatory questions.",
+      "The Netherlands does not regulate automated driving through one autonomous-vehicle statute. EU typegoedkeuring and the Dutch experimental vergunning answer different regulatory questions.",
     sections: [
       {
         id: "testing",
         eyebrow: "Testing & authorization",
-        title: "A permit for the experiment, not merely the technology",
+        title: "A vergunning for the experiment, not merely the technology",
         paragraphs: [
-          "Article 149aa Wegenverkeerswet 1994 expressly provides for public-road experiments where the driver is outside the vehicle. A specific ministerial permit is required, and the application is submitted through RDW under the ministerial regulation.",
-          "The application concerns the proposed operating system and experiment: route, dates and duration, driver location, number of vehicles controlled, functional description, risks, safety evidence, insurance and monitoring/evaluation information all form part of the package.",
+          "Article 149aa Wegenverkeerswet 1994 expressly provides for public-road experiments with a bestuurder buiten het motorrijtuig. A specific ministerial vergunning is required, and the application is submitted through RDW under the ministerial regulation.",
+          "The application concerns the proposed operating system and experiment: route, dates and duration, location of the bestuurder, number of vehicles controlled, functional description, risks, safety evidence, insurance and monitoring/evaluation information all form part of the package.",
         ],
         flow: [
           "Defined experiment and route",
           "RDW application and evidence package",
-          "Ministerial permit and conditions",
+          "Ministerial vergunning and conditions",
           "Operation within the authorization",
         ],
         takeaway:
-          "This is an experiment-specific authorization route, not a general authorization for unrestricted driverless deployment.",
+          "The vergunning is permission for the defined experiment, not a general authorization for unrestricted driverless deployment.",
         explain: ["experimental-permit"],
         sources: [
           { sourceId: "nl-wvw", provision: "Article 149aa" },
@@ -1360,11 +1363,11 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
       },
       {
         id: "driver",
-        eyebrow: "Driver & remote operation",
-        title: "Driver outside the vehicle ≠ no driver",
+        eyebrow: "Bestuurder & remote operation",
+        title: "Bestuurder buiten het motorrijtuig ≠ no driver",
         paragraphs: [
-          "The experimental framework allows the driver to be physically outside the vehicle; it does not eliminate the legal driver. Permit material addresses where the driver is located and how many vehicles that driver controls.",
-          "Official legislative history explains that the existing concept of bestuurder was considered capable of covering a person outside the vehicle who retains control and can intervene immediately. That explanation is interpretative legislative material, not the binding statutory text itself.",
+          "The experimental framework allows the bestuurder to be physically outside the vehicle; it does not eliminate the legal driver role. Vergunning materials address where the bestuurder is located and how many vehicles that person controls.",
+          "Official legislative history explains that the existing statutory concept of bestuurder was considered capable of covering a person outside the vehicle who retains control and can intervene immediately. That explanation of the out-of-vehicle configuration is interpretative legislative material, not itself the binding statutory text.",
         ],
         takeaway:
           "The Dutch experiment is legally different from an operating model in which no human performs the driving role.",
@@ -1382,12 +1385,12 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         title: "Ordinary rules remain the starting point",
         paragraphs: [
           "WVW 1994 and RVV 1990 remain the principal statutory and detailed traffic-rule layers. The Netherlands has not replaced them with a comprehensive standalone AV road code.",
-          "The experimental permit can include targeted exemptions where legally available and necessary. It does not automatically disapply the whole RVV, and WVW Articles 5 and 6 sit outside the Article 149aa exemption power.",
+          "The experimental vergunning can include a targeted ontheffing where legally available and necessary. Vergunning, ontheffing and vrijstelling are not interchangeable; the permit does not automatically disapply the whole RVV, and WVW Articles 5 and 6 sit outside the Article 149aa exemption power.",
         ],
         flow: [
           "Ordinary WVW / RVV rules",
           "Experiment-specific assessment",
-          "Targeted exemptions where legally available and necessary",
+          "Targeted ontheffing where legally available and necessary",
         ],
         takeaway:
           "The Dutch model adapts conventional traffic law around a specific experiment rather than replacing it with a separate AV traffic code.",
@@ -1400,13 +1403,13 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
       {
         id: "odd",
         eyebrow: "ODD & operating conditions",
-        title: "Operational Domain information enters the permit assessment",
+        title: "Operationeel Domein enters the vergunning assessment",
         paragraphs: [
-          "The ministerial experimental regulation expressly uses Operational Domain. The application must address environmental factors and the route of the Operational Domain, alongside timing and system-specific risks.",
-          "This gives the technical operating boundary legal relevance within the authorization assessment, but it does not turn ODD into a free-standing road-use permission.",
+          "The ministerial experimental regulation expressly uses the Dutch term Operationeel Domein. The application must address environmental factors and the route of the Operationeel Domein, alongside timing and system-specific risks.",
+          "This source term gives operating-domain information legal relevance within the vergunning assessment, but Atlas does not treat Operationeel Domein as a literal synonym for ODD or as a free-standing road-use permission.",
         ],
         takeaway:
-          "ODD is not merely a technical description in the Dutch experimental regime; it forms part of the authorization assessment.",
+          "Operationeel Domein information forms part of the Dutch authorization assessment; that does not make it legally identical to ODD.",
         explain: ["odd"],
         sources: [
           { sourceId: "nl-experiment-regulation", provision: "Article 4(1)(a), (c) and (d)" },
@@ -1417,11 +1420,11 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         eyebrow: "Vehicle & ADS approval",
         title: "Technical approval and road-use permission remain separate",
         paragraphs: [
-          "Regulations 2018/858 and 2019/2144 provide the wider EU vehicle-approval architecture. Regulation 2022/1426, in its current consolidated form after Regulation 2026/481, provides ADS type-approval procedures and technical specifications for fully automated vehicles within its defined scope.",
-          "That technical approval does not itself establish a general Dutch right to operate on public roads without a legally relevant human driver.",
+          "Regulations 2018/858 and 2019/2144 provide the wider EU vehicle-approval architecture. Regulation 2022/1426, in its current consolidated form after Regulation 2026/481, provides ADS type-approval procedures—typegoedkeuring in the official Dutch text—and technical specifications for fully automated vehicles within its defined scope.",
+          "That product-level typegoedkeuring does not itself supply the Dutch experimental vergunning or establish a general right to operate on public roads without a legally relevant human driver.",
         ],
         takeaway:
-          "Technical approval of the vehicle or ADS should not be confused with national permission to operate without a legally relevant human driver on Dutch roads.",
+          "Typegoedkeuring of the vehicle or ADS should not be confused with the national vergunning required for the defined public-road experiment.",
         explain: ["type-approval"],
         sources: [
           { sourceId: "eu-2018-858" },
@@ -1480,13 +1483,13 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
     ],
     deploymentConclusion: [
       "The Netherlands provides a clear legal mechanism for advanced automated-driving experiments, including experiments where the human driver is located outside the vehicle. Its dedicated national experimental framework nevertheless remains structurally based on the existence of a human driver.",
-      "EU law provides a technical type-approval architecture for fully automated vehicles, but technical approval and Dutch public-road authorization remain separate regulatory layers.",
+      "EU law provides a technical type-approval architecture (typegoedkeuring in the official Dutch text) for fully automated vehicles, but that product approval and the Dutch public-road experiment vergunning remain separate regulatory layers.",
       "The Netherlands is open to advanced automated-driving experimentation, but its dedicated national framework does not currently amount to a general road-use regime for deployment without a legally relevant human driver.",
     ],
     practicalQuestions: [
       "Is the proposed operation an experiment or ordinary deployment?",
       "Does the operating model retain a legally relevant human driver?",
-      "Is the vehicle / ADS covered by an applicable EU approval route?",
+      "Is the vehicle / ADS covered by an applicable EU typegoedkeuring route?",
       "Which Dutch road-traffic obligations remain applicable?",
     ],
     conclusions: NL_CONCLUSIONS,
@@ -1516,20 +1519,20 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
     ],
     verifiedLabel: "Substantive legal verification · 31 Aug 2026",
     primaryMessage:
-      "Germany has a dedicated statutory framework for autonomous vehicles operating on public roads without a person performing the driving task. Operation is permitted within an officially approved defined operating area where the statutory conditions are satisfied.",
+      "Germany has a dedicated statutory framework for autonomous vehicles operating on public roads without a person performing the driving task. Operation is permitted within a genehmigter festgelegter Betriebsbereich where the statutory conditions are satisfied.",
     deploymentAnswers: [
       {
         label: "General driverless deployment",
         answer: "Available conditionally",
         detail:
-          "Operation is possible within an approved defined operating area when the statutory vehicle, registration, insurance and organizational conditions are satisfied.",
+          "Operation is possible within a genehmigter festgelegter Betriebsbereich when the statutory vehicle-approval, Zulassung, insurance and organizational conditions are satisfied.",
         tone: "conditional",
       },
       {
         label: "Testing / experimental route",
         answer: "Separate authorization",
         detail:
-          "Testing and development on public roads use the distinct KBA authorization route under StVG § 1i and AFGBV § 16.",
+          "Testing and development on public roads use the distinct KBA Erprobungsgenehmigung route under StVG § 1i and AFGBV § 16.",
         tone: "conditional",
       },
     ],
@@ -1538,7 +1541,7 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         label: "Autonomous operation without vehicle-driving person",
         status: "Permitted",
         tone: "positive",
-        scope: "Approved defined operating area + statutory conditions",
+        scope: "Genehmigter Betriebsbereich + statutory conditions",
       },
       {
         label: "Dedicated national autonomous-driving regime",
@@ -1553,13 +1556,13 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         scope: "Authority-approved Betriebsbereich",
       },
       {
-        label: "Technical Supervisor",
+        label: "Technische Aufsicht",
         status: "Required",
         tone: "conditional",
         scope: "Defined statutory supervisory role",
       },
       {
-        label: "EU ADS type approval",
+        label: "EU ADS type approval · Typgenehmigung",
         status: "Expressly recognized",
         tone: "positive",
         scope: "Current § 1e StVG",
@@ -1608,13 +1611,13 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         eyebrow: "Approval path",
         title: "Four gates connect technical approval to the road",
         paragraphs: [
-          "Section 1e StVG permits autonomous operation only when the technical requirements, an eligible vehicle/ADS approval, an approved defined operating area and public-road registration are all in place.",
-          "Eligible approval routes expressly include the German autonomous-vehicle operating approval, EU type approval under Regulation 2022/1426 and another comparable approval under applicable law. KBA performs the German national vehicle-approval role.",
+          "Section 1e StVG permits autonomous operation only when the technical requirements, an eligible Betriebserlaubnis or Typgenehmigung, the Genehmigung des festgelegten Betriebsbereichs and the vehicle's Zulassung are all in place.",
+          "Eligible approval routes expressly include the German Betriebserlaubnis for the autonomous vehicle, an EU Typgenehmigung under Regulation 2022/1426 and another comparable approval under applicable law. These source-native terms identify distinct legal gates rather than interchangeable forms of permission.",
         ],
         flow: [
-          "Vehicle / ADS approval",
-          "Defined operating area approval",
-          "Registration and insurance",
+          "Betriebserlaubnis or Typgenehmigung",
+          "Genehmigung des festgelegten Betriebsbereichs",
+          "Zulassung and insurance",
           "Autonomous operation",
         ],
         takeaway:
@@ -1632,7 +1635,7 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         eyebrow: "Defined operating area",
         title: "Technical ODD ≠ legally approved Betriebsbereich",
         paragraphs: [
-          "The festgelegter Betriebsbereich is a geographically and spatially defined part of public road space. The holder proposes it and the competent authority decides whether to approve it.",
+          "The festgelegter Betriebsbereich is a geographically and spatially defined part of public road space. The Halter proposes it and the competent authority decides whether to grant the Genehmigung des festgelegten Betriebsbereichs.",
           "The authority assesses whether the vehicle can perform the driving task there, the road infrastructure, effects on traffic and road safety, risks to life and physical safety, and other public interests. Conditions may be imposed.",
         ],
         takeaway:
@@ -1645,15 +1648,15 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
       },
       {
         id: "supervisor",
-        eyebrow: "Driver & Technical Supervisor",
+        eyebrow: "Fahrzeugführer & Technische Aufsicht",
         title: "Technical supervision ≠ remote driving",
         paragraphs: [
-          "German law expressly contemplates autonomous operation without a person performing the vehicle-driving task. The ADS must perform that task independently, comply with driving-directed traffic rules and operate without continuous monitoring by the Technical Supervisor.",
-          "The Technical Supervisor evaluates and releases an alternative manoeuvre where required, can deactivate the autonomous function, responds to system-status information and performs the statutory functions following a minimum-risk event.",
+          "German law expressly contemplates autonomous operation without a Fahrzeugführer performing the driving task. The ADS must perform that task independently, comply with driving-directed traffic rules and operate without continuous monitoring by the Technische Aufsicht.",
+          "The Technische Aufsicht evaluates and releases an alternative manoeuvre where required, can deactivate the autonomous function, responds to system-status information and performs the statutory functions following a minimum-risk event.",
           "AFGBV makes this a regulated role with specified technical or engineering qualifications, manufacturer training, the relevant driving licence and reliability requirements.",
         ],
         takeaway:
-          "The vehicle drives itself; the Technical Supervisor performs defined supervisory and fallback functions rather than remote driving.",
+          "The vehicle drives itself; the Technische Aufsicht performs defined supervisory and fallback functions rather than acting as a generic remote driver or remote operator.",
         explain: ["technical-supervisor", "minimum-risk-condition"],
         sources: [
           { sourceId: "de-stvg", provision: "§ 1d(1), (3) and (4); § 1e(2); § 1f(2)" },
@@ -1694,11 +1697,11 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
       },
       {
         id: "holder",
-        eyebrow: "Holder & operational duties",
-        title: "Germany regulates the operating organization",
+        eyebrow: "Halter & operational duties",
+        title: "The Halter carries continuing operational duties",
         paragraphs: [
-          "The holder must preserve road safety and environmental compliance, maintain systems needed for autonomous operation, ensure non-driving traffic obligations, and ensure the Technical Supervisor functions are performed.",
-          "AFGBV adds pre-operation checks, a comprehensive inspection every 90 days, a six-month main vehicle inspection interval, maintenance documentation, qualified personnel and suitable Technical Supervisor facilities and IT systems.",
+          "The Halter must preserve road safety and environmental compliance, maintain systems needed for autonomous operation, ensure non-driving traffic obligations, and ensure the functions of the Technische Aufsicht are performed.",
+          "AFGBV adds pre-operation checks, a comprehensive inspection every 90 days, a six-month main vehicle inspection interval, maintenance documentation, qualified personnel and suitable Technische Aufsicht facilities and IT systems.",
         ],
         takeaway:
           "Germany regulates the organization operating the autonomous vehicle, not only the vehicle and ADS.",
@@ -1714,7 +1717,7 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         title: "An explicit AV-specific operational-data regime",
         paragraphs: [
           "Section 1g StVG identifies data categories including vehicle identity and position; activation and deactivation; alternative-manoeuvre releases; software and system status; environmental and connectivity conditions; safety-system state; speed and acceleration; and external commands.",
-          "Technical Supervisor intervention, accidents or near-accidents, unplanned lane changes or evasive manoeuvres, and operational disruptions are specified storage triggers. Competent authorities may obtain relevant data for their statutory supervision.",
+          "Intervention by the Technische Aufsicht, accidents or near-accidents, unplanned lane changes or evasive manoeuvres, and operational disruptions are specified storage triggers. Competent authorities may obtain relevant data for their statutory supervision.",
         ],
         takeaway:
           "Germany has AV-specific data and event-recording duties; event-triggered recording should not be mislabeled as one generic incident-reporting obligation.",
@@ -1728,8 +1731,8 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         eyebrow: "Liability & insurance",
         title: "The general regime is expressly adapted for autonomy",
         paragraphs: [
-          "Statutory holder liability under § 7 StVG remains relevant. Section 12 applies higher caps where harm arises through automated or autonomous functions: EUR 10 million for death or personal injury from the same event and EUR 2 million for property damage from the same event.",
-          "Compulsory motor liability continues under PflVG, which expressly includes the Technical Supervisor within the required coverage for an autonomous vehicle.",
+          "Statutory Halter liability under § 7 StVG remains relevant. Halter is the source-native legal role and should not be flattened into owner or operator. Section 12 applies higher caps where harm arises through automated or autonomous functions: EUR 10 million for death or personal injury from the same event and EUR 2 million for property damage from the same event.",
+          "Compulsory motor liability continues under PflVG, which expressly includes the Technische Aufsicht within the required coverage for an autonomous vehicle.",
         ],
         takeaway:
           "Germany does not replace conventional motor liability with an entirely separate AV system; it expressly adapts the existing liability and insurance architecture.",
@@ -1743,8 +1746,8 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
         eyebrow: "Testing vs deployment",
         title: "Testing authorization ≠ operational deployment regime",
         paragraphs: [
-          "Section 1i StVG provides a separate route for testing or developing automated and autonomous functions on public roads. It requires a KBA testing authorization and the monitoring specified for that testing context.",
-          "That route should not be conflated with ordinary autonomous operation under §§ 1d–1g within an approved defined operating area.",
+          "Section 1i StVG provides a separate Erprobungsgenehmigung route for testing or developing automated and autonomous functions on public roads. Automated-function testing is monitored by a Fahrzeugführer; autonomous-function testing is monitored on site by a Technische Aufsicht.",
+          "These testing roles and this authorization should not be conflated with ordinary autonomous operation under §§ 1d–1g within a genehmigter festgelegter Betriebsbereich.",
         ],
         takeaway:
           "Germany is not merely a jurisdiction that allows AV testing; it separately regulates testing and conditional operational deployment.",
@@ -1757,15 +1760,15 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
     ],
     deploymentConclusion: [
       "Germany provides a dedicated statutory architecture for autonomous operation on public roads without a person performing the driving task.",
-      "Operation is conditional rather than geographically unrestricted: an eligible vehicle/ADS approval, an approved defined operating area, registration and insurance, and a compliant operating organization including a Technical Supervisor must come together.",
-      "Germany permits autonomous operation without a vehicle-driving person within approved defined operating areas, subject to vehicle/ADS approval, operating-area approval, registration, insurance and detailed organizational and safety requirements.",
+      "Operation is conditional rather than geographically unrestricted: an eligible Betriebserlaubnis or Typgenehmigung, the Genehmigung des festgelegten Betriebsbereichs, Zulassung and insurance, and a compliant operating organization including the Technische Aufsicht must come together.",
+      "Germany permits autonomous operation without a Fahrzeugführer within a genehmigter festgelegter Betriebsbereich, subject to the distinct approval, registration, insurance, organizational and safety requirements.",
     ],
     practicalQuestions: [
-      "Which vehicle / ADS approval route applies?",
-      "What operating area will be submitted for approval?",
+      "Does the vehicle require a Betriebserlaubnis, a Typgenehmigung or another eligible approval?",
+      "What festgelegter Betriebsbereich will be submitted for approval?",
       "Can the ADS independently comply with traffic rules within that area?",
-      "Who will act as Technical Supervisor?",
-      "Can the holder satisfy maintenance, inspection, data and organizational duties?",
+      "Who will act as Technische Aufsicht?",
+      "Can the Halter satisfy maintenance, inspection, data and organizational duties?",
     ],
     conclusions: DE_CONCLUSIONS,
     sourceIds: [
