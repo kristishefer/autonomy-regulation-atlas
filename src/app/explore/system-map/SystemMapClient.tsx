@@ -3,26 +3,52 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { ExplainDetails, ExplainTooltip } from "@/app/explore/Explain";
+import {
+  LEARNING_CONCEPTS,
+  getLearningNote,
+  type LearningNote,
+} from "@/app/explore/learning-concepts";
+import {
+  JURISDICTION_PROFILES,
+  getRegulatorySource,
+  legalStatusLabel,
+  type JurisdictionProfile,
+  type StatusTone,
+} from "@/app/explore/regulatory-data";
 import {
   CLUSTERS,
   EDGES,
-  JURISDICTIONS,
+  JURISDICTION_CONTEXT_BINDINGS,
   NODES,
   NODE_TYPE_LABELS,
+  REGULATORY_CONCEPTS,
   type CoreClusterId,
-  type JurisdictionKey,
+  type RegulatoryConceptId,
+  type SystemMapContextJurisdiction,
   type SystemNode,
 } from "./system-map-data";
 
 type LegalFilter = "all" | "binding" | "voluntary" | "depends";
 const CORE_NODES = NODES.filter((node) => node.cluster);
+const CONTEXT_PROFILES = (["germany", "netherlands"] as const)
+  .map((slug) => JURISDICTION_PROFILES.find((profile) => profile.slug === slug))
+  .filter((profile): profile is JurisdictionProfile => Boolean(profile));
+
+const contextToneClasses: Record<StatusTone, string> = {
+  positive: "border-[#77c7bd]/35 bg-[#77c7bd]/12 text-[#a9e8df]",
+  conditional: "border-[#e5b363]/35 bg-[#e5b363]/12 text-[#f1c780]",
+  neutral: "border-white/14 bg-white/[0.06] text-white/72",
+  watch: "border-[#e5b363]/35 bg-[#e5b363]/12 text-[#f1c780]",
+};
 
 export default function SystemMapClient() {
   const [query, setQuery] = useState("");
   const [cluster, setCluster] = useState<CoreClusterId | "all">("all");
   const [legalFilter, setLegalFilter] = useState<LegalFilter>("all");
   const [selected, setSelected] = useState<SystemNode | null>(null);
-  const [jurisdiction, setJurisdiction] = useState<JurisdictionKey | null>(null);
+  const [jurisdiction, setJurisdiction] =
+    useState<SystemMapContextJurisdiction | null>(null);
 
   const visibleNodes = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -70,13 +96,9 @@ export default function SystemMapClient() {
 
   const visibleIds = new Set(visibleNodes.map((node) => node.id));
 
-  const overlayJurisdiction = jurisdiction
-    ? JURISDICTIONS.find((item) => item.key === jurisdiction) ?? null
+  const contextProfile = jurisdiction
+    ? CONTEXT_PROFILES.find((profile) => profile.slug === jurisdiction) ?? null
     : null;
-
-  const overlayNodes = jurisdiction
-    ? NODES.filter((node) => node.jurisdiction === jurisdiction)
-    : [];
 
   return (
     <div className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
@@ -219,28 +241,16 @@ export default function SystemMapClient() {
                 setJurisdiction(
                   event.target.value === "global"
                     ? null
-                    : (event.target.value as JurisdictionKey)
+                    : (event.target.value as SystemMapContextJurisdiction)
                 )
               }
               autoComplete="off"
               aria-label="Jurisdiction context"
               className="h-11 rounded-xl border border-[#10264a]/10 bg-[#fbf7ef] px-3 text-sm outline-none"
             >
-              <option value="global">Global core</option>
-              <option value="eu">European Union</option>
-              <optgroup label="EU countries">
-                <option value="nl">Netherlands</option>
-                <option value="de">Germany</option>
-                <option value="fr">France</option>
-                <option value="es">Spain</option>
-                <option value="it">Italy</option>
-                <option value="at">Austria</option>
-              </optgroup>
-              <option value="uk">United Kingdom</option>
-              <option value="ru">Russia</option>
-              <option value="us">United States</option>
-              <option value="ca">California</option>
-              <option value="cn">China</option>
+              <option value="global">Universal</option>
+              <option value="germany">Germany</option>
+              <option value="netherlands">Netherlands</option>
             </select>
 
             <select
@@ -278,24 +288,20 @@ export default function SystemMapClient() {
           </div>
         </div>
 
-        {overlayJurisdiction && (
+        {contextProfile && (
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#10264a]/10 bg-[#f1ece2] px-4 py-3">
             <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="text-[#10264a]/45">Jurisdiction context</span>
-              <span className="font-semibold">{overlayJurisdiction.label}</span>
+              <span className="text-[#10264a]/55">Regulatory system</span>
+              <span className="font-semibold">{contextProfile.name}</span>
               <span className="text-[#10264a]/25">·</span>
-              <span className="text-[#10264a]/45">
-                {overlayNodes.length > 0
-                  ? `${overlayNodes.length} legal nodes mapped`
-                  : "research pending"}
-              </span>
+              <span className="text-[#10264a]/55">national context applied to the universal concepts</span>
             </div>
             <button
               type="button"
               onClick={() => setJurisdiction(null)}
               className="text-xs font-semibold text-[#147c73]"
             >
-              Return to global core
+              Return to Universal
             </button>
           </div>
         )}
@@ -401,20 +407,20 @@ export default function SystemMapClient() {
           </div>
         </div>
 
-        {/* JURISDICTION LAYER */}
+        {/* REGULATORY CONTEXT LAYER */}
         <section className="mt-6 rounded-[30px] border border-[#10264a]/10 bg-[#10264a] p-5 text-[#fbf7ef] sm:p-7">
           <div className="grid gap-7 lg:grid-cols-[330px_1fr]">
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#77c7bd]">
-                Jurisdiction layer
+                Regulatory system
               </div>
               <h2 className="mt-2 font-serif text-3xl font-semibold leading-tight">
-                Apply a legal order to the core system
+                Universal architecture, national implementation
               </h2>
-              <p className="mt-4 text-sm leading-6 text-white/55">
-                International standards and vehicle-regulation frameworks are
-                only part of the picture. Choose a jurisdiction to see its
-                supranational, national or subnational overlay.
+              <p className="mt-4 text-sm leading-6 text-white/68">
+                The universal concepts stay fixed. Choose a jurisdiction to see
+                how its current law instantiates each concept without adding
+                national-law nodes to the canonical map.
               </p>
             </div>
 
@@ -424,35 +430,25 @@ export default function SystemMapClient() {
                   active={jurisdiction === null}
                   onClick={() => jurisdiction === null ? undefined : setJurisdiction(null)}
                 >
-                  Global core
+                  Universal
                 </JurisdictionChip>
 
-                {JURISDICTIONS.map((item) => (
+                {CONTEXT_PROFILES.map((profile) => (
                   <JurisdictionChip
-                    key={item.key}
-                    active={jurisdiction === item.key}
-                    onClick={() => setJurisdiction(item.key)}
+                    key={profile.slug}
+                    active={jurisdiction === profile.slug}
+                    onClick={() => setJurisdiction(profile.slug)}
                   >
-                    {item.label}
+                    {profile.name}
                   </JurisdictionChip>
                 ))}
               </div>
 
               <div className="mt-5 rounded-[22px] border border-white/10 bg-white/[0.055] p-5">
-                {!overlayJurisdiction ? (
-                  <div>
-                    <div className="text-sm font-semibold">Global core selected</div>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-white/50">
-                      National liability, road-use, authorization and enforcement
-                      rules are intentionally kept out of the common system map.
-                    </p>
-                  </div>
+                {!contextProfile ? (
+                  <UniversalContextLayer />
                 ) : (
-                  <JurisdictionOverlay
-                    jurisdiction={overlayJurisdiction}
-                    nodes={overlayNodes}
-                    onSelect={setSelected}
-                  />
+                  <JurisdictionContextLayer profile={contextProfile} />
                 )}
               </div>
             </div>
@@ -460,11 +456,9 @@ export default function SystemMapClient() {
         </section>
 
         <div className="mt-5 text-xs leading-5 text-[#10264a]/40">
-          Prototype data is normalized from the uploaded AV/ADS Safety &
-          Regulation Map. Repeated UNECE rows are represented once per unique
-          instrument or concept. Jurisdictions marked as scaffolded are part of
-          the information architecture but do not yet contain a researched legal
-          node set.
+          The canonical node map remains universal. Netherlands and Germany are
+          applied as context layers using the same reviewed conclusions, scope,
+          uncertainty and official sources as their jurisdiction profiles.
         </div>
       </main>
     </div>
@@ -576,6 +570,8 @@ function NodeButton({
   active: boolean;
   onClick: () => void;
 }) {
+  const learningNote = getSystemNodeLearning(node);
+
   return (
     <div className="group/node relative z-10 hover:z-[70] focus-within:z-[70]">
       <button
@@ -595,7 +591,7 @@ function NodeButton({
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          {node.learning && (
+          {learningNote && (
             <span className="hidden rounded-full border border-[#b97512]/20 bg-[#fff8e8] px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#9a6513] sm:inline-flex">
               Explain
             </span>
@@ -603,61 +599,9 @@ function NodeButton({
         </div>
       </button>
 
-      {node.learning && <CatTooltip node={node} />}
-    </div>
-  );
-}
-
-function CatTooltip({ node }: { node: SystemNode }) {
-  const note = node.learning;
-  if (!note) return null;
-
-  return (
-    <div
-      className="pointer-events-none invisible absolute left-3 right-3 top-[calc(100%+8px)] z-[80] translate-y-1 rounded-[20px] border border-[#b97512]/18 bg-[#fffaf0] p-4 opacity-0 shadow-[0_18px_45px_rgba(16,38,74,.16)] transition duration-150 group-hover/node:visible group-hover/node:translate-y-0 group-hover/node:opacity-100 group-focus-within/node:visible group-focus-within/node:translate-y-0 group-focus-within/node:opacity-100 sm:left-auto sm:right-0 sm:w-[360px]"
-      role="tooltip"
-    >
-      <div className="flex items-start gap-3">
-        <Image
-          src="/atlaslings/cat-explain.png"
-          alt=""
-          className="h-14 w-14 shrink-0 object-contain"
-          height={56}
-          width={56}
-        />
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#b97512]">
-            Cat explains
-          </div>
-          <div className="mt-1 font-serif text-lg font-semibold">
-            What is {node.name}?
-          </div>
-        </div>
-      </div>
-
-      <p className="mt-3 text-xs leading-5 text-[#10264a]/65">
-        {note.plain}
-      </p>
-
-      <div className="mt-3 border-t border-[#10264a]/8 pt-3">
-        <div className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/35">
-          Why it matters
-        </div>
-        <p className="mt-1 text-xs leading-5 text-[#10264a]/60">{note.why}</p>
-      </div>
-
-      <div className="mt-3 rounded-xl bg-[#f4ead3] p-3">
-        <div className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#9a6513]">
-          Common confusion
-        </div>
-        <p className="mt-1 text-xs leading-5 text-[#10264a]/65">
-          {note.confusion}
-        </p>
-      </div>
-
-      <div className="mt-3 text-[10px] font-semibold text-[#147c73]">
-        Click the node to open the full regulatory detail.
-      </div>
+      {learningNote ? (
+        <ExplainTooltip note={learningNote} title={`What is ${node.name}?`} />
+      ) : null}
     </div>
   );
 }
@@ -678,6 +622,7 @@ function NodeDrawer({
   const related = relatedIds
     .map((id) => NODES.find((item) => item.id === id))
     .filter((item): item is SystemNode => Boolean(item));
+  const learningNote = getSystemNodeLearning(node);
 
   return (
     <div className="sticky top-[73px] max-h-[calc(100vh-73px)] overflow-y-auto p-6">
@@ -701,29 +646,9 @@ function NodeDrawer({
         </button>
       </div>
 
-      {node.learning && (
-        <details className="mt-5 rounded-2xl border border-[#b97512]/15 bg-[#fff8e8] p-4">
-          <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-[#9a6513]">
-            <Image
-              src="/atlaslings/cat-explain.png"
-              alt=""
-              className="h-7 w-7 object-contain"
-              height={28}
-              width={28}
-            />
-            Cat explains this
-          </summary>
-          <p className="mt-3 text-sm leading-6 text-[#10264a]/65">
-            {node.learning.plain}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[#10264a]/55">
-            <strong>Why it matters:</strong> {node.learning.why}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[#10264a]/55">
-            <strong>Common confusion:</strong> {node.learning.confusion}
-          </p>
-        </details>
-      )}
+      {learningNote ? (
+        <ExplainDetails note={learningNote} title={node.name} />
+      ) : null}
 
       <DetailBlock label="What it is" text={node.whatItIs} />
       <DetailBlock label="Issued by" text={node.issuingBody} />
@@ -774,109 +699,151 @@ function NodeDrawer({
   );
 }
 
-function JurisdictionOverlay({
-  jurisdiction,
-  nodes,
-  onSelect,
+function UniversalContextLayer() {
+  return (
+    <div>
+      <div className="text-sm font-semibold">Universal concepts</div>
+      <p className="mt-2 max-w-3xl text-sm leading-6 text-white/62">
+        These questions form the stable regulatory architecture. A jurisdiction
+        context answers them with its own legal instruments, authorities and
+        authorization routes.
+      </p>
+
+      <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {REGULATORY_CONCEPTS.map((concept) => (
+          <article
+            className="border-l border-[#77c7bd]/45 bg-white/[0.045] p-4"
+            key={concept.id}
+          >
+            <h3 className="font-serif text-lg font-semibold">{concept.title}</h3>
+            <p className="mt-2 text-xs leading-5 text-white/62">
+              {concept.description}
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function JurisdictionContextLayer({
+  profile,
 }: {
-  jurisdiction: (typeof JURISDICTIONS)[number];
-  nodes: SystemNode[];
-  onSelect: (node: SystemNode) => void;
+  profile: JurisdictionProfile;
 }) {
-  const parent = jurisdiction.parent
-    ? JURISDICTIONS.find((item) => item.key === jurisdiction.parent)
-    : null;
+  const bindings = JURISDICTION_CONTEXT_BINDINGS[profile.slug];
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/35">
-        {parent && (
-          <>
-            <span>{parent.label} layer</span>
-            <span>→</span>
-          </>
-        )}
-        <span>{jurisdiction.label}</span>
-        <span>·</span>
-        <span>{jurisdiction.level}</span>
-      </div>
-
-      <div className="mt-2 flex items-center gap-3">
-        <h3 className="font-serif text-2xl font-semibold">
-          {jurisdiction.label}
-        </h3>
-        <span
-          className={`rounded-full px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] ${
-            nodes.length > 0
-              ? "bg-[#77c7bd]/15 text-[#9ce0d6]"
-              : "bg-white/8 text-white/35"
-          }`}
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9ce0d6]/80">
+            Universal → national context
+          </div>
+          <h3 className="mt-1 font-serif text-2xl font-semibold">
+            {profile.name}
+          </h3>
+        </div>
+        <Link
+          className="rounded-sm text-xs font-semibold text-[#9ce0d6] underline decoration-[#9ce0d6]/30 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#9ce0d6] focus-visible:ring-offset-4 focus-visible:ring-offset-[#10264a]"
+          href={`/${profile.slug}`}
         >
-          {nodes.length > 0 ? `${nodes.length} seeded nodes` : "Research pending"}
-        </span>
+          Open full jurisdiction profile →
+        </Link>
       </div>
 
-      {nodes.length > 0 ? (
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {nodes.map((node) => (
-            <button
-              key={node.id}
-              type="button"
-              onClick={() => onSelect(node)}
-              className="rounded-2xl border border-white/10 bg-white/[0.07] p-4 text-left transition hover:bg-white/[0.11]"
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        {bindings.map((binding) => {
+          const concept = getRegulatoryConcept(binding.conceptId);
+          const conclusion = profile.conclusions[binding.fieldId];
+          const learningConcept = binding.learningConceptId
+            ? LEARNING_CONCEPTS[binding.learningConceptId]
+            : null;
+
+          return (
+            <article
+              className="rounded-[20px] border border-white/10 bg-white/[0.06] p-5"
+              key={binding.conceptId}
             >
-              <div className="font-semibold">{node.name}</div>
-              <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-white/35">
-                {NODE_TYPE_LABELS[node.nodeType]}
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9ce0d6]/72">
+                    {concept.title}
+                  </div>
+                  <h4 className="mt-2 font-serif text-xl font-semibold leading-6">
+                    {conclusion.label}
+                  </h4>
+                </div>
+                <span
+                  className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${contextToneClasses[conclusion.tone]}`}
+                >
+                  {conclusion.status}
+                </span>
               </div>
-              <p className="mt-2 text-xs leading-5 text-white/48">
-                {node.takeaway}
+
+              <p className="mt-4 text-sm leading-6 text-white/72">
+                {conclusion.summary}
               </p>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="mt-4 rounded-2xl border border-dashed border-white/12 p-4">
-          <p className="max-w-2xl text-sm leading-6 text-white/48">
-            The jurisdiction is already part of the Atlas information
-            architecture, but its national legal nodes have not yet been mapped
-            into this prototype.
-          </p>
+              <p className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-white/60">
+                <strong className="text-white/78">Scope:</strong>{" "}
+                {conclusion.scopeLabel}
+              </p>
 
-          {jurisdiction.sourceNote && (
-            <p className="mt-3 max-w-2xl text-xs leading-5 text-white/42">
-              {jurisdiction.sourceNote}
-            </p>
-          )}
+              {learningConcept ? (
+                <ExplainDetails
+                  note={getLearningNote(learningConcept.id, profile.slug)}
+                  tone="dark"
+                  title={learningConcept.name}
+                />
+              ) : null}
 
-          {jurisdiction.sourceHints && jurisdiction.sourceHints.length > 0 && (
-            <div className="mt-4">
-              <div className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#9ce0d6]/70">
-                Source inventory already identified
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-4">
+                <Link
+                  className="rounded-sm text-xs font-semibold text-[#9ce0d6] underline decoration-[#9ce0d6]/30 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#9ce0d6]"
+                  href={`/${profile.slug}#${binding.sectionId}`}
+                >
+                  Read the national analysis →
+                </Link>
+                {conclusion.legalBasis.map((reference, index) => {
+                  const source = getRegulatorySource(reference.sourceId);
+                  return (
+                    <a
+                      className="rounded-sm text-xs text-white/62 underline decoration-white/20 underline-offset-4 outline-none hover:text-white focus-visible:ring-2 focus-visible:ring-[#9ce0d6]"
+                      href={source.url}
+                      key={`${reference.sourceId}-${reference.provision ?? index}`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {source.shortTitle}
+                      {reference.provision ? ` · ${reference.provision}` : ""}
+                      {` · ${legalStatusLabel(source.legalStatus)}`}
+                    </a>
+                  );
+                })}
               </div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {jurisdiction.sourceHints.map((source) => (
-                  <span
-                    key={source}
-                    className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-2 text-xs text-white/55"
-                  >
-                    {source}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {parent && (
-            <div className="mt-3 inline-flex rounded-full bg-white/[0.06] px-3 py-2 text-xs text-white/45">
-              Structure reserved: {parent.label} supranational layer →{" "}
-              {jurisdiction.label} national layer
-            </div>
-          )}
-        </div>
-      )}
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
+}
+
+function getRegulatoryConcept(id: RegulatoryConceptId) {
+  const concept = REGULATORY_CONCEPTS.find((item) => item.id === id);
+  if (!concept) {
+    throw new Error(`Missing regulatory concept: ${id}`);
+  }
+
+  return concept;
+}
+
+function getSystemNodeLearning(node: SystemNode): LearningNote | null {
+  if (node.learningConceptId) {
+    return getLearningNote(node.learningConceptId);
+  }
+
+  return node.learning ?? null;
 }
 
 function DetailBlock({ label, text }: { label: string; text: string }) {

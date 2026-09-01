@@ -73,8 +73,20 @@ export default function ComparePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10 lg:py-16">
-        <div className="overflow-x-auto pb-4">
-          <div className="min-w-[680px]">
+        <p className="mb-3 flex items-center justify-between gap-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#147c73] sm:hidden">
+          <span>Swipe to compare Netherlands and Germany</span>
+          <span className="text-base" aria-hidden="true">
+            →
+          </span>
+        </p>
+
+        <div className="relative">
+          <div
+            aria-label="Scrollable comparison of Netherlands and Germany"
+            className="overflow-x-auto pb-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#147c73]"
+            tabIndex={0}
+          >
+            <div className="min-w-[680px]">
             <div className="grid gap-3 border-b border-[#10264a]/12 pb-5 pl-[198px]">
               <div className="grid gap-3" style={jurisdictionColumns}>
                 {profiles.map((profile) => (
@@ -131,7 +143,13 @@ export default function ComparePage() {
                 </section>
               ))}
             </div>
+            </div>
           </div>
+
+          <div
+            className="pointer-events-none absolute top-0 right-0 bottom-4 w-12 bg-gradient-to-l from-[#fbf7ef] via-[#fbf7ef]/80 to-transparent sm:hidden"
+            aria-hidden="true"
+          />
         </div>
       </section>
 
