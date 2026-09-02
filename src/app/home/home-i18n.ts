@@ -107,8 +107,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     map: {
       eyebrow: "Interactive Atlas",
       title: "Same technology, different legal answers",
-      body: "Choose a beacon to open its jurisdiction profile. Locations and coverage states come from the Atlas database, so the map grows with the research.",
-      scopeNote: "The geographic view remains Europe-focused. Moscow is a discovery marker for the Russia profile, not an EPR operating area.",
+      body: "Choose a beacon to open its jurisdiction profile. The geographic map stays deliberately coherent; profiles outside the current European frame remain available in the profile list below.",
+      scopeNote: "The map is a navigation surface, not a map of permit, EPR or operating-area boundaries. Russia and the United States remain available as profiles without being represented by an artificial point inside the European frame.",
       additionalProfiles: "All jurisdiction profiles",
     },
     puzzle: {
@@ -192,9 +192,9 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       eyebrow: "Interaktive Karte",
       title: "Eine Technologie — unterschiedliche rechtliche Rahmen",
       body:
-        "Wählen Sie eine Markierung, um das Profil einer Rechtsordnung zu öffnen. Die Karte zeigt, welche Rechtsordnungen bereits untersucht wurden und wie weit die Abdeckung reicht.",
+        "Wählen Sie eine Markierung, um das Profil einer Rechtsordnung zu öffnen. Rechtsordnungen außerhalb des aktuellen europäischen Kartenausschnitts bleiben in der Profilliste darunter verfügbar.",
       scopeNote:
-        "Die geografische Ansicht bleibt auf Europa ausgerichtet. Moskau ist ein Einstiegspunkt zum Russland-Profil und kein EPR-Betriebsgebiet.",
+        "Die Karte dient der Navigation und zeigt keine Genehmigungs-, EPR- oder Betriebsgebietsgrenzen. Russland und die Vereinigten Staaten bleiben als Profile verfügbar, ohne durch einen künstlichen Punkt im europäischen Kartenausschnitt dargestellt zu werden.",
       additionalProfiles: "Alle Rechtsordnungsprofile",
     },
     puzzle: {
@@ -284,9 +284,9 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       eyebrow: "Interactieve kaart",
       title: "Eén technologie — verschillende juridische kaders",
       body:
-        "Kies een markering om het profiel van een jurisdictie te openen. De kaart laat zien welke jurisdicties al zijn onderzocht en hoe ver de dekking reikt.",
+        "Kies een markering om het profiel van een jurisdictie te openen. Jurisdicties buiten het huidige Europese kaartvenster blijven beschikbaar in de profielenlijst eronder.",
       scopeNote:
-        "De geografische weergave blijft op Europa gericht. Moskou is een toegangspunt tot het Rusland-profiel en geen EPR-exploitatiegebied.",
+        "De kaart is een navigatiemiddel en toont geen grenzen van vergunningen, EPR's of operationele gebieden. Rusland en de Verenigde Staten blijven als profiel beschikbaar zonder een kunstmatige locatiepunt in de Europese kaart.",
       additionalProfiles: "Alle jurisdictieprofielen",
     },
     puzzle: {
@@ -341,71 +341,71 @@ export const homeCopy: Record<Locale, HomeCopy> = {
   },
   ru: {
     nav: {
-      deploy: "Запуск",
+      deploy: "Сценарий",
       jurisdictions: "Юрисдикции",
-      landscape: "Карта регулирования",
-      learn: "Обучение",
-      method: "Методология",
+      landscape: "Система регулирования",
+      learn: "Разобраться",
+      method: "Метод",
     },
     hero: {
-      eyebrow: "Право × автономный транспорт × реальное внедрение",
+      eyebrow: "Регулирование автономной мобильности — от нормы к реальному сценарию",
       line1: "Одна технология",
-      line2: "Разные правовые режимы",
-      line3: "Atlas собирает картину целиком",
+      line2: "Разные правовые системы",
+      line3: "Atlas показывает, как они устроены",
       body:
-        "Исследуйте, как регулируется автономный транспорт в разных странах, и находите ответы на практические вопросы запуска: какие разрешения нужны, кто выполняет функции водителя, где может работать система и на какие первичные источники опирается вывод.",
-      atlaslings: "Проводники Atlas",
-      atlaslingsSub: "Три героя. Три способа разобраться в регулировании.",
+        "Atlas помогает понять, как в разных юрисдикциях устроено регулирование автономной мобильности: какие уровни права применяются, какие разрешения нужны, какие роли сохраняются за человеком, где допустима эксплуатация и на каких официальных источниках основан каждый вывод.",
+      atlaslings: "Проводники по Atlas",
+      atlaslingsSub: "Три режима работы с одной системой регулирования.",
     },
     modes: {
-      title: "С чего вы хотите начать?",
-      deployTitle: "Разобрать путь к запуску",
+      title: "Что вы хотите сделать?",
+      deployTitle: "Проверить путь к эксплуатации",
       deployBody:
-        "Выберите реальный сценарий и посмотрите, какие нормы, разрешения, условия эксплуатации и открытые вопросы определяют возможность запуска.",
-      deployCta: "Разобрать сценарий",
-      exploreTitle: "Увидеть систему регулирования целиком",
+        "Разберите конкретный сценарий: какие уровни регулирования, разрешения, условия эксплуатации и открытые вопросы определяют возможность выхода на дорогу.",
+      deployCta: "Открыть сценарий",
+      exploreTitle: "Понять систему регулирования",
       exploreBody:
-        "Исследуйте юрисдикции, уровни регулирования, стандарты, органы и первичные источники — и связи между ними.",
-      exploreCta: "Открыть карту регулирования",
-      learnTitle: "Понять, как всё работает",
+        "Посмотрите, как связаны международные инструменты, национальные режимы, стандарты, компетентные органы и первичные источники.",
+      exploreCta: "Открыть системную карту",
+      learnTitle: "Разобраться в ключевых понятиях",
       learnBody:
-        "Разбирайте ключевые понятия на примерах из законодательства, стандартов и реальных ситуаций, обстоятельства которых установлены официальными органами.",
-      learnCta: "Начать обучение",
+        "Изучайте регулирование через понятия, нормы, стандарты и реальные кейсы с опорой на официальные источники.",
+      learnCta: "Перейти к обучению",
     },
     map: {
-      eyebrow: "Карта юрисдикций",
-      title: "Одна технология — разные правовые режимы",
+      eyebrow: "Юрисдикции",
+      title: "Одна технология — разные правовые ответы",
       body:
-        "Выберите страну, чтобы открыть её профиль регулирования. Карта показывает, какие юрисдикции уже исследованы и насколько полно.",
+        "Выберите отметку на карте, чтобы открыть профиль юрисдикции. На карту вынесены только профили, которые корректно помещаются в текущую европейскую рамку; остальные доступны в списке ниже.",
       scopeNote:
-        "Географическая карта по-прежнему ориентирована на Европу. Москва — точка перехода к профилю России, а не территория действия ЭПР.",
-      additionalProfiles: "Все профили юрисдикций",
+        "Карта нужна для навигации и не показывает границы конкретных разрешений, ЭПР или зон эксплуатации. Россия и США доступны в списке профилей и не обозначаются условной точкой внутри европейской карты.",
+      additionalProfiles: "Все профили",
     },
     puzzle: {
-      eyebrow: "Кот объясняет",
+      eyebrow: "Разобраться с Cat",
       title:
-        "Одобрение типа получено. Почему всё равно нельзя просто выехать на дорогу?",
+        "Одобрение типа есть. Почему этого недостаточно для выезда на дорогу?",
       body:
-        "Одобрение типа и право на эксплуатацию на дорогах — разные юридические вопросы.",
-      reveal: "Показать, чего ещё не хватает",
+        "Техническое одобрение и право эксплуатации на дорогах отвечают на разные юридические вопросы.",
+      reveal: "Показать следующий правовой уровень",
       answer:
-        "Одобрение типа подтверждает, что транспортное средство или ADS соответствует применимым техническим требованиям. Но само по себе оно не даёт права эксплуатировать систему на дорогах. В зависимости от юрисдикции могут потребоваться отдельное разрешение, утверждённая зона эксплуатации, регистрация, страхование и соблюдение иных требований дорожного законодательства.",
+        "Одобрение типа может подтверждать соответствие транспортного средства или ADS применимому техническому режиму. Но само по себе оно не решает вопросы допуска к дорогам, условий эксплуатации, роли оператора, географии, регистрации или страхования. Эти требования определяются применимой юрисдикцией и конкретным режимом.",
       secondaryOne:
-        "В салоне никого нет. Значит ли это, что с точки зрения права водителя тоже нет?",
-      secondaryOneConcept: "ADS · водитель · человеческий контроль",
+        "В салоне никого нет. Означает ли это, что право тоже не видит никакой человеческой роли?",
+      secondaryOneConcept: "ADS · водитель · дистанционные роли",
       secondaryTwo:
-        "Удалённое управление и дистанционная помощь — одно и то же с точки зрения права?",
-      secondaryTwoConcept: "Дистанционные функции",
+        "Remote driving и удалённая поддержка — это одна юридическая роль?",
+      secondaryTwoConcept: "Дистанционные роли",
     },
     method: {
-      eyebrow: "Выводы с опорой на источники",
-      title: "От вывода — к конкретному источнику",
+      eyebrow: "Каждый вывод — к источнику",
+      title: "От правового вывода к официальному тексту",
       body:
-        "Atlas отделяет то, что прямо следует из источника, от нашей юридической интерпретации и практических последствий. Каждый существенный вывод можно проверить по официальному тексту; первичные источники приводятся на языке оригинала.",
+        "Atlas отдельно показывает, что прямо следует из источника, как мы это юридически интерпретируем и что это меняет для эксплуатации. Официальные термины и первичные источники сохраняются на языке оригинала.",
       steps: [
-        "Что прямо следует из источника",
-        "Юридическая интерпретация Atlas",
-        "Что это значит на практике",
+        "Позиция источника",
+        "Юридический анализ Atlas",
+        "Практическое значение",
         "Официальный источник",
       ],
     },
@@ -414,12 +414,12 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       primaryNavigation: "Основная навигация",
       map: {
         ariaLabel: "Карта юрисдикций Atlas",
-        openProfile: "Открыть профиль юрисдикции",
-        profileAvailable: "Профиль доступен",
+        openProfile: "Открыть профиль",
+        profileAvailable: "Профиль готов",
         coverageDeveloping: "Исследование продолжается",
-        profilesOnMap: "Профилей на карте",
+        profilesOnMap: "профиля на карте",
         disclaimer:
-          "Границы показаны только для ориентации и не выражают позицию Atlas относительно статуса территорий или суверенитета. Картографическая основа: Natural Earth via world-atlas.",
+          "Границы показаны только для ориентации и не выражают позицию Atlas относительно статуса территорий или суверенитета. Картографическая основа: Natural Earth через world-atlas.",
         fallbackNames: {
           netherlands: "Нидерланды",
           germany: "Германия",
@@ -428,7 +428,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         },
       },
       footerTagline:
-        "Одна технология · разные правовые режимы · единая карта связей",
+        "Одна технология · разные правовые системы · единая карта регулирования",
     },
   },
 };
