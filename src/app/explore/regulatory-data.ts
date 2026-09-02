@@ -1,4 +1,12 @@
 import type { LearningConceptId } from "@/app/explore/learning-concepts";
+import expansionSeed from "@/app/explore/jurisdiction-expansion-seed-v1.json";
+
+export type JurisdictionSlug =
+  | "netherlands"
+  | "germany"
+  | "united-states"
+  | "russia"
+  | "united-kingdom";
 
 export type ConfidenceStatus = "established" | "unclear" | "not_identified";
 
@@ -28,6 +36,7 @@ export type RegulatoryScope = {
   roadType?: string;
   useCase?: string;
   humanRole?: string;
+  geographicScope?: string;
 };
 
 export type SourceReference = {
@@ -46,7 +55,7 @@ export type RegulatoryConclusion = {
   summary: string;
   legalBasis: SourceReference[];
   legalStatus: LegalStatus;
-  lastVerified: "2026-08-31";
+  lastVerified: string;
   atlasAnalysis?: string;
   uncertaintyReason?: string;
   searchScope?: string;
@@ -61,8 +70,8 @@ export type RegulatorySource = {
   type: SourceType;
   legalStatus: LegalStatus;
   statusLabel: string;
-  lastChecked: "2026-08-31";
-  jurisdiction: "EU" | "Netherlands" | "Germany";
+  lastChecked: string;
+  jurisdiction: string;
 };
 
 export type JurisdictionSection = {
@@ -102,9 +111,11 @@ export type PageNavigationItem = {
 };
 
 export type JurisdictionProfile = {
-  slug: "netherlands" | "germany";
+  slug: JurisdictionSlug;
   name: string;
   code: string;
+  scopeNote?: string;
+  localizedNames?: Partial<Record<"en" | "de" | "nl" | "ru", string>>;
   scenario: string;
   scenarioScope: ScenarioScopeItem[];
   verifiedLabel: string;
@@ -274,9 +285,37 @@ export type SourceId =
   | "de-stvg"
   | "de-afgbv"
   | "de-stvo"
-  | "de-pflvg";
+  | "de-pflvg"
+  | "us-title49-ch301"
+  | "us-49cfr-555"
+  | "us-nhtsa-sgo"
+  | "us-ca-veh-38750"
+  | "us-ca-dmv-av-regulations"
+  | "us-ca-dmv-2026-summary"
+  | "us-ca-dmv-permits"
+  | "us-ca-dmv-incidents"
+  | "us-ca-cpuc-programs"
+  | "us-ca-cpuc-permits"
+  | "us-ca-cpuc-rulemaking-2025"
+  | "ru-258fz"
+  | "ru-2495"
+  | "ru-1955"
+  | "ru-347"
+  | "ru-mintrans-draft-vats"
+  | "uk-aeva-2018"
+  | "uk-av-act-2024"
+  | "uk-vca-pilot"
+  | "uk-pilot-guidance"
+  | "uk-listed-vehicles"
+  | "uk-aps-regs-2026"
+  | "uk-commencement2-2026"
+  | "uk-aps-local-guidance"
+  | "uk-sosp-consultation"
+  | "uk-highway-code"
+  | "uk-commencement3-2026"
+  | "uk-marketing-regs-2026";
 
-export const REGULATORY_SOURCES = {
+const BASE_REGULATORY_SOURCES = {
   "eu-2018-858": {
     id: "eu-2018-858",
     title: "Regulation (EU) 2018/858",
@@ -458,6 +497,64 @@ export const REGULATORY_SOURCES = {
     jurisdiction: "Germany",
   },
 } as const satisfies Record<string, RegulatorySource>;
+
+type ExpansionSourceInput = Omit<RegulatorySource, "id"> & {
+  id: SourceId;
+  exposeOnlyAfterValidation?: boolean;
+};
+
+const validatedConditionalSourceIds = new Set<SourceId>([
+  "ru-1955",
+  "uk-commencement3-2026",
+]);
+
+const withheldSourceIds = new Set<SourceId>([
+  "ru-347",
+  "uk-marketing-regs-2026",
+]);
+
+const expansionSourceCorrections: Partial<
+  Record<SourceId, Partial<RegulatorySource>>
+> = {
+  "us-ca-dmv-av-regulations": {
+    statusLabel: "Adopted 28 Apr 2026 · phased effective dates",
+  },
+  "uk-aps-regs-2026": {
+    title: "The Automated Vehicles (Permits for Automated Passenger Services) Regulations 2026",
+    shortTitle: "APS permit regulations 2026",
+  },
+  "uk-commencement3-2026": {
+    legalStatus: "adopted_not_yet_effective",
+    statusLabel: "Made · relevant commencement takes effect 7 Jan 2027",
+  },
+};
+
+function isSourceExposed(source: ExpansionSourceInput) {
+  if (withheldSourceIds.has(source.id)) return false;
+  return (
+    !source.exposeOnlyAfterValidation ||
+    validatedConditionalSourceIds.has(source.id)
+  );
+}
+
+const EXPANSION_REGULATORY_SOURCES = Object.fromEntries(
+  (expansionSeed.sources as ExpansionSourceInput[])
+    .filter(isSourceExposed)
+    .map((source) => [
+      source.id,
+      {
+        ...source,
+        ...expansionSourceCorrections[source.id],
+      } satisfies RegulatorySource,
+    ]),
+) as Partial<Record<SourceId, RegulatorySource>>;
+
+export const REGULATORY_SOURCES: Partial<
+  Record<SourceId, RegulatorySource>
+> = {
+  ...BASE_REGULATORY_SOURCES,
+  ...EXPANSION_REGULATORY_SOURCES,
+};
 
 type ConclusionInput = Omit<RegulatoryConclusion, "lastVerified">;
 
@@ -1261,7 +1358,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
   }),
 };
 
-export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
+const BASE_JURISDICTION_PROFILES: JurisdictionProfile[] = [
   {
     slug: "netherlands",
     name: "Netherlands",
@@ -1784,12 +1881,90 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
   },
 ];
 
+const compareFieldIds = COMPARE_GROUPS.flatMap((group) =>
+  group.fields.map((field) => field.id),
+);
+
+export function isExposedSourceId(sourceId: string): sourceId is SourceId {
+  return sourceId in REGULATORY_SOURCES;
+}
+
+function normalizeSourceReferences(
+  references: { sourceId: string; provision?: string }[],
+): SourceReference[] {
+  return references
+    .filter((reference) => isExposedSourceId(reference.sourceId))
+    .map((reference) => ({
+      ...reference,
+      sourceId: reference.sourceId as SourceId,
+    }));
+}
+
+function normalizeExpansionProfile(input: unknown): JurisdictionProfile {
+  const profile = input as JurisdictionProfile;
+  const conclusions = Object.fromEntries(
+    Object.entries(profile.conclusions).map(([key, value]) => {
+      if (value.confidenceStatus === "unclear" && !value.uncertaintyReason) {
+        throw new Error(`Unclear conclusion requires uncertaintyReason: ${key}`);
+      }
+
+      if (value.confidenceStatus === "not_identified" && !value.searchScope) {
+        throw new Error(`Not identified conclusion requires searchScope: ${key}`);
+      }
+
+      return [
+        key,
+        {
+          ...value,
+          legalBasis: normalizeSourceReferences(value.legalBasis),
+        },
+      ];
+    }),
+  ) as Record<CompareFieldId, RegulatoryConclusion>;
+
+  const conclusionKeys = Object.keys(conclusions);
+  const missingFields = compareFieldIds.filter(
+    (fieldId) => !conclusionKeys.includes(fieldId),
+  );
+
+  if (missingFields.length > 0 || conclusionKeys.length !== compareFieldIds.length) {
+    throw new Error(
+      `Jurisdiction ${profile.slug} must implement all ${compareFieldIds.length} comparison fields`,
+    );
+  }
+
+  return {
+    ...profile,
+    sections: profile.sections.map((section) => ({
+      ...section,
+      sources: normalizeSourceReferences(section.sources),
+    })),
+    conclusions,
+    sourceIds: profile.sourceIds.filter(isExposedSourceId),
+  };
+}
+
+const EXPANSION_JURISDICTION_PROFILES = expansionSeed.profiles.map(
+  normalizeExpansionProfile,
+);
+
+export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
+  ...BASE_JURISDICTION_PROFILES,
+  ...EXPANSION_JURISDICTION_PROFILES,
+];
+
 export function getJurisdictionProfile(slug: string) {
   return JURISDICTION_PROFILES.find((profile) => profile.slug === slug) ?? null;
 }
 
 export function getRegulatorySource(sourceId: SourceId) {
-  return REGULATORY_SOURCES[sourceId];
+  const source = REGULATORY_SOURCES[sourceId];
+
+  if (!source) {
+    throw new Error(`Regulatory source is not exposed: ${sourceId}`);
+  }
+
+  return source;
 }
 
 export function legalStatusLabel(status: LegalStatus) {

@@ -1,4 +1,9 @@
-import type { SourceId } from "@/app/explore/regulatory-data";
+import expansionSeed from "@/app/explore/jurisdiction-expansion-seed-v1.json";
+import {
+  isExposedSourceId,
+  type JurisdictionSlug,
+  type SourceId,
+} from "@/app/explore/regulatory-data";
 
 export type RegulatoryQuestionId =
   | "road-access"
@@ -23,7 +28,26 @@ export type UniversalAtlasConceptId =
   | "vehicle-registration"
   | "operating-area-authorization"
   | "experimental-road-access-permit"
-  | "regulatory-exemption";
+  | "regulatory-exemption"
+  | "vehicle-approval"
+  | "operational-authorization"
+  | "commercial-service-authorization"
+  | "remote-driving-role"
+  | "remote-assistance-role"
+  | "safety-assurance"
+  | "experimental-regime"
+  | "automated-vehicle-category"
+  | "human-driver-present"
+  | "no-person-in-cabin-operation"
+  | "operating-organization"
+  | "conformity-assessment"
+  | "ads-operation"
+  | "authorization-test"
+  | "vehicle-listing"
+  | "safety-driver-role"
+  | "future-responsibility-role"
+  | "future-human-role"
+  | "future-operating-organization";
 
 export type JurisdictionTermStatus =
   | "statutory-defined-term"
@@ -56,7 +80,37 @@ export type JurisdictionTermId =
   | "nl-ontheffing"
   | "nl-vrijstelling"
   | "nl-operationeel-domein"
-  | "nl-typegoedkeuring";
+  | "nl-typegoedkeuring"
+  | "us-fmvss"
+  | "us-self-certification"
+  | "us-temporary-exemption"
+  | "us-ca-driverless-testing-permit"
+  | "us-ca-deployment-permit"
+  | "us-ca-cpuc-authority"
+  | "us-ca-remote-driver"
+  | "us-ca-remote-assistant"
+  | "us-ca-safety-case"
+  | "ru-epr"
+  | "ru-vats"
+  | "ru-vats1"
+  | "ru-vats2"
+  | "ru-test-driver"
+  | "ru-operator"
+  | "ru-epr-participant"
+  | "ru-safety-declaration"
+  | "ru-conformity-conclusion"
+  | "ru-ordinary-environment"
+  | "ru-operating-zone"
+  | "ru-automated-mode"
+  | "uk-self-driving-test"
+  | "uk-vso"
+  | "uk-vehicle-listing"
+  | "uk-aps-permit"
+  | "uk-safety-driver"
+  | "uk-asde"
+  | "uk-uic"
+  | "uk-nuic-operator"
+  | "uk-sosp";
 
 export type UniversalAtlasConcept = {
   id: UniversalAtlasConceptId;
@@ -81,11 +135,11 @@ export type TermRelationship = {
 export type JurisdictionTerm = {
   id: JurisdictionTermId;
   conceptId: UniversalAtlasConceptId;
-  jurisdiction: "germany" | "netherlands";
+  jurisdiction: JurisdictionSlug;
   officialTerm: string;
   originalLanguage: {
-    tag: "de-DE" | "nl-NL";
-    label: "German" | "Dutch";
+    tag: "de-DE" | "nl-NL" | "en-US" | "ru-RU" | "en-GB";
+    label: "German" | "Dutch" | "English (US)" | "Russian" | "English (UK)";
   };
   englishGloss: string;
   explanation: string;
@@ -193,12 +247,145 @@ export const UNIVERSAL_ATLAS_CONCEPTS: Record<
       "A mechanism that disapplies or adjusts specified requirements where the applicable law authorizes it.",
     regulatoryQuestionBindings: ["traffic-rules", "road-access"],
   },
+  "vehicle-approval": {
+    id: "vehicle-approval",
+    analyticalLabel: "Vehicle-safety approval or compliance route",
+    universalExplanation:
+      "The applicable product-level route for showing that a vehicle satisfies technical or safety requirements; its legal form differs between regimes.",
+    regulatoryQuestionBindings: ["vehicle-approval"],
+  },
+  "operational-authorization": {
+    id: "operational-authorization",
+    analyticalLabel: "Operational authorization",
+    universalExplanation:
+      "A jurisdiction-specific permission to conduct a defined public-road operation, distinct from product-level vehicle approval.",
+    regulatoryQuestionBindings: ["road-access", "operations"],
+  },
+  "commercial-service-authorization": {
+    id: "commercial-service-authorization",
+    analyticalLabel: "Commercial service authorization",
+    universalExplanation:
+      "A permission required for a passenger or other commercial service in addition to any vehicle and road-use approvals.",
+    regulatoryQuestionBindings: ["road-access", "operations"],
+  },
+  "remote-driving-role": {
+    id: "remote-driving-role",
+    analyticalLabel: "Remote driving role",
+    universalExplanation:
+      "A person outside the vehicle who performs the driving task or exercises real-time vehicle control under the applicable regime.",
+    regulatoryQuestionBindings: ["human-roles", "traffic-rules"],
+  },
+  "remote-assistance-role": {
+    id: "remote-assistance-role",
+    analyticalLabel: "Remote assistance role",
+    universalExplanation:
+      "A remote role that supports the ADS or operation without automatically performing the driving task.",
+    regulatoryQuestionBindings: ["human-roles", "operations"],
+  },
+  "safety-assurance": {
+    id: "safety-assurance",
+    analyticalLabel: "Safety assurance",
+    universalExplanation:
+      "Structured reasoning and evidence used to demonstrate acceptable safety in a defined operational context.",
+    regulatoryQuestionBindings: ["safety-assurance", "vehicle-approval"],
+  },
+  "experimental-regime": {
+    id: "experimental-regime",
+    analyticalLabel: "Experimental legal regime",
+    universalExplanation:
+      "A special legal framework allowing defined activity under a bounded experiment rather than ordinary nationwide deployment law.",
+    regulatoryQuestionBindings: ["road-access", "operations"],
+  },
+  "automated-vehicle-category": {
+    id: "automated-vehicle-category",
+    analyticalLabel: "Automated-vehicle legal category",
+    universalExplanation:
+      "A vehicle category defined by a particular regime for determining applicable technical, human-role and operating conditions.",
+    regulatoryQuestionBindings: ["road-access", "vehicle-approval"],
+  },
+  "human-driver-present": {
+    id: "human-driver-present",
+    analyticalLabel: "Human driver present",
+    universalExplanation:
+      "A regime category in which a human driver remains present and carries the functions assigned by that regime.",
+    regulatoryQuestionBindings: ["human-roles"],
+  },
+  "no-person-in-cabin-operation": {
+    id: "no-person-in-cabin-operation",
+    analyticalLabel: "No-person-in-cabin operation",
+    universalExplanation:
+      "An operating category defined by the absence of a person in the vehicle cabin, without implying that all remote or organizational roles disappear.",
+    regulatoryQuestionBindings: ["human-roles", "road-access"],
+  },
+  "operating-organization": {
+    id: "operating-organization",
+    analyticalLabel: "Operating organization",
+    universalExplanation:
+      "The entity to which a regime assigns ongoing operational, personnel, safety, reporting or compliance duties.",
+    regulatoryQuestionBindings: ["operations", "data-incidents"],
+  },
+  "conformity-assessment": {
+    id: "conformity-assessment",
+    analyticalLabel: "Conformity assessment",
+    universalExplanation:
+      "A regime-specific assessment or finding that stated technical and safety conditions have been satisfied.",
+    regulatoryQuestionBindings: ["vehicle-approval", "safety-assurance"],
+  },
+  "ads-operation": {
+    id: "ads-operation",
+    analyticalLabel: "ADS operation",
+    universalExplanation:
+      "Operation in the mode where the automated driving system performs the driving task within the conditions recognized by the regime.",
+    regulatoryQuestionBindings: ["road-access", "traffic-rules"],
+  },
+  "authorization-test": {
+    id: "authorization-test",
+    analyticalLabel: "Statutory authorization test",
+    universalExplanation:
+      "A legal test used to decide whether a vehicle or feature qualifies for authorization under a particular framework.",
+    regulatoryQuestionBindings: ["vehicle-approval", "road-access"],
+  },
+  "vehicle-listing": {
+    id: "vehicle-listing",
+    analyticalLabel: "Official vehicle listing",
+    universalExplanation:
+      "An official list giving a vehicle a defined legal status or triggering a regime-specific consequence.",
+    regulatoryQuestionBindings: ["vehicle-approval", "liability-insurance"],
+  },
+  "safety-driver-role": {
+    id: "safety-driver-role",
+    analyticalLabel: "Safety driver role",
+    universalExplanation:
+      "A human role required to control, monitor or intervene for safety under the applicable test or pilot conditions.",
+    regulatoryQuestionBindings: ["human-roles", "road-access"],
+  },
+  "future-responsibility-role": {
+    id: "future-responsibility-role",
+    analyticalLabel: "Future authorized-entity role",
+    universalExplanation:
+      "An organizational responsibility role created by enacted legislation whose full operating framework is not yet effective.",
+    regulatoryQuestionBindings: ["operations", "vehicle-approval"],
+  },
+  "future-human-role": {
+    id: "future-human-role",
+    analyticalLabel: "Future human role",
+    universalExplanation:
+      "A human role created by enacted legislation for a future operating framework and kept separate from current pilot roles.",
+    regulatoryQuestionBindings: ["human-roles", "traffic-rules"],
+  },
+  "future-operating-organization": {
+    id: "future-operating-organization",
+    analyticalLabel: "Future operating organization",
+    universalExplanation:
+      "An operating-entity role created by enacted legislation for a future no-user-in-charge framework.",
+    regulatoryQuestionBindings: ["operations", "liability-insurance"],
+  },
 };
 
 const german = { tag: "de-DE", label: "German" } as const;
 const dutch = { tag: "nl-NL", label: "Dutch" } as const;
 
-export const JURISDICTION_TERMS: Record<JurisdictionTermId, JurisdictionTerm> = {
+const BASE_JURISDICTION_TERMS = {
   "de-technische-aufsicht": {
     id: "de-technische-aufsicht",
     conceptId: "technical-supervision-role",
@@ -654,6 +841,89 @@ export const JURISDICTION_TERMS: Record<JurisdictionTermId, JurisdictionTerm> = 
       },
     ],
   },
+};
+
+type ExpansionTerminologyInput = {
+  id: JurisdictionTermId;
+  profile: JurisdictionSlug;
+  officialTerm: string;
+  languageTag: JurisdictionTerm["originalLanguage"]["tag"];
+  englishGloss: string;
+  conceptId: UniversalAtlasConceptId;
+  explanation: string;
+  whyItMatters: string;
+  termStatus: JurisdictionTermStatus;
+  scope: string;
+  sources: { sourceId: string; provision?: string }[];
+  relationships: {
+    type: TermRelationshipType;
+    target?: string;
+    explanation: string;
+  }[];
+};
+
+const languageLabels: Record<
+  JurisdictionTerm["originalLanguage"]["tag"],
+  JurisdictionTerm["originalLanguage"]["label"]
+> = {
+  "de-DE": "German",
+  "nl-NL": "Dutch",
+  "en-US": "English (US)",
+  "ru-RU": "Russian",
+  "en-GB": "English (UK)",
+};
+
+const expansionTermIds = new Set(
+  expansionSeed.terminologyRecords.map((term) => term.id),
+);
+
+function normalizeExpansionTerm(
+  input: ExpansionTerminologyInput,
+): JurisdictionTerm {
+  return {
+    id: input.id,
+    conceptId: input.conceptId,
+    jurisdiction: input.profile,
+    officialTerm: input.officialTerm,
+    originalLanguage: {
+      tag: input.languageTag,
+      label: languageLabels[input.languageTag],
+    },
+    englishGloss: input.englishGloss,
+    explanation: input.explanation,
+    whyItMatters: input.whyItMatters,
+    termStatus: input.termStatus,
+    scope: input.scope,
+    sources: input.sources
+      .filter((source) => isExposedSourceId(source.sourceId))
+      .map((source) => ({
+        ...source,
+        sourceId: source.sourceId as SourceId,
+      })),
+    relationships: input.relationships.map((relationship) => ({
+      type: relationship.type,
+      ...(relationship.target && expansionTermIds.has(relationship.target)
+        ? { targetTermId: relationship.target as JurisdictionTermId }
+        : relationship.target
+          ? { targetConceptId: relationship.target as UniversalAtlasConceptId }
+          : {}),
+      explanation: relationship.explanation,
+    })),
+  };
+}
+
+const EXPANSION_JURISDICTION_TERMS = Object.fromEntries(
+  (expansionSeed.terminologyRecords as ExpansionTerminologyInput[]).map(
+    (term) => [term.id, normalizeExpansionTerm(term)],
+  ),
+) as Record<JurisdictionTermId, JurisdictionTerm>;
+
+export const JURISDICTION_TERMS: Record<
+  JurisdictionTermId,
+  JurisdictionTerm
+> = {
+  ...BASE_JURISDICTION_TERMS,
+  ...EXPANSION_JURISDICTION_TERMS,
 };
 
 export function getUniversalAtlasConcept(conceptId: UniversalAtlasConceptId) {

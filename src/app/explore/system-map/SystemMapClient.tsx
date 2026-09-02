@@ -35,10 +35,16 @@ import {
 } from "./system-map-data";
 
 type LegalFilter = "all" | "binding" | "voluntary" | "depends";
+type SystemMapContextProfile = JurisdictionProfile & {
+  slug: SystemMapContextJurisdiction;
+};
 const CORE_NODES = NODES.filter((node) => node.cluster);
 const CONTEXT_PROFILES = (["germany", "netherlands"] as const)
   .map((slug) => JURISDICTION_PROFILES.find((profile) => profile.slug === slug))
-  .filter((profile): profile is JurisdictionProfile => Boolean(profile));
+  .filter(
+    (profile): profile is SystemMapContextProfile =>
+      profile?.slug === "germany" || profile?.slug === "netherlands",
+  );
 
 const contextToneClasses: Record<StatusTone, string> = {
   positive: "border-[#77c7bd]/35 bg-[#77c7bd]/12 text-[#a9e8df]",
@@ -748,7 +754,7 @@ function JurisdictionContextLayer({
   profile,
 }: {
   locale: Locale;
-  profile: JurisdictionProfile;
+  profile: SystemMapContextProfile;
 }) {
   const bindings = JURISDICTION_CONTEXT_BINDINGS[profile.slug];
 

@@ -40,6 +40,7 @@ export function JurisdictionProfileView({
   profile: JurisdictionProfile;
 }) {
   const common = getCommonUiCopy(locale);
+  const profileName = profile.localizedNames?.[locale] ?? profile.name;
 
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
@@ -87,12 +88,12 @@ export function JurisdictionProfileView({
           </div>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-end">
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
                 {common.regulatoryProfile}
               </p>
-              <h1 className="mt-3 font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl lg:text-7xl">
-                {profile.name}
+              <h1 className="mt-3 break-words hyphens-auto font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+                {profileName}
               </h1>
               <p className="mt-5 max-w-3xl text-sm leading-6 text-[#10264a]/65">
                 {profile.scenario}
@@ -156,6 +157,11 @@ export function JurisdictionProfileView({
           <div className="mt-8 max-w-5xl border-l-2 border-[#147c73] pl-5 font-serif text-xl font-semibold leading-8 tracking-[-0.015em] sm:text-2xl">
             {profile.primaryMessage}
           </div>
+          {profile.scopeNote ? (
+            <p className="mt-5 max-w-5xl border-l border-[#b97512]/55 pl-5 text-sm font-semibold leading-6 text-[#10264a]/68">
+              <span className="text-[#8f5f13]">Scope:</span> {profile.scopeNote}
+            </p>
+          ) : null}
         </div>
       </section>
 
@@ -321,7 +327,9 @@ export function JurisdictionProfileView({
         ))}
       </div>
 
-      <DeploymentReality jurisdiction={profile.slug} />
+      {profile.slug === "netherlands" || profile.slug === "germany" ? (
+        <DeploymentReality jurisdiction={profile.slug} />
+      ) : null}
 
       <section className="bg-[#10264a] text-[#fbf7ef]">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_0.75fr] lg:px-10 lg:py-20">
@@ -447,9 +455,19 @@ function OfficialSources({
   profile: JurisdictionProfile;
 }) {
   const sources = profile.sourceIds.map(getRegulatorySource);
-  const currentLaw = sources.filter((source) => source.legalStatus === "in_force");
-  const interpretative = sources.filter((source) =>
-    ["guidance", "legislative_history", "case_law"].includes(source.legalStatus),
+  const currentLaw = sources.filter(
+    (source) =>
+      source.legalStatus === "in_force" &&
+      ["official_legislation", "official_regulation", "eu_legislation"].includes(
+        source.type,
+      ),
+  );
+  const interpretative = sources.filter(
+    (source) =>
+      source.type === "regulator_material" ||
+      ["guidance", "legislative_history", "case_law"].includes(
+        source.legalStatus,
+      ),
   );
   const futureRules = sources.filter((source) =>
     ["adopted_not_yet_effective", "proposed", "draft"].includes(source.legalStatus),
@@ -470,7 +488,7 @@ function OfficialSources({
           </summary>
           <div className="mt-7 grid gap-8 border-t border-[#10264a]/10 pt-7 lg:grid-cols-3">
             <SourceGroup sources={currentLaw} title="Current law" />
-            <SourceGroup sources={interpretative} title="Guidance & legislative material" />
+            <SourceGroup sources={interpretative} title="Official guidance & regulator material" />
             <SourceGroup sources={futureRules} title="Future / proposed rules" />
           </div>
         </details>
@@ -517,7 +535,7 @@ function SourceGroup({
                 {source.title} ↗
               </a>
               <p className="mt-2 text-xs leading-5 text-[#10264a]/62">
-                {source.authority} · {source.statusLabel} · checked 31 Aug 2026
+                {source.authority} · {source.statusLabel} · checked {formatSourceDate(source.lastChecked)}
               </p>
             </li>
           ))}
@@ -525,4 +543,17 @@ function SourceGroup({
       )}
     </div>
   );
+}
+
+function formatSourceDate(value: string) {
+  const parsed = new Date(`${value}T00:00:00Z`);
+
+  return Number.isNaN(parsed.getTime())
+    ? value
+    : new Intl.DateTimeFormat("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(parsed);
 }

@@ -26,6 +26,8 @@ export type JurisdictionMapCopy = {
   fallbackNames: {
     netherlands: string;
     germany: string;
+    "united-kingdom": string;
+    russia: string;
   };
 };
 
@@ -66,6 +68,26 @@ const CORE_JURISDICTIONS: JurisdictionMapPoint[] = [
     slug: "germany",
     mapLat: 51.1657,
     mapLng: 10.4515,
+    mapStatus: "active",
+    profileStatus: "ready",
+  },
+  {
+    id: -3,
+    name: "United Kingdom",
+    code: "GB",
+    slug: "united-kingdom",
+    mapLat: 52.7,
+    mapLng: -1.5,
+    mapStatus: "active",
+    profileStatus: "ready",
+  },
+  {
+    id: -4,
+    name: "Russia",
+    code: "RU",
+    slug: "russia",
+    mapLat: 55.7558,
+    mapLng: 37.6173,
     mapStatus: "active",
     profileStatus: "ready",
   },

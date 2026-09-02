@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { JURISDICTION_PROFILES } from "@/app/explore/regulatory-data";
 import { EuropeJurisdictionMap } from "@/app/home/EuropeJurisdictionMap";
 import type { JurisdictionMapPoint } from "@/app/home/EuropeJurisdictionMap";
 import { homeCopy } from "@/app/home/home-i18n";
@@ -263,6 +264,29 @@ export default async function Home() {
           <p className="mt-4 text-[10px] leading-4 text-[#10264a]/45">
             {t.ui.map.disclaimer}
           </p>
+          <p className="mt-3 max-w-3xl text-xs leading-5 text-[#10264a]/55">
+            {t.map.scopeNote}
+          </p>
+
+          <nav
+            aria-label={t.map.additionalProfiles}
+            className="mt-7 border-t border-[#10264a]/12 pt-5"
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/45">
+              {t.map.additionalProfiles}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-[#147c73]">
+              {JURISDICTION_PROFILES.map((profile) => (
+                <Link
+                  className="rounded-sm underline decoration-[#147c73]/25 underline-offset-4 outline-none hover:decoration-[#147c73] focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-2"
+                  href={`/${profile.slug}`}
+                  key={profile.slug}
+                >
+                  {profile.localizedNames?.[locale] ?? profile.name} · {profile.code}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
       </section>
 

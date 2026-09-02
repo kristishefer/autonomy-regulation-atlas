@@ -8,6 +8,7 @@ import {
   getKnowledgeStandard,
   type KnowledgeConceptId,
 } from "@/app/explore/learning-data";
+import type { JurisdictionSlug } from "@/app/explore/regulatory-data";
 
 export type LearningConceptId =
   | "odd"
@@ -41,9 +42,9 @@ export type LearningConcept = LearningNote & {
   id: LearningConceptId;
   name: string;
   deeperHref?: string;
-  jurisdictionContext?: Partial<Record<"netherlands" | "germany", string>>;
+  jurisdictionContext?: Partial<Record<JurisdictionSlug, string>>;
   jurisdictionTerminology?: Partial<
-    Record<"netherlands" | "germany", JurisdictionTermId[]>
+    Record<JurisdictionSlug, JurisdictionTermId[]>
   >;
 };
 
@@ -67,13 +68,35 @@ export const LEARNING_CONCEPTS: Record<LearningConceptId, LearningConcept> = {
         "Operationeel Domein information forms part of the Dutch experimental vergunning assessment, but the source term is not treated as a literal synonym for ODD.",
       germany:
         "The ADS technical ODD must not be conflated with the legally approved defined operating area (Betriebsbereich).",
+      "united-states":
+        "California permit and passenger-service records can make an ODD legally relevant to a specific authorization, but that does not create one nationwide operating-domain rule.",
+      russia:
+        "The technical среда штатной эксплуатации and the legally bounded зона эксплуатации perform related but non-equivalent functions within the EPR.",
+      "united-kingdom":
+        "The current Great Britain pilot assesses operating conditions and routes; Atlas does not turn those conditions into a single statutory ODD synonym.",
     },
     jurisdictionTerminology: {
       netherlands: ["nl-operationeel-domein"],
       germany: ["de-betriebsbereich", "de-betriebsbereich-genehmigung"],
+      russia: ["ru-ordinary-environment", "ru-operating-zone"],
     },
   },
-  "safety-assurance": projectKnowledgeConcept("safety-assurance"),
+  "safety-assurance": {
+    ...projectKnowledgeConcept("safety-assurance"),
+    jurisdictionContext: {
+      "united-states":
+        "California uses safety-case documentation within its permit framework; it is not a nationwide certificate or a substitute for operational permission.",
+      russia:
+        "The EPR admission package uses a декларация о безопасности alongside a distinct conformity conclusion.",
+      "united-kingdom":
+        "The Statement of Safety Principles belongs to staged AV Act implementation; the September 2026 text remains a consultation draft rather than current binding criteria.",
+    },
+    jurisdictionTerminology: {
+      "united-states": ["us-ca-safety-case"],
+      russia: ["ru-safety-declaration", "ru-conformity-conclusion"],
+      "united-kingdom": ["uk-sosp"],
+    },
+  },
   "functional-safety": projectKnowledgeConcept("functional-safety"),
   sotif: projectKnowledgeConcept("sotif"),
   "scenario-based-assessment": projectKnowledgeConcept(
@@ -95,6 +118,12 @@ export const LEARNING_CONCEPTS: Record<LearningConceptId, LearningConcept> = {
         "EU ADS approval and Dutch public-road authorization answer separate regulatory questions.",
       germany:
         "EU 2022/1426 Typgenehmigung is expressly recognized, while Betriebserlaubnis, approval of the Betriebsbereich and Zulassung remain distinct gates where applicable.",
+      "united-states":
+        "Federal FMVSS self-certification and temporary exemption mechanisms are not EU-style type approval and do not grant California road-use permission.",
+      russia:
+        "The EPR uses a conformity conclusion and programme-specific admission steps; Atlas does not relabel that route as EU type approval.",
+      "united-kingdom":
+        "Current vehicle approval, the VSO pilot route and official listing answer different questions; future AV Act authorization is shown separately.",
     },
     jurisdictionTerminology: {
       netherlands: ["nl-typegoedkeuring", "nl-vergunning"],
@@ -103,6 +132,18 @@ export const LEARNING_CONCEPTS: Record<LearningConceptId, LearningConcept> = {
         "de-typgenehmigung",
         "de-betriebsbereich-genehmigung",
         "de-zulassung",
+      ],
+      "united-states": [
+        "us-fmvss",
+        "us-self-certification",
+        "us-temporary-exemption",
+        "us-ca-deployment-permit",
+      ],
+      russia: ["ru-conformity-conclusion"],
+      "united-kingdom": [
+        "uk-vso",
+        "uk-vehicle-listing",
+        "uk-self-driving-test",
       ],
     },
   },
@@ -250,7 +291,7 @@ export const LEARNING_CONCEPTS: Record<LearningConceptId, LearningConcept> = {
 
 export function getLearningNote(
   conceptId: LearningConceptId,
-  jurisdiction?: "netherlands" | "germany",
+  jurisdiction?: JurisdictionSlug,
 ): LearningNote {
   const concept = LEARNING_CONCEPTS[conceptId];
   const context = jurisdiction

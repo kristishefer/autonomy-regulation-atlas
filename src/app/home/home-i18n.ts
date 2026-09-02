@@ -33,6 +33,8 @@ type HomeCopy = {
     eyebrow: string;
     title: string;
     body: string;
+    scopeNote: string;
+    additionalProfiles: string;
   };
   puzzle: {
     eyebrow: string;
@@ -64,6 +66,8 @@ type HomeCopy = {
       fallbackNames: {
         netherlands: string;
         germany: string;
+        "united-kingdom": string;
+        russia: string;
       };
     };
     footerTagline: string;
@@ -104,6 +108,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       eyebrow: "Interactive Atlas",
       title: "Same technology, different legal answers",
       body: "Choose a beacon to open its jurisdiction profile. Locations and coverage states come from the Atlas database, so the map grows with the research.",
+      scopeNote: "The geographic view remains Europe-focused. Moscow is a discovery marker for the Russia profile, not an EPR operating area.",
+      additionalProfiles: "All jurisdiction profiles",
     },
     puzzle: {
       eyebrow: "Learn with Cat",
@@ -141,6 +147,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         fallbackNames: {
           netherlands: "Netherlands",
           germany: "Germany",
+          "united-kingdom": "United Kingdom",
+          russia: "Russia",
         },
       },
       footerTagline:
@@ -185,6 +193,9 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "Eine Technologie — unterschiedliche rechtliche Rahmen",
       body:
         "Wählen Sie eine Markierung, um das Profil einer Rechtsordnung zu öffnen. Die Karte zeigt, welche Rechtsordnungen bereits untersucht wurden und wie weit die Abdeckung reicht.",
+      scopeNote:
+        "Die geografische Ansicht bleibt auf Europa ausgerichtet. Moskau ist ein Einstiegspunkt zum Russland-Profil und kein EPR-Betriebsgebiet.",
+      additionalProfiles: "Alle Rechtsordnungsprofile",
     },
     puzzle: {
       eyebrow: "Die Katze erklärt",
@@ -228,6 +239,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         fallbackNames: {
           netherlands: "Niederlande",
           germany: "Deutschland",
+          "united-kingdom": "Vereinigtes Königreich",
+          russia: "Russland",
         },
       },
       footerTagline:
@@ -272,6 +285,9 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "Eén technologie — verschillende juridische kaders",
       body:
         "Kies een markering om het profiel van een jurisdictie te openen. De kaart laat zien welke jurisdicties al zijn onderzocht en hoe ver de dekking reikt.",
+      scopeNote:
+        "De geografische weergave blijft op Europa gericht. Moskou is een toegangspunt tot het Rusland-profiel en geen EPR-exploitatiegebied.",
+      additionalProfiles: "Alle jurisdictieprofielen",
     },
     puzzle: {
       eyebrow: "De kat legt uit",
@@ -315,6 +331,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         fallbackNames: {
           netherlands: "Nederland",
           germany: "Duitsland",
+          "united-kingdom": "Verenigd Koninkrijk",
+          russia: "Rusland",
         },
       },
       footerTagline:
@@ -359,6 +377,9 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "Одна технология — разные правовые режимы",
       body:
         "Выберите страну, чтобы открыть её профиль регулирования. Карта показывает, какие юрисдикции уже исследованы и насколько полно.",
+      scopeNote:
+        "Географическая карта по-прежнему ориентирована на Европу. Москва — точка перехода к профилю России, а не территория действия ЭПР.",
+      additionalProfiles: "Все профили юрисдикций",
     },
     puzzle: {
       eyebrow: "Кот объясняет",
@@ -402,6 +423,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         fallbackNames: {
           netherlands: "Нидерланды",
           germany: "Германия",
+          "united-kingdom": "Великобритания",
+          russia: "Россия",
         },
       },
       footerTagline:

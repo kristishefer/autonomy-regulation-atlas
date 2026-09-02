@@ -33,8 +33,14 @@ export default async function ComparePage() {
   const compare = getCompareUiCopy(locale);
   const methodology = getMethodologyStatusCopy(locale);
   const profiles = JURISDICTION_PROFILES;
+  const profileNames = profiles.map(
+    (profile) => profile.localizedNames?.[locale] ?? profile.name,
+  );
   const jurisdictionColumns = {
     gridTemplateColumns: `repeat(${profiles.length}, minmax(250px, 1fr))`,
+  };
+  const comparisonCanvas = {
+    minWidth: `${198 + profiles.length * 262}px`,
   };
 
   return (
@@ -90,6 +96,21 @@ export default async function ComparePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10 lg:py-16">
+        <nav
+          aria-label={common.compareJurisdictions}
+          className="mb-5 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-[#147c73]"
+        >
+          {profiles.map((profile, index) => (
+            <a
+              className="rounded-sm underline decoration-[#147c73]/25 underline-offset-4 outline-none hover:decoration-[#147c73] focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-2"
+              href={`#compare-${profile.slug}`}
+              key={profile.slug}
+            >
+              {profileNames[index]} · {profile.code}
+            </a>
+          ))}
+        </nav>
+
         <p className="mb-3 flex items-center justify-between gap-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#147c73] sm:hidden">
           <span>{compare.swipe}</span>
           <span className="text-base" aria-hidden="true">
@@ -99,26 +120,28 @@ export default async function ComparePage() {
 
         <div className="relative">
           <div
-            aria-label={`${common.compareJurisdictions}: Netherlands, Germany`}
+            aria-label={`${common.compareJurisdictions}: ${profileNames.join(", ")}`}
             className="overflow-x-auto pb-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#147c73]"
             tabIndex={0}
           >
-            <div className="min-w-[680px]">
+            <div style={comparisonCanvas}>
             <div className="grid gap-3 border-b border-[#10264a]/12 pb-5 pl-[198px]">
               <div className="grid gap-3" style={jurisdictionColumns}>
-                {profiles.map((profile) => (
-                  <Link
+                {profiles.map((profile, index) => (
+                  <div
                     className="group border-l border-[#147c73]/35 pl-4"
-                    href={`/${profile.slug}`}
+                    id={`compare-${profile.slug}`}
                     key={profile.slug}
                   >
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/38">
-                      {profile.code}
-                    </span>
-                    <span className="mt-1 block font-serif text-2xl font-semibold group-hover:text-[#147c73]">
-                      {profile.name} ↗
-                    </span>
-                  </Link>
+                    <Link href={`/${profile.slug}`}>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/38">
+                        {profile.code}
+                      </span>
+                      <span className="mt-1 block font-serif text-2xl font-semibold group-hover:text-[#147c73]">
+                        {profileNames[index]} ↗
+                      </span>
+                    </Link>
+                  </div>
                 ))}
               </div>
             </div>
