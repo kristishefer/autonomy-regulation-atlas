@@ -17,6 +17,18 @@ export type JurisdictionMapPoint = {
   profileStatus: string | null;
 };
 
+export type JurisdictionMapCopy = {
+  ariaLabel: string;
+  openProfile: string;
+  profileAvailable: string;
+  coverageDeveloping: string;
+  profilesOnMap: string;
+  fallbackNames: {
+    netherlands: string;
+    germany: string;
+  };
+};
+
 type WorldTopology = Topology<{
   countries: GeometryCollection;
 }>;
@@ -78,13 +90,26 @@ function isProfileAvailable(item: JurisdictionMapPoint) {
   return visibleProfileStatuses.has(status);
 }
 
-function withCoreJurisdictions(jurisdictions: JurisdictionMapPoint[]) {
+function withCoreJurisdictions(
+  jurisdictions: JurisdictionMapPoint[],
+  fallbackNames: JurisdictionMapCopy["fallbackNames"],
+) {
   const bySlug = new Map(
-    CORE_JURISDICTIONS.map((jurisdiction) => [jurisdiction.slug, jurisdiction]),
+    CORE_JURISDICTIONS.map((jurisdiction) => [
+      jurisdiction.slug,
+      {
+        ...jurisdiction,
+        name: fallbackNames[jurisdiction.slug as keyof typeof fallbackNames],
+      },
+    ]),
   );
 
   jurisdictions.forEach((jurisdiction) => {
-    bySlug.set(jurisdiction.slug, jurisdiction);
+    const fallback = bySlug.get(jurisdiction.slug);
+    bySlug.set(
+      jurisdiction.slug,
+      fallback ? { ...jurisdiction, name: fallback.name } : jurisdiction,
+    );
   });
 
   return Array.from(bySlug.values());
@@ -92,10 +117,15 @@ function withCoreJurisdictions(jurisdictions: JurisdictionMapPoint[]) {
 
 export function EuropeJurisdictionMap({
   jurisdictions,
+  copy,
 }: {
   jurisdictions: JurisdictionMapPoint[];
+  copy: JurisdictionMapCopy;
 }) {
-  const mappedJurisdictions = withCoreJurisdictions(jurisdictions);
+  const mappedJurisdictions = withCoreJurisdictions(
+    jurisdictions,
+    copy.fallbackNames,
+  );
   const topology = world as unknown as WorldTopology;
   const countries = feature(
     topology,
@@ -123,7 +153,7 @@ export function EuropeJurisdictionMap({
     <div className="overflow-hidden border border-[#10264a]/15 bg-[#dceae5]">
       <div className="relative aspect-[3/2] w-full">
         <svg
-          aria-label={`Map of Europe with ${mappedJurisdictions.length} Atlas jurisdiction ${mappedJurisdictions.length === 1 ? "beacon" : "beacons"}`}
+          aria-label={copy.ariaLabel}
           className="h-full w-full"
           role="img"
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
@@ -153,16 +183,19 @@ export function EuropeJurisdictionMap({
               const [x, y] = projected;
               const available = isProfileAvailable(item);
               const labelOnLeft = x > WIDTH - 135;
+              const profileLabel = `${copy.openProfile}: ${item.name}`;
 
               return (
                 <a
-                  aria-label={`Open ${item.name} jurisdiction profile`}
+                  aria-label={profileLabel}
                   className="atlas-map-link"
                   href={`/${item.slug}`}
                   key={item.slug}
                 >
                   <title>{`${item.name} — ${
-                    available ? "profile available" : "coverage developing"
+                    available
+                      ? copy.profileAvailable
+                      : copy.coverageDeveloping
                   }`}</title>
                   <circle
                     className="atlas-map-hit-area"
@@ -206,10 +239,11 @@ export function EuropeJurisdictionMap({
           if (!projected) return null;
 
           const [x, y] = projected;
+          const profileLabel = `${copy.openProfile}: ${item.name}`;
 
           return (
             <a
-              aria-label={`Open ${item.name} jurisdiction profile`}
+              aria-label={profileLabel}
               className="absolute z-10 size-14 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#b97512]"
               href={`/${item.slug}`}
               key={`html-hit-${item.slug}`}
@@ -217,9 +251,9 @@ export function EuropeJurisdictionMap({
                 left: `${(x / WIDTH) * 100}%`,
                 top: `${(y / HEIGHT) * 100}%`,
               }}
-              title={`Open ${item.name} jurisdiction profile`}
+              title={profileLabel}
             >
-              <span className="sr-only">Open {item.name} jurisdiction profile</span>
+              <span className="sr-only">{profileLabel}</span>
             </a>
           );
         })}
@@ -227,16 +261,16 @@ export function EuropeJurisdictionMap({
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#10264a]/15 bg-[#fbf7ef] px-5 py-4 text-[11px] uppercase tracking-[0.14em] text-[#10264a]/60 sm:px-7">
         <span>
-          {mappedJurisdictions.length} mapped {mappedJurisdictions.length === 1 ? "profile" : "profiles"}
+          {mappedJurisdictions.length} {copy.profilesOnMap}
         </span>
         <span className="flex flex-wrap gap-x-5 gap-y-2">
           <span className="inline-flex items-center gap-2">
             <span className="size-2 bg-[#147c73]" aria-hidden="true" />
-            Profile available
+            {copy.profileAvailable}
           </span>
           <span className="inline-flex items-center gap-2">
             <span className="size-2 bg-[#b97512]" aria-hidden="true" />
-            Coverage developing
+            {copy.coverageDeveloping}
           </span>
         </span>
       </div>
