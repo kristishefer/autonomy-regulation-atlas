@@ -556,7 +556,7 @@ export default function SystemMapClient() {
         </section>
 
         <div className="mt-5 text-xs leading-5 text-[#10264a]/42">
-          The System Map does not infer legal effect from an instrument's name,
+          The System Map does not infer legal effect from an instrument&apos;s name,
           issuing body or international origin. Binding effect, treaty pathway,
           implementation and regulatory references are stored as
           jurisdiction-specific relationships. Unresearched relationships remain
