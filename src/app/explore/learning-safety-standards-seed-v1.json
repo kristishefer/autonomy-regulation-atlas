@@ -1,0 +1,1928 @@
+{
+  "schemaVersion": "1.0",
+  "generatedFor": "Autonomy Regulation Atlas",
+  "lastVerified": "2026-09-01",
+  "learningPaths": [
+    {
+      "id": "path-safety-standards",
+      "slug": "safety-standards",
+      "title": "Safety & Standards",
+      "description": "A guided path through the core safety-assurance concepts, standards and regulatory evidence used to reason about automated-driving safety.",
+      "coreQuestion": "How do safety concepts, standards, testing and regulatory evidence fit together for an ADS?",
+      "order": 2,
+      "conceptIds": [
+        "safety-assurance",
+        "functional-safety",
+        "sotif",
+        "odd",
+        "scenario-based-assessment",
+        "safety-case-evidence"
+      ],
+      "status": "seed_v1",
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "concepts": [
+    {
+      "id": "safety-assurance",
+      "slug": "safety-assurance",
+      "title": "Safety Assurance",
+      "coreQuestion": "How do we build confidence that an automated driving system is acceptably safe?",
+      "atlasDefinition": "Safety assurance is the structured process of building, evaluating and maintaining evidence that an ADS can operate with acceptable safety within its intended conditions.",
+      "plainEnglish": "There is no single test that proves an automated vehicle is safe. Safety assurance is about putting different pieces of evidence together and checking whether they support the safety claim.",
+      "whyItMatters": [
+        "ADS safety depends on more than one component, one standard or one test campaign.",
+        "The evidence stack can include engineering processes, scenario-based evaluation, physical and virtual tests, operational controls and in-service monitoring.",
+        "Regulators may judge the adequacy of the overall demonstration rather than mere possession of a standard certificate."
+      ],
+      "commonConfusions": [
+        {
+          "title": "Safety assurance ≠ compliance with one standard",
+          "body": "A standard can provide part of the evidence. It does not automatically establish overall ADS safety or legal permission to operate."
+        },
+        {
+          "title": "Safety assurance ≠ one mileage number",
+          "body": "Accumulated road mileage can be evidence, but UNECE NATM expressly uses a multi-method validation architecture rather than a single validation method."
+        }
+      ],
+      "levels": {
+        "essentials": {
+          "summary": "Safety assurance is the umbrella concept connecting safety claims to evidence across the ADS lifecycle.",
+          "keyPoints": [
+            "No single validation method is sufficient for the whole ADS safety question.",
+            "UNECE NATM combines a scenario catalogue with multiple validation pillars.",
+            "The legal role of the evidence depends on the applicable approval or operating framework."
+          ]
+        },
+        "applied": {
+          "howItWorks": [
+            "Define the safety question and the intended operating conditions.",
+            "Identify relevant hazards, functional limitations and scenarios.",
+            "Generate evidence using complementary methods.",
+            "Connect the evidence to the safety argument.",
+            "Continue collecting evidence after deployment where the legal/assurance framework requires in-service monitoring or reporting."
+          ],
+          "regulatoryRelevance": [
+            "EU Regulation 2022/1426 provides a binding example of a broader ADS safety assessment architecture: safety concept documentation, safety-management-system assessment, scenario-based tests, virtual-toolchain credibility and in-service reporting."
+          ],
+          "regulatoryExamples": [
+            {
+              "title": "EU type approval",
+              "sourceIds": [
+                "src-eu-2022-1426-consolidated"
+              ],
+              "takeaway": "A technical standard can contribute evidence, but the regulatory assessment concerns the broader safety demonstration required by the approval framework."
+            },
+            {
+              "title": "UNECE NATM",
+              "sourceIds": [
+                "src-unece-natm-2023"
+              ],
+              "takeaway": "Scenario catalogue + simulation/virtual testing + track testing + real-world testing + audit/assessment + in-service monitoring/reporting form a multi-method validation architecture."
+            }
+          ],
+          "jurisdictionOverlayIds": [
+            "overlay-nl-safety-assurance",
+            "overlay-de-safety-assurance"
+          ],
+          "caseIds": [
+            "case-uber-tempe-2018",
+            "case-cruise-sf-2023"
+          ],
+          "checkYourUnderstanding": [
+            {
+              "question": "If an ADS project follows ISO 26262, has overall ADS safety been demonstrated?",
+              "answer": "No. ISO 26262 can support one part of the evidence, but broader ADS safety assurance also addresses other safety questions and the applicable regulatory framework."
+            }
+          ]
+        },
+        "deepDive": {
+          "summary": "Deep Dive should explain claims–argument–evidence logic, lifecycle assurance, multi-pillar validation and the distinction between engineering evidence and regulatory acceptance.",
+          "topics": [
+            "claims, arguments and evidence",
+            "multi-pillar validation",
+            "lifecycle / in-service evidence",
+            "technical evidence vs legal approval"
+          ],
+          "sourceIds": [
+            "src-unece-natm-2023",
+            "src-unece-ads-guidelines-2025",
+            "src-eu-2022-1426-consolidated"
+          ]
+        }
+      },
+      "standardIds": [
+        "std-iso-26262",
+        "std-iso-21448",
+        "std-iso-34503"
+      ],
+      "relatedConceptIds": [
+        "functional-safety",
+        "sotif",
+        "odd",
+        "scenario-based-assessment",
+        "safety-case-evidence"
+      ],
+      "glossary": true,
+      "sourceIds": [
+        "src-unece-natm-2023",
+        "src-unece-ads-guidelines-2025",
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "functional-safety",
+      "slug": "functional-safety",
+      "title": "Functional Safety",
+      "coreQuestion": "What happens when safety-related E/E systems malfunction?",
+      "atlasDefinition": "Functional safety addresses unreasonable risk arising from hazards caused by malfunctioning behaviour of safety-related electrical and/or electronic systems.",
+      "plainEnglish": "This is the safety question about faults and unintended system behaviour: what happens when safety-relevant electronics or software do not behave as intended?",
+      "whyItMatters": [
+        "ADSs depend heavily on safety-related E/E systems.",
+        "A failure or unintended behaviour can create hazards even if the broader ADS concept is sound.",
+        "Functional safety therefore forms one evidence stream within a larger ADS safety argument."
+      ],
+      "commonConfusions": [
+        {
+          "title": "Functional safety ≠ all ADS safety",
+          "body": "It focuses on hazards caused by malfunctioning behaviour; it does not cover every risk created by limitations of an intended function."
+        },
+        {
+          "title": "ISO 26262 ≠ AV approval",
+          "body": "ISO 26262 is an engineering standard, not a road-use permission or a complete autonomous-driving regulatory regime."
+        }
+      ],
+      "levels": {
+        "essentials": {
+          "summary": "Functional safety focuses on risk caused by malfunctioning behaviour of safety-related E/E systems.",
+          "keyPoints": [
+            "Think malfunctioning behaviour, not every unsafe outcome.",
+            "ISO 26262 is the core standard object linked to this concept.",
+            "The concept is narrower than overall ADS safety assurance."
+          ]
+        },
+        "applied": {
+          "howItWorks": [
+            "Identify safety-relevant functions and hazards related to malfunctioning behaviour.",
+            "Use functional-safety lifecycle activities and evidence appropriate to the system.",
+            "Connect this evidence to the broader ADS safety demonstration."
+          ],
+          "regulatoryRelevance": [
+            "The current consolidated EU 2022/1426 text defines functional safety in terms of unreasonable risk arising from hazards caused by malfunctioning behaviour and separately addresses failure scenarios."
+          ],
+          "regulatoryExamples": [
+            {
+              "title": "EU 2022/1426",
+              "sourceIds": [
+                "src-eu-2022-1426-consolidated"
+              ],
+              "takeaway": "Binding law can use functional-safety concepts without making ISO 26262 itself the whole legal approval test."
+            }
+          ],
+          "jurisdictionOverlayIds": [
+            "overlay-nl-functional-safety",
+            "overlay-de-functional-safety"
+          ],
+          "caseIds": [],
+          "caseDisplayNote": "No canonical AV malfunction case is required for MVP. Do not fill this slot with a weak analogy merely to achieve visual symmetry.",
+          "checkYourUnderstanding": [
+            {
+              "question": "A perception system correctly executes its implemented logic but cannot reliably classify a difficult object. Is that automatically an ISO 26262 malfunction?",
+              "answer": "No. A safety problem can arise without a fault in the ISO 26262 sense; that is why functional safety must be distinguished from intended-functionality insufficiencies."
+            }
+          ]
+        },
+        "deepDive": {
+          "summary": "Deep Dive should cover malfunctioning behaviour, functional-safety lifecycle logic, the boundary with SOTIF and the evidentiary—not automatically legal—role of ISO 26262.",
+          "topics": [
+            "malfunctioning behaviour",
+            "functional-safety lifecycle",
+            "functional safety vs intended-functionality insufficiency",
+            "standard vs legal requirement"
+          ],
+          "sourceIds": [
+            "src-iso-26262-1-2018",
+            "src-eu-2022-1426-consolidated"
+          ]
+        }
+      },
+      "standardIds": [
+        "std-iso-26262"
+      ],
+      "relatedConceptIds": [
+        "safety-assurance",
+        "sotif",
+        "safety-case-evidence"
+      ],
+      "glossary": true,
+      "sourceIds": [
+        "src-iso-26262-1-2018",
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "sotif",
+      "slug": "sotif",
+      "title": "SOTIF",
+      "coreQuestion": "What if safety risk arises from a functional insufficiency rather than an ISO 26262 fault?",
+      "atlasDefinition": "Safety of the Intended Functionality (SOTIF) concerns the absence of unreasonable risk due to hazards caused by functional insufficiencies of the intended functionality.",
+      "plainEnglish": "Nothing necessarily has to break. A system can operate without an ISO 26262 fault and still be unable to handle a safety-relevant situation adequately.",
+      "whyItMatters": [
+        "ADS functions rely on complex sensing, perception and decision-making in an open environment.",
+        "A function can be implemented and operating as designed yet still face specification or performance insufficiencies.",
+        "Reasonably foreseeable misuse can also be within the SOTIF analysis where the standard's scope applies."
+      ],
+      "commonConfusions": [
+        {
+          "title": "SOTIF ≠ 'AI mistakes'",
+          "body": "The formal concept is functional insufficiency and resulting unreasonable risk, not a catch-all label for any machine-learning or perception error."
+        },
+        {
+          "title": "SOTIF ≠ malfunctioning behaviour",
+          "body": "ISO 21448 expressly excludes faults covered by ISO 26262."
+        },
+        {
+          "title": "SOTIF ≠ any accident with system limitations",
+          "body": "Do not classify a real-world crash as a SOTIF failure unless the authoritative source supports that classification."
+        }
+      ],
+      "levels": {
+        "essentials": {
+          "summary": "SOTIF addresses unreasonable risk from functional insufficiencies where an ISO 26262 fault is not necessary.",
+          "keyPoints": [
+            "No fault is required.",
+            "Complex sensing/situational awareness is central to the standard's ADS relevance.",
+            "Keep SOTIF distinct from functional safety."
+          ]
+        },
+        "applied": {
+          "howItWorks": [
+            "Identify intended-functionality insufficiencies and relevant triggering conditions.",
+            "Consider foreseeable situations and reasonably foreseeable misuse within scope.",
+            "Use design, verification, validation and operation-phase measures to reduce/maintain risk."
+          ],
+          "regulatoryRelevance": [
+            "EU 2022/1426 uses the separate legal term 'operational safety' for hazards including functional insufficiencies, operational disturbances and reasonably foreseeable misuse/errors. Atlas must not rename this statutory category 'SOTIF'."
+          ],
+          "regulatoryExamples": [
+            {
+              "title": "EU operational safety",
+              "sourceIds": [
+                "src-eu-2022-1426-consolidated"
+              ],
+              "takeaway": "There is conceptual overlap with SOTIF territory, but the regulation uses its own legal terminology."
+            }
+          ],
+          "jurisdictionOverlayIds": [
+            "overlay-nl-sotif",
+            "overlay-de-sotif"
+          ],
+          "caseIds": [],
+          "checkYourUnderstanding": [
+            {
+              "question": "If no component has failed, can there still be a safety problem relevant to SOTIF?",
+              "answer": "Yes. SOTIF specifically addresses hazards from functional insufficiencies where an ISO 26262 fault is not necessary."
+            }
+          ]
+        },
+        "deepDive": {
+          "summary": "Deep Dive should explain specification insufficiency, performance insufficiency, triggering conditions, reasonably foreseeable misuse and the boundary with functional safety.",
+          "topics": [
+            "functional insufficiency",
+            "specification vs performance insufficiency",
+            "reasonably foreseeable misuse",
+            "functional safety boundary",
+            "remote user/back-office interactions within ISO 21448 scope"
+          ],
+          "sourceIds": [
+            "src-iso-21448-2022",
+            "src-eu-2022-1426-consolidated"
+          ]
+        }
+      },
+      "standardIds": [
+        "std-iso-21448"
+      ],
+      "relatedConceptIds": [
+        "functional-safety",
+        "safety-assurance",
+        "odd",
+        "scenario-based-assessment"
+      ],
+      "glossary": true,
+      "sourceIds": [
+        "src-iso-21448-2022",
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "odd",
+      "slug": "odd",
+      "title": "Operational Design Domain (ODD)",
+      "coreQuestion": "Under which conditions is the ADS designed to function?",
+      "atlasDefinition": "An ODD describes the operating conditions within which a given ADS is specifically designed to function.",
+      "plainEnglish": "ODD is the system's operating envelope: the conditions the ADS is designed for, not simply a pin on a map.",
+      "whyItMatters": [
+        "ADS capability is conditional: road type, environment, weather, time, traffic and other attributes can matter.",
+        "ODD boundaries shape scenario selection, testing and the safety argument.",
+        "Legal permission to operate can be narrower, differently structured or separately approved."
+      ],
+      "commonConfusions": [
+        {
+          "title": "ODD ≠ geofence",
+          "body": "Geography can be one attribute, but ODD can also include environmental, roadway, traffic and temporal conditions."
+        },
+        {
+          "title": "ODD ≠ legal operating permission",
+          "body": "A system capability concept does not itself grant a legal right to operate."
+        },
+        {
+          "title": "ODD ≠ Germany's Betriebsbereich",
+          "body": "The German festgelegter Betriebsbereich is a legally approved operating-area concept; it must not be silently substituted for technical ODD."
+        }
+      ],
+      "levels": {
+        "essentials": {
+          "summary": "ODD describes the conditions within which an ADS is designed to function.",
+          "keyPoints": [
+            "It is broader than geography.",
+            "It defines capability boundaries.",
+            "It is a key input into scenarios, validation and safety evidence."
+          ]
+        },
+        "applied": {
+          "howItWorks": [
+            "Describe relevant static and dynamic operating conditions.",
+            "Define boundaries in a structured format.",
+            "Use the ODD to identify relevant scenarios and evidence needs.",
+            "Map technical capability separately from jurisdiction-specific legal authorisation."
+          ],
+          "regulatoryRelevance": [
+            "EU 2022/1426 directly defines ODD and requires documentation of the ADS operating domain/boundary conditions in the type-approval package."
+          ],
+          "regulatoryExamples": [
+            {
+              "title": "EU type approval",
+              "sourceIds": [
+                "src-eu-2022-1426-consolidated"
+              ],
+              "takeaway": "ODD is a defined regulatory concept in the EU ADS type-approval framework."
+            },
+            {
+              "title": "Germany",
+              "sourceIds": [
+                "src-de-stvg",
+                "src-de-afgbv"
+              ],
+              "takeaway": "Technical ODD and the legally approved festgelegter Betriebsbereich must be shown as distinct layers."
+            }
+          ],
+          "jurisdictionOverlayIds": [
+            "overlay-nl-odd",
+            "overlay-de-odd"
+          ],
+          "caseIds": [],
+          "checkYourUnderstanding": [
+            {
+              "question": "If an ADS is technically capable of operating on a road, does that mean it is legally authorised to operate there?",
+              "answer": "No. Technical ODD/capability and legal operating permission are separate questions."
+            }
+          ]
+        },
+        "deepDive": {
+          "summary": "Deep Dive should cover ODD taxonomy, static/dynamic attributes, boundary conditions, ODD-to-scenario traceability and the distinction between capability and legal permission.",
+          "topics": [
+            "ODD taxonomy",
+            "static and dynamic attributes",
+            "boundary conditions",
+            "ODD-to-scenario traceability",
+            "ODD vs legal operating area"
+          ],
+          "sourceIds": [
+            "src-iso-34503-2023",
+            "src-eu-2022-1426-consolidated",
+            "src-de-stvg",
+            "src-de-afgbv"
+          ]
+        }
+      },
+      "standardIds": [
+        "std-iso-34503",
+        "std-iso-sae-22736"
+      ],
+      "relatedConceptIds": [
+        "safety-assurance",
+        "sotif",
+        "scenario-based-assessment",
+        "safety-case-evidence"
+      ],
+      "glossary": true,
+      "sourceIds": [
+        "src-iso-34503-2023",
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "scenario-based-assessment",
+      "slug": "scenario-based-assessment",
+      "title": "Scenario-based Assessment",
+      "coreQuestion": "Which situations must the safety demonstration address, and how are they evaluated?",
+      "atlasDefinition": "Scenario-based assessment uses structured driving situations to organise, select and evaluate evidence about ADS safety across complementary validation methods.",
+      "plainEnglish": "Instead of asking only how many kilometres the vehicle has driven, scenario-based assessment asks whether the system has been challenged with the situations that matter.",
+      "whyItMatters": [
+        "The space of possible road situations is too broad to reduce validation to one generic road-test metric.",
+        "ODD definition helps identify relevant scenario space.",
+        "Scenarios can be evaluated through simulation, track testing, real-world testing and other assessment methods."
+      ],
+      "commonConfusions": [
+        {
+          "title": "Scenario catalogue ≠ NATM validation pillar",
+          "body": "Under NATM, the scenario catalogue supports the validation architecture; the validation pillars are simulation/virtual testing, track testing, real-world testing, audit/assessment, and in-service monitoring/reporting."
+        },
+        {
+          "title": "Scenario-based assessment ≠ physical testing only",
+          "body": "The concept includes scenario selection/organisation and evidence from multiple assessment methods."
+        },
+        {
+          "title": "Do not invent a universal taxonomy",
+          "body": "Use source-specific categories. EU 2022/1426 expressly uses nominal traffic, critical and failure scenarios; other standards may use additional structures."
+        }
+      ],
+      "levels": {
+        "essentials": {
+          "summary": "Scenario-based assessment structures the safety question around relevant situations rather than relying on a single mileage or test metric.",
+          "keyPoints": [
+            "ODD helps define relevant scenario space.",
+            "Different validation methods contribute different evidence.",
+            "Scenario terminology must remain source-specific."
+          ]
+        },
+        "applied": {
+          "howItWorks": [
+            "Define the ODD and safety requirements.",
+            "Build/select relevant scenarios.",
+            "Categorise/evaluate scenarios and convert them into test cases where appropriate.",
+            "Execute evidence through suitable validation methods.",
+            "Trace results back to requirements and the safety argument."
+          ],
+          "regulatoryRelevance": [
+            "The current EU 2022/1426 text defines scenario, nominal traffic scenarios, critical scenarios and failure scenarios and embeds scenario assessment/testing in the binding ADS type-approval architecture."
+          ],
+          "regulatoryExamples": [
+            {
+              "title": "UNECE NATM",
+              "sourceIds": [
+                "src-unece-natm-2023"
+              ],
+              "takeaway": "Uses a scenario catalogue together with five validation pillars; no single methodology is treated as sufficient for comprehensive ADS validation."
+            },
+            {
+              "title": "EU 2022/1426",
+              "sourceIds": [
+                "src-eu-2022-1426-consolidated"
+              ],
+              "takeaway": "Turns scenario assessment into part of a binding type-approval process for fully automated vehicles within scope."
+            },
+            {
+              "title": "ISO 3450x family",
+              "sourceIds": [
+                "src-iso-34501-2022",
+                "src-iso-34502-2022",
+                "src-iso-34503-2023",
+                "src-iso-34504-2024",
+                "src-iso-34505-2025"
+              ],
+              "takeaway": "Provides vocabulary, evaluation framework, ODD specification, categorisation and scenario-to-test-case methodology; scope differs by document."
+            }
+          ],
+          "jurisdictionOverlayIds": [
+            "overlay-nl-scenario-assessment",
+            "overlay-de-scenario-assessment"
+          ],
+          "caseIds": [],
+          "checkYourUnderstanding": [
+            {
+              "question": "Does scenario-based assessment mean replacing all real-world testing with simulation?",
+              "answer": "No. Simulation is one evidence method. NATM explicitly combines multiple validation methods."
+            }
+          ]
+        },
+        "deepDive": {
+          "summary": "Deep Dive should show the ODD → scenario space → scenario selection/categorisation → test case → validation evidence chain and explain NATM's multi-pillar architecture.",
+          "topics": [
+            "scenario vocabulary",
+            "nominal / critical / failure scenarios in EU law",
+            "scenario catalogues",
+            "test-case generation",
+            "simulation / track / real-world testing",
+            "audit and in-service evidence",
+            "traceability to safety requirements"
+          ],
+          "sourceIds": [
+            "src-iso-34501-2022",
+            "src-iso-34502-2022",
+            "src-iso-34503-2023",
+            "src-iso-34504-2024",
+            "src-iso-34505-2025",
+            "src-unece-natm-2023",
+            "src-eu-2022-1426-consolidated"
+          ]
+        }
+      },
+      "standardIds": [
+        "std-iso-34501",
+        "std-iso-34502",
+        "std-iso-34503",
+        "std-iso-34504",
+        "std-iso-34505"
+      ],
+      "relatedConceptIds": [
+        "odd",
+        "safety-assurance",
+        "functional-safety",
+        "sotif",
+        "safety-case-evidence"
+      ],
+      "glossary": false,
+      "sourceIds": [
+        "src-unece-natm-2023",
+        "src-eu-2022-1426-consolidated",
+        "src-iso-34501-2022",
+        "src-iso-34502-2022",
+        "src-iso-34504-2024",
+        "src-iso-34505-2025"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "safety-case-evidence",
+      "slug": "safety-case-evidence",
+      "title": "Safety Case & Evidence",
+      "coreQuestion": "How are safety claims, reasoning and evidence brought together?",
+      "atlasDefinition": "A safety case is a structured safety argument supported by evidence. Atlas uses the concept to explain how individual evidence streams are connected to a safety claim; it is not assumed to be the statutory label used by every jurisdiction.",
+      "plainEnglish": "Tests and documents do not explain themselves. A safety case shows what is being claimed, why the evidence supports it, and where the limits or assumptions are.",
+      "whyItMatters": [
+        "ADS safety evidence is heterogeneous: engineering analysis, simulations, track tests, road tests, operational controls and in-service data.",
+        "A structured argument makes assumptions, evidence gaps and dependencies visible.",
+        "Regulatory frameworks can require a structured body of safety evidence without using the term 'safety case'."
+      ],
+      "commonConfusions": [
+        {
+          "title": "Safety case ≠ certificate",
+          "body": "It is an assurance/argument concept, not automatically an approval or certification."
+        },
+        {
+          "title": "Do not rename the law",
+          "body": "EU 2022/1426 requires extensive safety documentation and evidence, but Atlas must not state that the Regulation 'requires a safety case' unless the legal text itself uses that term for the relevant requirement."
+        },
+        {
+          "title": "Verification and validation are related but not identical",
+          "body": "Atlas may explain verification as checking implementation against specified requirements and validation as evaluating fitness/safety in the intended use context, while preserving source-specific definitions where a standard or law uses them differently."
+        }
+      ],
+      "levels": {
+        "essentials": {
+          "summary": "A safety case connects safety claims, reasoning and evidence; its role is to make the safety demonstration structured and reviewable.",
+          "keyPoints": [
+            "Evidence needs an argument.",
+            "Assumptions and boundaries matter.",
+            "A jurisdiction may demand equivalent evidence without using the phrase 'safety case'."
+          ]
+        },
+        "applied": {
+          "howItWorks": [
+            "State the safety claim and its scope.",
+            "Break the claim into supporting arguments.",
+            "Attach evidence to each argument.",
+            "Expose assumptions, limitations and unresolved gaps.",
+            "Maintain/update the evidence where lifecycle or in-service information changes the safety picture."
+          ],
+          "regulatoryRelevance": [
+            "EU 2022/1426 is a strong regulatory example of a structured safety-evidence package: safety concept, safety-management-system assessment, scenario testing, virtual-toolchain evidence and in-service reporting. Atlas must describe the legal requirements in their own terminology."
+          ],
+          "regulatoryExamples": [
+            {
+              "title": "ISO 34503",
+              "sourceIds": [
+                "src-iso-34503-2023"
+              ],
+              "takeaway": "ISO explicitly notes that ODD specification can be used by organisations developing safety cases for trials, testing and commercial deployment."
+            },
+            {
+              "title": "EU 2022/1426",
+              "sourceIds": [
+                "src-eu-2022-1426-consolidated"
+              ],
+              "takeaway": "A binding framework can require structured safety evidence without using Atlas's umbrella term for the entire package."
+            }
+          ],
+          "jurisdictionOverlayIds": [
+            "overlay-nl-safety-case",
+            "overlay-de-safety-case"
+          ],
+          "caseIds": [
+            "case-cruise-sf-2023"
+          ],
+          "checkYourUnderstanding": [
+            {
+              "question": "If a law requires extensive technical documentation, may Atlas automatically call that documentation a 'safety case'?",
+              "answer": "No. Atlas can explain the safety-case concept, but must preserve the terminology and legal status of the actual source."
+            }
+          ]
+        },
+        "deepDive": {
+          "summary": "Deep Dive should cover claims–argument–evidence structure, evidence traceability, verification/validation, assumptions, confidence and lifecycle maintenance.",
+          "topics": [
+            "claims–argument–evidence",
+            "traceability",
+            "verification vs validation",
+            "assumptions and evidence gaps",
+            "lifecycle maintenance",
+            "regulatory terminology vs assurance terminology"
+          ],
+          "sourceIds": [
+            "src-iso-34503-2023",
+            "src-iso-21448-2022",
+            "src-unece-ads-guidelines-2025",
+            "src-eu-2022-1426-consolidated"
+          ]
+        }
+      },
+      "standardIds": [
+        "std-iso-34503",
+        "std-iso-21448"
+      ],
+      "relatedConceptIds": [
+        "safety-assurance",
+        "functional-safety",
+        "sotif",
+        "odd",
+        "scenario-based-assessment"
+      ],
+      "glossary": true,
+      "sourceIds": [
+        "src-iso-34503-2023",
+        "src-iso-21448-2022",
+        "src-unece-ads-guidelines-2025",
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "terms": [
+    {
+      "id": "term-ads",
+      "term": "ADS",
+      "expandedName": "Automated Driving System",
+      "glossary": true,
+      "atlasDefinition": "Hardware and software collectively capable of performing the entire dynamic driving task on a sustained basis within a specific operational design domain, using the current EU 2022/1426 formulation for this Atlas context.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU type-approval definition"
+        },
+        {
+          "sourceId": "src-iso-sae-22736-2021",
+          "context": "Driving-automation taxonomy"
+        }
+      ],
+      "commonConfusions": [
+        "Do not use ADS as a synonym for every ADAS or driver-assistance function.",
+        "Jurisdiction-specific legislation may use different vehicle/system terms."
+      ],
+      "relatedConceptIds": [
+        "odd"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated",
+        "src-iso-sae-22736-2021"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-ddt",
+      "term": "DDT",
+      "expandedName": "Dynamic Driving Task",
+      "glossary": true,
+      "atlasDefinition": "The real-time operational and tactical functions required to operate the vehicle, excluding strategic functions such as trip scheduling and destination/waypoint selection.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        },
+        {
+          "sourceId": "src-iso-sae-22736-2021",
+          "context": "Driving-automation taxonomy"
+        }
+      ],
+      "commonConfusions": [
+        "DDT is not the entire trip-planning function.",
+        "Who performs the DDT is central to automation-level and legal-role analysis."
+      ],
+      "relatedConceptIds": [
+        "odd"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated",
+        "src-iso-sae-22736-2021"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-ddt-fallback",
+      "term": "DDT fallback",
+      "glossary": true,
+      "atlasDefinition": "A supporting driving-automation taxonomy concept used to describe the expected response when sustained performance of the DDT cannot or should not continue.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-iso-sae-22736-2021",
+          "context": "ISO/SAE taxonomy; use the source-specific definition when showing formal wording"
+        }
+      ],
+      "commonConfusions": [
+        "Do not treat DDT fallback as synonymous with the EU MRM/MRC definitions.",
+        "Legal responsibility for fallback depends on the applicable system level and jurisdiction."
+      ],
+      "relatedConceptIds": [
+        "safety-assurance"
+      ],
+      "sourceIds": [
+        "src-iso-sae-22736-2021"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-odd",
+      "term": "ODD",
+      "expandedName": "Operational Design Domain",
+      "glossary": true,
+      "atlasDefinition": "The operating conditions within which a given ADS is specifically designed to function.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        },
+        {
+          "sourceId": "src-iso-34503-2023",
+          "context": "ISO ODD specification standard"
+        }
+      ],
+      "commonConfusions": [
+        "Not just a geofence.",
+        "Not the same as legal operating permission.",
+        "Not the same as Germany's festgelegter Betriebsbereich."
+      ],
+      "relatedConceptIds": [
+        "odd"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated",
+        "src-iso-34503-2023"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-mrm",
+      "term": "MRM",
+      "expandedName": "Minimal Risk Manoeuvre",
+      "glossary": true,
+      "atlasDefinition": "In EU 2022/1426, a manoeuvre aimed at minimising traffic risk by stopping the vehicle in a safe condition.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        }
+      ],
+      "commonConfusions": [
+        "MRM is the manoeuvre; MRC is the resulting stable/stopped condition in the EU definition.",
+        "Other frameworks may define minimal-risk concepts differently."
+      ],
+      "relatedConceptIds": [
+        "safety-assurance"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-mrc",
+      "term": "MRC",
+      "expandedName": "Minimal Risk Condition",
+      "glossary": true,
+      "atlasDefinition": "In EU 2022/1426, the stable and stopped state of the vehicle that reduces crash risk.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        }
+      ],
+      "commonConfusions": [
+        "MRC is a condition; MRM is the manoeuvre used to reach a safer condition."
+      ],
+      "relatedConceptIds": [
+        "safety-assurance"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-malfunctioning-behaviour",
+      "term": "Malfunctioning behaviour",
+      "glossary": true,
+      "atlasDefinition": "Failure or unintended behaviour of an ADS component or system relative to its design intent, using the current EU 2022/1426 formulation.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        },
+        {
+          "sourceId": "src-iso-26262-1-2018",
+          "context": "Functional-safety standard context"
+        }
+      ],
+      "commonConfusions": [
+        "Do not equate every inadequate system response with malfunctioning behaviour; a functional insufficiency can exist without an ISO 26262 fault."
+      ],
+      "relatedConceptIds": [
+        "functional-safety",
+        "sotif"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated",
+        "src-iso-26262-1-2018"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-functional-safety",
+      "term": "Functional safety",
+      "glossary": true,
+      "atlasDefinition": "Absence of unreasonable risk arising from hazards caused by malfunctioning behaviour; Atlas links the legal/standards wording to the broader functional-safety concept without treating it as all ADS safety.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        },
+        {
+          "sourceId": "src-iso-26262-1-2018",
+          "context": "ISO functional-safety series"
+        }
+      ],
+      "commonConfusions": [
+        "Functional safety is narrower than overall ADS safety assurance.",
+        "ISO 26262 compliance is not automatically AV legal approval."
+      ],
+      "relatedConceptIds": [
+        "functional-safety"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated",
+        "src-iso-26262-1-2018"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-sotif",
+      "term": "SOTIF",
+      "expandedName": "Safety of the Intended Functionality",
+      "glossary": true,
+      "atlasDefinition": "Absence of unreasonable risk due to hazards caused by functional insufficiencies, using ISO 21448 terminology.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-iso-21448-2022",
+          "context": "Current published ISO standard"
+        }
+      ],
+      "commonConfusions": [
+        "Not a synonym for all perception errors.",
+        "Not the same as ISO 26262 malfunction/fault safety.",
+        "Do not classify an accident as SOTIF failure without authoritative support."
+      ],
+      "relatedConceptIds": [
+        "sotif"
+      ],
+      "sourceIds": [
+        "src-iso-21448-2022"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-operational-safety-eu",
+      "term": "Operational safety (EU 2022/1426)",
+      "glossary": true,
+      "atlasDefinition": "The EU ADS type-approval category covering unreasonable risk from functional insufficiencies, operational disturbances and reasonably foreseeable misuse/errors without system faults.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        }
+      ],
+      "commonConfusions": [
+        "Do not silently rename the EU legal term 'operational safety' as SOTIF, even where the subject matter overlaps."
+      ],
+      "relatedConceptIds": [
+        "sotif",
+        "safety-assurance"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-scenario",
+      "term": "Scenario",
+      "glossary": true,
+      "atlasDefinition": "In EU 2022/1426, a sequence or combination of situations used to assess ADS safety requirements.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        },
+        {
+          "sourceId": "src-iso-34501-2022",
+          "context": "ADS test-scenario vocabulary"
+        }
+      ],
+      "commonConfusions": [
+        "A scenario is not automatically an executable test case.",
+        "Different sources can categorise scenarios differently."
+      ],
+      "relatedConceptIds": [
+        "scenario-based-assessment"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated",
+        "src-iso-34501-2022"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-nominal-traffic-scenario",
+      "term": "Nominal traffic scenario",
+      "glossary": true,
+      "atlasDefinition": "Under EU 2022/1426, a reasonably foreseeable non-critical situation encountered within the ODD during normal operation.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        }
+      ],
+      "commonConfusions": [
+        "Nominal does not mean irrelevant; it describes normal/non-critical interactions within the ODD."
+      ],
+      "relatedConceptIds": [
+        "scenario-based-assessment"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-critical-scenario",
+      "term": "Critical scenario",
+      "glossary": true,
+      "atlasDefinition": "Under EU 2022/1426, a scenario related to edge cases and operational insufficiencies, including relevant traffic, environmental, human-factor, connectivity or communication conditions.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        }
+      ],
+      "commonConfusions": [
+        "Do not generalise the EU category as the only universal definition of a critical scenario across all standards."
+      ],
+      "relatedConceptIds": [
+        "scenario-based-assessment"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-failure-scenario",
+      "term": "Failure scenario",
+      "glossary": true,
+      "atlasDefinition": "Under EU 2022/1426, a scenario related to ADS and/or vehicle-component failure that can lead to normal or emergency operation depending on whether the minimum safety level is preserved.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-eu-2022-1426-consolidated",
+          "context": "Binding EU definition"
+        }
+      ],
+      "commonConfusions": [
+        "Failure scenario belongs to the legal/source-specific scenario taxonomy; do not use it as a synonym for any difficult scenario."
+      ],
+      "relatedConceptIds": [
+        "functional-safety",
+        "scenario-based-assessment"
+      ],
+      "sourceIds": [
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-safety-assurance",
+      "term": "Safety assurance",
+      "glossary": true,
+      "atlasDefinition": "Atlas umbrella concept for the structured process of building, evaluating and maintaining evidence that supports an ADS safety claim.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-unece-natm-2023",
+          "context": "ADS validation/assessment architecture"
+        },
+        {
+          "sourceId": "src-ntsb-uber-tempe",
+          "context": "NTSB safety-management recommendation uses safety assurance as an SMS element"
+        }
+      ],
+      "commonConfusions": [
+        "Not one universal certificate or one standard.",
+        "Its exact legal form depends on the applicable regulatory framework."
+      ],
+      "relatedConceptIds": [
+        "safety-assurance"
+      ],
+      "sourceIds": [
+        "src-unece-natm-2023",
+        "src-ntsb-uber-tempe"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-safety-case",
+      "term": "Safety case",
+      "glossary": true,
+      "atlasDefinition": "A structured safety argument supported by evidence; Atlas treats this as an assurance concept unless an applicable legal source expressly uses it as a defined requirement.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-iso-34503-2023",
+          "context": "ISO states ODD specification can be used by organisations developing safety cases"
+        }
+      ],
+      "commonConfusions": [
+        "Not automatically a statutory document.",
+        "Do not relabel an entire regulatory approval dossier as a safety case without source support."
+      ],
+      "relatedConceptIds": [
+        "safety-case-evidence"
+      ],
+      "sourceIds": [
+        "src-iso-34503-2023"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-verification",
+      "term": "Verification",
+      "glossary": true,
+      "atlasDefinition": "Atlas explanatory shorthand: checking whether specified requirements have been correctly implemented or satisfied. Preserve source-specific definitions when a standard or legal instrument defines the term more precisely.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-iso-21448-2022",
+          "context": "V&V measures in SOTIF framework"
+        },
+        {
+          "sourceId": "src-unece-ads-guidelines-2025",
+          "context": "ADS assessment/test context"
+        }
+      ],
+      "commonConfusions": [
+        "Do not present the Atlas shorthand as a universal legal definition."
+      ],
+      "relatedConceptIds": [
+        "safety-case-evidence",
+        "scenario-based-assessment"
+      ],
+      "sourceIds": [
+        "src-iso-21448-2022",
+        "src-unece-ads-guidelines-2025"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "term-validation",
+      "term": "Validation",
+      "glossary": true,
+      "atlasDefinition": "Atlas explanatory shorthand: evaluating whether the system and its evidence are adequate for the intended use and operating context. Preserve source-specific definitions where applicable.",
+      "officialDefinitionRefs": [
+        {
+          "sourceId": "src-iso-21448-2022",
+          "context": "V&V measures in SOTIF framework"
+        },
+        {
+          "sourceId": "src-unece-natm-2023",
+          "context": "ADS validation methodology"
+        }
+      ],
+      "commonConfusions": [
+        "Validation is not synonymous with one road test or one mileage threshold."
+      ],
+      "relatedConceptIds": [
+        "safety-case-evidence",
+        "scenario-based-assessment"
+      ],
+      "sourceIds": [
+        "src-iso-21448-2022",
+        "src-unece-natm-2023"
+      ],
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "standards": [
+    {
+      "id": "std-iso-26262",
+      "name": "ISO 26262",
+      "fullTitle": "Road vehicles — Functional safety",
+      "publisher": "ISO",
+      "currentEdition": "2018 series (Edition 2 parts)",
+      "status": "published",
+      "scope": "Functional safety of safety-related E/E systems in series-production road vehicles; addresses hazards caused by malfunctioning behaviour.",
+      "whatItDoes": [
+        "Provides a functional-safety lifecycle and related engineering/process framework.",
+        "Addresses hazards arising from malfunctioning behaviour of safety-related E/E systems."
+      ],
+      "whatItDoesNotDo": [
+        "It is not a complete ADS safety standard.",
+        "It does not by itself establish legal approval or road-use permission.",
+        "Nominal-performance / intended-functionality insufficiencies are addressed outside the core ISO 26262 fault domain."
+      ],
+      "avRelevance": "Provides one important evidence stream within broader ADS safety assurance.",
+      "relatedConceptIds": [
+        "functional-safety",
+        "safety-assurance",
+        "safety-case-evidence"
+      ],
+      "officialSourceId": "src-iso-26262-1-2018",
+      "watchIds": [
+        "watch-iso-26262-ed3"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "std-iso-21448",
+      "name": "ISO 21448:2022",
+      "fullTitle": "Road vehicles — Safety of the intended functionality",
+      "publisher": "ISO",
+      "currentEdition": "2022 (Edition 1)",
+      "status": "published",
+      "scope": "Guidance and argument framework for SOTIF: absence of unreasonable risk due to hazards caused by functional insufficiencies, including reasonably foreseeable misuse within scope.",
+      "whatItDoes": [
+        "Addresses functional insufficiencies where a relevant ISO 26262 fault is not necessary.",
+        "Provides guidance on design, verification, validation and operation-phase measures for SOTIF."
+      ],
+      "whatItDoesNotDo": [
+        "It does not apply to faults covered by ISO 26262.",
+        "It is not a legal authorisation by itself.",
+        "It should not be used as a label for any accident involving perception or automated driving."
+      ],
+      "avRelevance": "Highly relevant to ADS functions relying on complex sensing and processing where situational awareness is safety-critical.",
+      "relatedConceptIds": [
+        "sotif",
+        "safety-assurance",
+        "safety-case-evidence"
+      ],
+      "officialSourceId": "src-iso-21448-2022",
+      "watchIds": [
+        "watch-iso-21448-ed2"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "std-iso-34501",
+      "name": "ISO 34501:2022",
+      "fullTitle": "Road vehicles — Test scenarios for automated driving systems — Vocabulary",
+      "publisher": "ISO",
+      "currentEdition": "2022 (Edition 1)",
+      "status": "published",
+      "scope": "Defines vocabulary in the context of ADS test scenarios.",
+      "whatItDoes": [
+        "Provides common scenario terminology for Level 3+ ADS testing context."
+      ],
+      "whatItDoesNotDo": [
+        "Does not itself create a complete validation framework or legal test requirement."
+      ],
+      "avRelevance": "Terminology foundation for the ISO 3450x scenario family.",
+      "relatedConceptIds": [
+        "scenario-based-assessment"
+      ],
+      "officialSourceId": "src-iso-34501-2022",
+      "watchIds": [],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "std-iso-34502",
+      "name": "ISO 34502:2022",
+      "fullTitle": "Road vehicles — Test scenarios for automated driving systems — Scenario based safety evaluation framework",
+      "publisher": "ISO",
+      "currentEdition": "2022 (Edition 1)",
+      "status": "published",
+      "scope": "Guidance for a scenario-based safety evaluation process during product development; stated scope is limited-access highways.",
+      "whatItDoes": [
+        "Provides a scenario-based safety evaluation framework."
+      ],
+      "whatItDoesNotDo": [
+        "Its stated scope is not all roads or all ADS use cases.",
+        "It does not address misuse, HMI and cybersecurity safety issues."
+      ],
+      "avRelevance": "Useful method component; scope limitations must remain visible in Atlas.",
+      "relatedConceptIds": [
+        "scenario-based-assessment"
+      ],
+      "officialSourceId": "src-iso-34502-2022",
+      "watchIds": [],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "std-iso-34503",
+      "name": "ISO 34503:2023",
+      "fullTitle": "Road vehicles — Test scenarios for automated driving systems — Specification for operational design domain",
+      "publisher": "ISO",
+      "currentEdition": "2023 (Edition 1)",
+      "status": "published",
+      "scope": "Requirements for a hierarchical taxonomy and definition format for ODD; ODD comprises specific static and dynamic operating conditions within which an ADS is designed to function.",
+      "whatItDoes": [
+        "Structures ODD specification.",
+        "Can support organizations developing safety cases, trials, testing and commercial deployment."
+      ],
+      "whatItDoesNotDo": [
+        "Does not itself grant permission to operate in a place.",
+        "Does not cover basic test procedures for ODD attributes or ODD-attribute monitoring requirements."
+      ],
+      "avRelevance": "Core bridge between ADS capability, scenario selection and safety evidence.",
+      "relatedConceptIds": [
+        "odd",
+        "scenario-based-assessment",
+        "safety-case-evidence"
+      ],
+      "officialSourceId": "src-iso-34503-2023",
+      "watchIds": [],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "std-iso-34504",
+      "name": "ISO 34504:2024",
+      "fullTitle": "Road vehicles — Test scenarios for automated driving systems — Scenario categorization",
+      "publisher": "ISO",
+      "currentEdition": "2024 (Edition 1)",
+      "status": "published",
+      "scope": "Guidance on categorizing ADS scenarios, including use of tags as meta-attributes.",
+      "whatItDoes": [
+        "Supports systematic scenario categorization and harmonized classification."
+      ],
+      "whatItDoesNotDo": [
+        "Does not by itself establish legal pass/fail requirements."
+      ],
+      "avRelevance": "Supports scenario libraries and traceable validation organisation.",
+      "relatedConceptIds": [
+        "scenario-based-assessment"
+      ],
+      "officialSourceId": "src-iso-34504-2024",
+      "watchIds": [],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "std-iso-34505",
+      "name": "ISO 34505:2025",
+      "fullTitle": "Road vehicles — Test scenarios for automated driving systems — Scenario evaluation and test case generation",
+      "publisher": "ISO",
+      "currentEdition": "2025 (Edition 1)",
+      "status": "published",
+      "scope": "Methodology for evaluating scenarios and extending test scenarios into test cases; includes characteristics such as test objectives, inputs, steps, platforms and expected results.",
+      "whatItDoes": [
+        "Supports scenario evaluation and test-case generation.",
+        "Addresses criteria such as frequency, criticality, complexity and coverage."
+      ],
+      "whatItDoesNotDo": [
+        "Does not make every generated test case legally required."
+      ],
+      "avRelevance": "Extends the ISO 3450x chain from scenario description toward executable test evidence.",
+      "relatedConceptIds": [
+        "scenario-based-assessment"
+      ],
+      "officialSourceId": "src-iso-34505-2025",
+      "watchIds": [],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "std-iso-sae-22736",
+      "name": "ISO/SAE PAS 22736:2021",
+      "fullTitle": "Taxonomy and definitions for terms related to driving automation systems for on-road motor vehicles",
+      "publisher": "ISO / SAE International",
+      "currentEdition": "2021 PAS",
+      "status": "published_to_be_revised",
+      "scope": "Driving-automation taxonomy and supporting terms, including six levels and actor roles in DDT/DDT fallback.",
+      "whatItDoes": [
+        "Provides a widely used functional taxonomy for driving automation."
+      ],
+      "whatItDoesNotDo": [
+        "It does not itself determine legal status, responsibility or road-use permission in a jurisdiction.",
+        "Atlas must not substitute SAE/ISO taxonomy for jurisdiction-specific statutory terminology."
+      ],
+      "avRelevance": "Useful glossary source; jurisdiction law remains controlling where it defines terms differently.",
+      "relatedConceptIds": [
+        "odd"
+      ],
+      "officialSourceId": "src-iso-sae-22736-2021",
+      "watchIds": [
+        "watch-iso-sae-22736-revision"
+      ],
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "realCases": [
+    {
+      "id": "case-uber-tempe-2018",
+      "title": "Uber ATG developmental ADS — Tempe, Arizona, 2018",
+      "date": "2018-03-18",
+      "jurisdiction": "United States — Arizona",
+      "authority": "US National Transportation Safety Board",
+      "documentType": "final_investigation_report",
+      "officiallyEstablished": true,
+      "establishedFacts": [
+        "A modified Volvo XC90 operated by Uber ATG with a developmental ADS struck and killed a pedestrian in Tempe, Arizona.",
+        "A vehicle operator occupied the driver's seat while the ADS controlled the vehicle."
+      ],
+      "authorityFindings": [
+        "NTSB found the probable cause was the vehicle operator's failure to monitor the driving environment and ADS because of visual distraction by a personal cell phone.",
+        "NTSB identified Uber ATG's inadequate safety risk assessment procedures, ineffective oversight of vehicle operators, and lack of adequate mechanisms for addressing automation complacency as contributing factors, describing them as consequences of inadequate safety culture.",
+        "NTSB recommended completion of an ADS-testing safety management system including safety policy, safety risk management, safety assurance and safety promotion."
+      ],
+      "atlasRelevance": [
+        "Illustrates why ADS safety assurance is broader than component performance: operational controls, supervision, risk-management processes and organisational safety practices can form part of the safety picture."
+      ],
+      "notToConclude": [
+        "Do not label the crash an ISO 26262 failure.",
+        "Do not label the crash a SOTIF failure.",
+        "Do not infer a standards-specific root cause unless the authority expressly made that finding."
+      ],
+      "primaryConceptIds": [
+        "safety-assurance"
+      ],
+      "secondaryConceptIds": [
+        "safety-case-evidence"
+      ],
+      "mvpDisplay": true,
+      "sourceIds": [
+        "src-ntsb-uber-tempe"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "case-cruise-sf-2023",
+      "title": "Cruise — San Francisco pedestrian incident and regulatory actions, 2023–2024",
+      "date": "2023-10-02",
+      "jurisdiction": "United States — California",
+      "authority": "California DMV / NHTSA",
+      "documentType": "regulatory_actions",
+      "officiallyEstablished": true,
+      "establishedFacts": [
+        "A driverless Cruise ADS vehicle was involved in the 2 October 2023 pedestrian incident and, after initially stopping, moved again and dragged the pedestrian approximately 20 feet before the final stop, as described in NHTSA's 2024 consent-order materials."
+      ],
+      "authorityFindings": [
+        "California DMV suspended Cruise's driverless testing and deployment permits on 24 October 2023, citing statutory/regulatory grounds including vehicle safety, misrepresentation of safety-related information and unreasonable risk to the public.",
+        "NHTSA's 2024 consent order addressed incomplete Standing General Order crash reports; NHTSA stated that Cruise's one-day and ten-day reports did not disclose the post-crash dragging behaviour."
+      ],
+      "atlasRelevance": [
+        "Shows that safety assurance continues after deployment through in-service monitoring, reporting and regulatory oversight.",
+        "Shows why evidence governance and accurate regulatory reporting are part of an operational safety regime."
+      ],
+      "notToConclude": [
+        "Do not infer a technical root cause from the permit suspension or reporting enforcement.",
+        "Do not label the event an ISO 26262 or SOTIF failure.",
+        "Keep California DMV permit grounds separate from NHTSA reporting-enforcement findings."
+      ],
+      "primaryConceptIds": [
+        "safety-assurance"
+      ],
+      "secondaryConceptIds": [
+        "safety-case-evidence"
+      ],
+      "mvpDisplay": true,
+      "sourceIds": [
+        "src-ca-dmv-cruise-suspension",
+        "src-nhtsa-cruise-consent-order"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "case-tesla-mountain-view-2018",
+      "title": "Tesla Model X / Autopilot — Mountain View, California, 2018",
+      "date": "2018-03-23",
+      "jurisdiction": "United States — California",
+      "authority": "US National Transportation Safety Board",
+      "documentType": "final_investigation_report",
+      "officiallyEstablished": true,
+      "establishedFacts": [
+        "A Tesla Model X operating with Autopilot struck a highway crash attenuator in Mountain View, California."
+      ],
+      "authorityFindings": [
+        "NTSB found the probable cause included the Autopilot system steering the vehicle into a highway gore area due to system limitations and the driver's lack of response due to distraction and overreliance on the partial-driving-automation system.",
+        "NTSB found ineffective monitoring of driver engagement contributed by facilitating complacency and inattentiveness."
+      ],
+      "atlasRelevance": [
+        "Useful later for explaining system limitations, human-system interaction and misuse/overreliance."
+      ],
+      "notToConclude": [
+        "This was a partial-driving-automation case; do not present it as a Level 4 driverless ADS case.",
+        "Do not relabel NTSB's finding as SOTIF, ODD breach or ISO-standard non-compliance.",
+        "Use only the authority's stated findings when describing causation."
+      ],
+      "primaryConceptIds": [],
+      "secondaryConceptIds": [
+        "sotif",
+        "odd"
+      ],
+      "mvpDisplay": false,
+      "sourceIds": [
+        "src-ntsb-tesla-mountain-view"
+      ],
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "jurisdictionOverlays": [
+    {
+      "id": "overlay-nl-safety-assurance",
+      "conceptId": "safety-assurance",
+      "jurisdictionId": "netherlands",
+      "confidenceStatus": "established",
+      "summary": "The Dutch national framework relevant to no-in-vehicle-driver experiments is permit-specific rather than a general commercial no-driver deployment regime.",
+      "legalContext": "Safety is assessed in the context of an experiment-specific authorisation under the Dutch road-traffic framework and the ministerial experiment-permit regulation.",
+      "whatIsDifferentHere": "The regulatory structure is experimental and permit-oriented; do not present it as a general national autonomous-operation safety code.",
+      "instrumentRefs": [
+        "Wegenverkeerswet 1994, Article 149aa",
+        "Regeling vergunningverlening experimenten zelfrijdende auto"
+      ],
+      "sourceIds": [
+        "src-nl-wvw-1994",
+        "src-nl-experiment-regulation"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-de-safety-assurance",
+      "conceptId": "safety-assurance",
+      "jurisdictionId": "germany",
+      "confidenceStatus": "established",
+      "summary": "Germany combines vehicle/ADS approval requirements with approval of a defined operating area and legally structured operator/holder/supervision duties.",
+      "legalContext": "StVG §§ 1d–1g and AFGBV create a dedicated operational framework for autonomous vehicles in approved operating areas.",
+      "whatIsDifferentHere": "Safety assurance is embedded not only in technical approval but also in operational-area approval, holder duties, Technical Supervisor requirements and ongoing operational controls.",
+      "instrumentRefs": [
+        "StVG §§ 1d–1g",
+        "AFGBV"
+      ],
+      "sourceIds": [
+        "src-de-stvg",
+        "src-de-afgbv"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-nl-functional-safety",
+      "conceptId": "functional-safety",
+      "jurisdictionId": "netherlands",
+      "confidenceStatus": "established",
+      "summary": "Functional-safety evidence can support an experiment-specific safety demonstration, but ISO 26262 is not itself Dutch AV legislation or a road-use permission.",
+      "legalContext": "The governing national layer is the experiment permit framework; technical evidence must be assessed in that legal context.",
+      "whatIsDifferentHere": "Do not convert use of a technical standard or engineering process into a statement that Dutch law universally mandates ISO 26262 for all AV operation.",
+      "instrumentRefs": [
+        "Wegenverkeerswet 1994, Article 149aa",
+        "Regeling vergunningverlening experimenten zelfrijdende auto"
+      ],
+      "sourceIds": [
+        "src-nl-wvw-1994",
+        "src-nl-experiment-regulation"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-de-functional-safety",
+      "conceptId": "functional-safety",
+      "jurisdictionId": "germany",
+      "confidenceStatus": "established",
+      "summary": "German autonomous-vehicle approval imposes binding functional and safety requirements; technical standards may support the evidence, but they do not replace statutory approval.",
+      "legalContext": "StVG § 1e and AFGBV/Annex 1 impose functional requirements for autonomous operation in an approved operating area.",
+      "whatIsDifferentHere": "Keep the legal requirement and the engineering standard as separate layers.",
+      "instrumentRefs": [
+        "StVG § 1e",
+        "AFGBV Annex 1"
+      ],
+      "sourceIds": [
+        "src-de-stvg",
+        "src-de-afgbv"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-nl-sotif",
+      "conceptId": "sotif",
+      "jurisdictionId": "netherlands",
+      "confidenceStatus": "not_identified",
+      "summary": "No standalone Dutch SOTIF-specific statutory regime has been identified for the Atlas scenario.",
+      "legalContext": "Functional-insufficiency and operational limitations may still matter to the safety assessment of an experiment.",
+      "whatIsDifferentHere": "Do not state that ISO 21448 is a Dutch legal requirement without a source-specific legal basis.",
+      "searchScope": "Special Dutch legal requirement expressly adopting SOTIF/ISO 21448 for the Atlas no-driver passenger-vehicle scenario.",
+      "instrumentRefs": [
+        "Wegenverkeerswet 1994, Article 149aa",
+        "Regeling vergunningverlening experimenten zelfrijdende auto"
+      ],
+      "sourceIds": [
+        "src-nl-wvw-1994",
+        "src-nl-experiment-regulation"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-de-sotif",
+      "conceptId": "sotif",
+      "jurisdictionId": "germany",
+      "confidenceStatus": "not_identified",
+      "summary": "German autonomous-driving law imposes safety and functional-performance requirements, but Atlas should not relabel those provisions as a statutory SOTIF regime.",
+      "legalContext": "StVG/AFGBV require safe performance in the approved operating area and specify functional requirements.",
+      "whatIsDifferentHere": "ISO 21448 may be relevant engineering evidence; it is not automatically the legal test.",
+      "searchScope": "German autonomous-driving provisions expressly adopting SOTIF/ISO 21448 as the legal requirement.",
+      "instrumentRefs": [
+        "StVG § 1e",
+        "AFGBV Annex 1"
+      ],
+      "sourceIds": [
+        "src-de-stvg",
+        "src-de-afgbv"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-nl-odd",
+      "conceptId": "odd",
+      "jurisdictionId": "netherlands",
+      "confidenceStatus": "established",
+      "summary": "The Dutch experiment model is tied to the conditions of the authorised experiment; the technical operating domain must not be confused with a general national permission to deploy without a legally relevant human driver.",
+      "legalContext": "The experiment permit defines the authorised operation and its conditions.",
+      "whatIsDifferentHere": "ODD/capability and experiment-specific legal permission are different layers.",
+      "instrumentRefs": [
+        "Wegenverkeerswet 1994, Article 149aa",
+        "Regeling vergunningverlening experimenten zelfrijdende auto"
+      ],
+      "sourceIds": [
+        "src-nl-wvw-1994",
+        "src-nl-experiment-regulation"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-de-odd",
+      "conceptId": "odd",
+      "jurisdictionId": "germany",
+      "confidenceStatus": "established",
+      "summary": "A technical ODD is not the same as Germany's legally approved festgelegter Betriebsbereich.",
+      "legalContext": "StVG § 1d(2) defines the festgelegter Betriebsbereich as the geographically/spatially defined public road space in which the autonomous vehicle may operate when the statutory conditions are met; AFGBV § 7 requires approval of that operating area.",
+      "whatIsDifferentHere": "Technical capability describes where the ADS is designed to function; the approved Betriebsbereich is a legal permission element.",
+      "instrumentRefs": [
+        "StVG § 1d(2)",
+        "AFGBV §§ 7–9"
+      ],
+      "sourceIds": [
+        "src-de-stvg",
+        "src-de-afgbv"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-nl-scenario-assessment",
+      "conceptId": "scenario-based-assessment",
+      "jurisdictionId": "netherlands",
+      "confidenceStatus": "established",
+      "summary": "The Dutch national experiment regime does not create one universal scenario-assessment methodology for all AV operation.",
+      "legalContext": "Scenario evidence may support the safety demonstration; EU type-approval requirements can apply at the separate vehicle/ADS approval layer where within scope.",
+      "whatIsDifferentHere": "Do not collapse EU type approval and Dutch road-use/experiment authorisation into one permission.",
+      "instrumentRefs": [
+        "Regeling vergunningverlening experimenten zelfrijdende auto",
+        "Regulation (EU) 2022/1426, where applicable"
+      ],
+      "sourceIds": [
+        "src-nl-experiment-regulation",
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-de-scenario-assessment",
+      "conceptId": "scenario-based-assessment",
+      "jurisdictionId": "germany",
+      "confidenceStatus": "established",
+      "summary": "Scenario/testing evidence can sit within the approval evidence stack, but German road-use permission remains structured through vehicle approval and approved operating area; EU ADS type-approval rules may also apply where within scope.",
+      "legalContext": "AFGBV contains functional requirements and permits proof in testing contexts; EU 2022/1426 provides a separate binding type-approval assessment architecture for fully automated vehicles in its scope.",
+      "whatIsDifferentHere": "Do not turn one testing methodology into the entire German legal approval test.",
+      "instrumentRefs": [
+        "AFGBV",
+        "Regulation (EU) 2022/1426, where applicable"
+      ],
+      "sourceIds": [
+        "src-de-afgbv",
+        "src-eu-2022-1426-consolidated"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-nl-safety-case",
+      "conceptId": "safety-case-evidence",
+      "jurisdictionId": "netherlands",
+      "confidenceStatus": "not_identified",
+      "summary": "No separate Dutch statutory requirement labelled 'safety case' has been identified for the Atlas scenario.",
+      "legalContext": "The experiment framework still requires a safety demonstration and supporting material in the permit process.",
+      "whatIsDifferentHere": "Atlas may use 'safety case' as an assurance concept, but must not relabel Dutch legal documentation unless the source uses that term.",
+      "searchScope": "Dutch statutory/ministerial requirement expressly denominated as a 'safety case' for the Atlas scenario.",
+      "instrumentRefs": [
+        "Wegenverkeerswet 1994, Article 149aa",
+        "Regeling vergunningverlening experimenten zelfrijdende auto"
+      ],
+      "sourceIds": [
+        "src-nl-wvw-1994",
+        "src-nl-experiment-regulation"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "overlay-de-safety-case",
+      "conceptId": "safety-case-evidence",
+      "jurisdictionId": "germany",
+      "confidenceStatus": "not_identified",
+      "summary": "Germany requires structured technical and operational evidence, but Atlas should not call the statutory approval package a 'safety case' unless the applicable source does so.",
+      "legalContext": "StVG/AFGBV require approval evidence, functional compliance and operational controls.",
+      "whatIsDifferentHere": "Safety case is an assurance concept; the German legal architecture uses its own approval terminology.",
+      "searchScope": "German autonomous-driving statutory requirement expressly denominated as a 'safety case'.",
+      "instrumentRefs": [
+        "StVG §§ 1d–1g",
+        "AFGBV"
+      ],
+      "sourceIds": [
+        "src-de-stvg",
+        "src-de-afgbv"
+      ],
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "standardsWatch": [
+    {
+      "id": "watch-iso-26262-ed3",
+      "title": "ISO 26262 Edition 3",
+      "status": "ISO/DIS 26262-1 registered at DIS stage [40.00] on 4 August 2026; not current published standard.",
+      "displayRule": "Show only in Standards Watch. Do not replace 2018 series in current-content fields until published.",
+      "sourceIds": [
+        "src-iso-dis-26262-1-ed3"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "watch-iso-21448-ed2",
+      "title": "ISO 21448 Edition 2",
+      "status": "Working Draft [20.20] under development; ISO 21448:2022 remains current published standard.",
+      "displayRule": "Show only in Standards Watch. Do not describe draft text as current requirements.",
+      "sourceIds": [
+        "src-iso-wd-21448-ed2"
+      ],
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "watch-iso-sae-22736-revision",
+      "title": "ISO/SAE 22736 revision",
+      "status": "ISO/SAE CD TS 22736 is under development; published ISO/SAE PAS 22736:2021 remains the current published specification.",
+      "displayRule": "Use published PAS for current glossary terminology; show revision only in Standards Watch.",
+      "sourceIds": [
+        "src-iso-sae-cd-ts-22736"
+      ],
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-iso-26262-1-2018",
+      "title": "ISO 26262-1:2018 — Road vehicles — Functional safety — Part 1: Vocabulary",
+      "authority": "ISO",
+      "type": "standard",
+      "status": "Published; Edition 2 (2018); current published edition, to be revised",
+      "url": "https://www.iso.org/standard/68383.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-dis-26262-1-ed3",
+      "title": "ISO/DIS 26262-1 — Road vehicles — Functional safety — Part 1: Vocabulary",
+      "authority": "ISO",
+      "type": "draft_standard",
+      "status": "Under development; Edition 3; DIS registered [40.00] on 2026-08-04",
+      "url": "https://www.iso.org/standard/90020.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-21448-2022",
+      "title": "ISO 21448:2022 — Road vehicles — Safety of the intended functionality",
+      "authority": "ISO",
+      "type": "standard",
+      "status": "Published; Edition 1 (2022); to be revised",
+      "url": "https://www.iso.org/standard/77490.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-wd-21448-ed2",
+      "title": "ISO/WD 21448 — Road vehicles — Safety of the intended functionality",
+      "authority": "ISO",
+      "type": "draft_standard",
+      "status": "Under development; Edition 2; Working Draft [20.20]",
+      "url": "https://www.iso.org/standard/93071.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-34501-2022",
+      "title": "ISO 34501:2022 — Road vehicles — Test scenarios for automated driving systems — Vocabulary",
+      "authority": "ISO",
+      "type": "standard",
+      "status": "Published; Edition 1 (2022)",
+      "url": "https://www.iso.org/standard/78950.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-34502-2022",
+      "title": "ISO 34502:2022 — Road vehicles — Test scenarios for automated driving systems — Scenario based safety evaluation framework",
+      "authority": "ISO",
+      "type": "standard",
+      "status": "Published; Edition 1 (2022)",
+      "url": "https://www.iso.org/standard/78951.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-34503-2023",
+      "title": "ISO 34503:2023 — Road vehicles — Test scenarios for automated driving systems — Specification for operational design domain",
+      "authority": "ISO",
+      "type": "standard",
+      "status": "Published; Edition 1 (2023)",
+      "url": "https://www.iso.org/standard/78952.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-34504-2024",
+      "title": "ISO 34504:2024 — Road vehicles — Test scenarios for automated driving systems — Scenario categorization",
+      "authority": "ISO",
+      "type": "standard",
+      "status": "Published; Edition 1 (2024)",
+      "url": "https://www.iso.org/standard/78953.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-34505-2025",
+      "title": "ISO 34505:2025 — Road vehicles — Test scenarios for automated driving systems — Scenario evaluation and test case generation",
+      "authority": "ISO",
+      "type": "standard",
+      "status": "Published; Edition 1 (2025)",
+      "url": "https://www.iso.org/standard/78954.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-sae-22736-2021",
+      "title": "ISO/SAE PAS 22736:2021 — Taxonomy and definitions for terms related to driving automation systems for on-road motor vehicles",
+      "authority": "ISO / SAE International",
+      "type": "publicly_available_specification",
+      "status": "Published (2021); to be revised",
+      "url": "https://www.iso.org/standard/73766.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-iso-sae-cd-ts-22736",
+      "title": "ISO/SAE CD TS 22736 — Taxonomy and definitions for terms related to driving automation systems for on-road motor vehicles",
+      "authority": "ISO / SAE International",
+      "type": "draft_specification",
+      "status": "Under development; CD approved for registration as DIS [30.99]",
+      "url": "https://www.iso.org/standard/87218.html",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-unece-natm-2023",
+      "title": "UNECE WP.29 / GRVA — New Assessment/Test Method for Automated Driving (NATM), ECE/TRANS/WP.29/2023/44/Rev.1",
+      "authority": "UNECE WP.29",
+      "type": "guideline",
+      "status": "UNECE assessment/test methodology guidance; non-binding unless incorporated by an applicable legal framework",
+      "url": "https://unece.org/transport/documents/2023/06/working-documents/grva-new-assessmenttest-method-automated-driving-natm",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-unece-ads-guidelines-2025",
+      "title": "UNECE — Guidelines and recommendations for ADS safety requirements, assessments and test methods to inform regulatory development",
+      "authority": "UNECE WP.29",
+      "type": "guideline",
+      "status": "WP.29-approved guidelines/recommendations (approved June 2024; publication May 2025); not itself a binding UN Regulation",
+      "url": "https://unece.org/transport/publications/guidelines-and-recommendations-ads-safety-requirements-assessments-and-test",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-eu-2022-1426-consolidated",
+      "title": "Commission Implementing Regulation (EU) 2022/1426 — consolidated version 24 March 2026",
+      "authority": "European Commission / European Union",
+      "type": "binding_law",
+      "status": "In force; amended; current consolidated version 24/03/2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02022R1426-20260324",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-eu-2026-481",
+      "title": "Commission Implementing Regulation (EU) 2026/481",
+      "authority": "European Commission / European Union",
+      "type": "binding_law",
+      "status": "In force; effective 24 March 2026; amends Regulation (EU) 2022/1426",
+      "url": "https://eur-lex.europa.eu/eli/reg_impl/2026/481/oj",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-nl-wvw-1994",
+      "title": "Wegenverkeerswet 1994",
+      "authority": "Netherlands",
+      "type": "binding_law",
+      "status": "Current national road traffic act; use provision-level status from Explorer dataset",
+      "url": "https://wetten.overheid.nl/BWBR0006622/",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-nl-experiment-regulation",
+      "title": "Regeling vergunningverlening experimenten zelfrijdende auto",
+      "authority": "Netherlands — Minister of Infrastructure and Water Management",
+      "type": "binding_regulation",
+      "status": "In force from 1 July 2019; current Dutch experimental permit regulation",
+      "url": "https://wetten.overheid.nl/BWBR0042343/",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-de-stvg",
+      "title": "Straßenverkehrsgesetz (StVG), including §§ 1d–1g",
+      "authority": "Germany",
+      "type": "binding_law",
+      "status": "Current federal road traffic act; use provision-level status from Explorer dataset",
+      "url": "https://www.gesetze-im-internet.de/stvg/",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-de-afgbv",
+      "title": "Autonome-Fahrzeuge-Genehmigungs-und-Betriebs-Verordnung (AFGBV)",
+      "authority": "Germany",
+      "type": "binding_regulation",
+      "status": "Current; amended by Article 8 of Act of 12 May 2026",
+      "url": "https://www.gesetze-im-internet.de/afgbv/",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-ntsb-uber-tempe",
+      "title": "NTSB HWY18MH010 / HAR-19/03 — Collision Between Vehicle Controlled by Developmental Automated Driving System and Pedestrian",
+      "authority": "US National Transportation Safety Board",
+      "type": "final_investigation_report",
+      "status": "Completed investigation; final findings",
+      "url": "https://www.ntsb.gov/investigations/Pages/HWY18MH010.aspx",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-ntsb-tesla-mountain-view",
+      "title": "NTSB HWY18FH011 / HAR-20/01 — Mountain View, California crash",
+      "authority": "US National Transportation Safety Board",
+      "type": "final_investigation_report",
+      "status": "Completed investigation; final findings",
+      "url": "https://www.ntsb.gov/investigations/Pages/HWY18FH011.aspx",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-ca-dmv-cruise-suspension",
+      "title": "California DMV Statement on Cruise LLC Suspension — 24 October 2023",
+      "authority": "California Department of Motor Vehicles",
+      "type": "regulatory_decision_statement",
+      "status": "Official regulator statement explaining immediate permit suspensions",
+      "url": "https://www.dmv.ca.gov/portal/news-and-media/dmv-statement-on-cruise-llc-suspension/",
+      "lastVerified": "2026-09-01"
+    },
+    {
+      "id": "src-nhtsa-cruise-consent-order",
+      "title": "NHTSA Consent Order with Cruise — 30 September 2024",
+      "authority": "US National Highway Traffic Safety Administration",
+      "type": "consent_order",
+      "status": "Official enforcement action / consent order",
+      "url": "https://www.nhtsa.gov/press-releases/consent-order-cruise-crash-reporting",
+      "lastVerified": "2026-09-01"
+    }
+  ],
+  "contentRules": {
+    "primarySourceOnlyForMaterialClaims": true,
+    "lawInterpretationSeparation": true,
+    "currentVsUpcomingSeparation": true,
+    "realCaseRequiresOfficiallyEstablishedRecord": true,
+    "realCaseRequiresNotToConclude": true,
+    "notIdentifiedDoesNotMeanProhibited": true,
+    "unclearDoesNotMeanNo": true,
+    "glossaryIsProjectionNotParallelDatabase": true,
+    "conceptNotEqualStandard": true,
+    "standardNotEqualLaw": true
+  }
+}

@@ -213,7 +213,7 @@ export default function SystemMapClient() {
 
         <div className="mt-8 flex flex-wrap items-center gap-2">
           <ModeButton active label="Explore" icon="🦊" />
-          <ModeButton label="Learn" icon="🐱" soon />
+          <ModeButton href="/learn" label="Learn" icon="🐱" />
           <ModeButton
             href="/deploy"
             label="Apply to deployment"

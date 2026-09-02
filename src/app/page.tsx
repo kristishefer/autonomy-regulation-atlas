@@ -235,7 +235,7 @@ export default async function Home({ searchParams }: PageProps) {
               <GuideLink
                 body={t.modes.learnBody}
                 cta={t.modes.learnCta}
-                href="#learn"
+                href="/learn"
                 image="/atlaslings/cat.png"
                 name="Learn"
                 title={t.modes.learnTitle}

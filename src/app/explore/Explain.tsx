@@ -25,6 +25,8 @@ export function ExplainDetails({
   deeperHref,
   tone = "light",
 }: ExplainProps) {
+  const learnHref = deeperHref ?? note.deeperHref;
+
   return (
     <details
       className={`group mt-6 border-t pt-4 ${tone === "dark" ? "border-white/15" : "border-[#b97512]/25"}`}
@@ -36,7 +38,7 @@ export function ExplainDetails({
             : "text-[#8b5a10] hover:text-[#147c73] focus-visible:ring-[#147c73]"
         }`}
       >
-          <span>Explain this concept</span>
+          <span>Explain</span>
           <span
             aria-hidden="true"
             className="text-lg font-normal leading-none transition-transform group-open:rotate-45"
@@ -85,13 +87,25 @@ export function ExplainDetails({
           <TerminologyDetails terms={note.terminology} />
         ) : null}
 
-        {deeperHref ? (
-          <Link
-            className="mt-4 inline-flex rounded-sm text-xs font-semibold text-[#147c73] underline decoration-[#147c73]/30 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-4"
-            href={deeperHref}
-          >
-            Learn deeper in the System Map →
-          </Link>
+        {learnHref || note.regulationHref ? (
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+            {learnHref ? (
+              <Link
+                className="inline-flex rounded-sm text-xs font-semibold text-[#147c73] underline decoration-[#147c73]/30 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-4"
+                href={learnHref}
+              >
+                Learn deeper →
+              </Link>
+            ) : null}
+            {note.regulationHref ? (
+              <Link
+                className="inline-flex rounded-sm text-xs font-semibold text-[#8b5a10] underline decoration-[#8b5a10]/30 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-4"
+                href={note.regulationHref}
+              >
+                See it in regulation →
+              </Link>
+            ) : null}
+          </div>
         ) : null}
       </div>
     </details>

@@ -3,9 +3,19 @@ import {
   type JurisdictionTerm,
   type JurisdictionTermId,
 } from "@/app/explore/regulatory-terminology";
+import {
+  getKnowledgeConcept,
+  getKnowledgeStandard,
+  type KnowledgeConceptId,
+} from "@/app/explore/learning-data";
 
 export type LearningConceptId =
   | "odd"
+  | "safety-assurance"
+  | "functional-safety"
+  | "sotif"
+  | "scenario-based-assessment"
+  | "safety-case-evidence"
   | "type-approval"
   | "technical-supervisor"
   | "iso-26262"
@@ -23,6 +33,8 @@ export type LearningNote = {
   why: string;
   confusion: string;
   terminology?: JurisdictionTerm[];
+  deeperHref?: string;
+  regulationHref?: string;
 };
 
 export type LearningConcept = LearningNote & {
@@ -35,17 +47,21 @@ export type LearningConcept = LearningNote & {
   >;
 };
 
+function projectKnowledgeConcept(id: KnowledgeConceptId): LearningConcept {
+  const concept = getKnowledgeConcept(id);
+  return {
+    id,
+    name: concept.title,
+    plain: concept.plainEnglish,
+    why: concept.whyItMatters.join(" "),
+    confusion: concept.commonConfusions[0].body,
+    deeperHref: `/learn/safety-standards/${concept.slug}`,
+  };
+}
+
 export const LEARNING_CONCEPTS: Record<LearningConceptId, LearningConcept> = {
   odd: {
-    id: "odd",
-    name: "Operational Design Domain (ODD)",
-    plain:
-      "An ODD describes the conditions an automated driving system is designed to handle, such as road type, geography, weather, lighting, traffic and speed range.",
-    why:
-      "The ODD bounds the situations in which ADS behavior and safety performance need to be specified, evaluated and monitored.",
-    confusion:
-      "An ODD is a technical design domain, not automatically a legal operating permit or the same boundary as an authorized service area.",
-    deeperHref: "/explore/system-map",
+    ...projectKnowledgeConcept("odd"),
     jurisdictionContext: {
       netherlands:
         "Operationeel Domein information forms part of the Dutch experimental vergunning assessment, but the source term is not treated as a literal synonym for ODD.",
@@ -57,6 +73,13 @@ export const LEARNING_CONCEPTS: Record<LearningConceptId, LearningConcept> = {
       germany: ["de-betriebsbereich", "de-betriebsbereich-genehmigung"],
     },
   },
+  "safety-assurance": projectKnowledgeConcept("safety-assurance"),
+  "functional-safety": projectKnowledgeConcept("functional-safety"),
+  sotif: projectKnowledgeConcept("sotif"),
+  "scenario-based-assessment": projectKnowledgeConcept(
+    "scenario-based-assessment",
+  ),
+  "safety-case-evidence": projectKnowledgeConcept("safety-case-evidence"),
   "type-approval": {
     id: "type-approval",
     name: "Type approval",
@@ -103,13 +126,10 @@ export const LEARNING_CONCEPTS: Record<LearningConceptId, LearningConcept> = {
   "iso-26262": {
     id: "iso-26262",
     name: "ISO 26262",
-    plain:
-      "ISO 26262 is a functional-safety standard for automotive electrical and electronic systems.",
-    why:
-      "It gives teams a structured way to identify malfunction-related hazards and determine how rigorous the safety process needs to be.",
-    confusion:
-      "Functional Safety is not the same as SOTIF: ISO 26262 focuses on malfunctioning behaviour.",
-    deeperHref: "/explore/system-map",
+    plain: getKnowledgeStandard("std-iso-26262").scope,
+    why: getKnowledgeStandard("std-iso-26262").avRelevance,
+    confusion: getKnowledgeStandard("std-iso-26262").whatItDoesNotDo[0],
+    deeperHref: "/learn/safety-standards/functional-safety",
     jurisdictionContext: {
       netherlands:
         "The experimental application regulation references specified processes while allowing a demonstrably equivalent method.",
@@ -244,6 +264,8 @@ export function getLearningNote(
     plain: concept.plain,
     why: context ? `${concept.why} ${context}` : concept.why,
     confusion: concept.confusion,
+    deeperHref: concept.deeperHref,
+    regulationHref: concept.regulationHref,
     terminology: terminologyIds
       ? getJurisdictionTerms(terminologyIds)
       : undefined,

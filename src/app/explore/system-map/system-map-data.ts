@@ -367,11 +367,7 @@ export const NODES: SystemNode[] = [
     relevance: { EU: "◐", US: "◐", China: "◐" },
     takeaway: "A hazardous situation can arise even when the system is functioning as designed, because its capabilities may be insufficient for the situation.",
     source: "https://www.iso.org/standard/77490.html",
-    learning: {
-      plain: "SOTIF deals with safety problems that do not require a component or system failure.",
-      why: "An automated system may operate exactly as designed and still misunderstand or inadequately handle a real-world situation.",
-      confusion: "ISO 26262 asks about malfunctioning behaviour; SOTIF can matter even when nothing has technically failed.",
-    },
+    learningConceptId: "sotif",
   },
   {
     id: "iso-pas-8800",
@@ -475,11 +471,7 @@ export const NODES: SystemNode[] = [
     relevance: { EU: "◐", US: "◐", China: "◐" },
     takeaway: "Safety assurance is broader than a generic 'safety case': regulators may require safety concepts, argumentation, validation evidence, audits and testing without using one universal safety-case format. A generic safety case may organize claims and arguments supported by evidence; EU ADS type approval, for example, specifies its own safety-concept, documentation, validation and authority-assessment requirements.",
     source: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R1426",
-    learning: {
-      plain: "Safety assurance is the structured reasoning and evidence used to show why an automated driving system is acceptably safe in a defined context.",
-      why: "For complex ADS, safety is usually demonstrated through a combination of engineering argumentation, scenario-based validation, simulation, physical testing, process evidence and in-service data rather than one test or certificate.",
-      confusion: "A 'safety case' is one assurance approach, not a single globally defined AV permit or certification document. Different regimes use different terminology and evidence requirements.",
-    },
+    learningConceptId: "safety-case-evidence",
   },
   {
     id: "ul-4600",
@@ -511,11 +503,7 @@ export const NODES: SystemNode[] = [
     relevance: { EU: "◐", US: "◐", China: "◐" },
     takeaway: "ISO 34501–34505 structure scenario-based ADS evaluation. As of August 2026, ISO/DPAS 34506 on qualification of virtual test environments is under development and is not a final published standard.",
     source: "https://www.iso.org/committee/5383785/x/catalogue/p/0/u/1/",
-    learning: {
-      plain: "The ISO 3450x family supplies shared vocabulary and methods for defining ODDs, organizing scenarios, evaluating them and generating ADS test cases.",
-      why: "Scenario-based evaluation helps connect the system's ODD to a traceable body of virtual and physical test evidence across many relevant situations.",
-      confusion: "The family is not one global approval rule. ISO 34501–34505 are published standards, while ISO 34506 remains under development as of August 2026.",
-    },
+    learningConceptId: "scenario-based-assessment",
   },
   {
     id: "natm",
