@@ -46,6 +46,7 @@ const EU_GSR =
 const EU_ADS =
   "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R1426";
 const NL_EXPERIMENT = "https://wetten.overheid.nl/BWBR0042343/";
+const DE_AFGBV = "https://www.gesetze-im-internet.de/afgbv/";
 
 /**
  * Instrument ↔ jurisdiction relationships.
@@ -176,7 +177,25 @@ export const JURISDICTION_APPLICABILITY: JurisdictionApplicability[] = [
       "The Dutch experimental-permit framework expressly references specified ISO 26262 processes as a safety-evidence method, while allowing a demonstrably equivalent method. That is a concrete regulatory reference, not a rule that ISO 26262 is universally mandatory in the Netherlands.",
     source: NL_EXPERIMENT,
   },
-  ...(["germany", "united-states", "united-kingdom", "russia"] as const).map(
+  {
+    instrumentId: "iso-26262",
+    jurisdiction: "germany",
+    status: "referenced",
+    mechanism: "regulatory_reference",
+    legalEffect:
+      "AFGBV references ISO 26262 in specific state-of-the-art presumptions and safety-evidence constructions. The reference gives the standard regulatory significance in those constructions without turning ISO 26262 into a universal standalone German deployment rule.",
+    source: DE_AFGBV,
+  },
+  {
+    instrumentId: "sotif",
+    jurisdiction: "germany",
+    status: "referenced",
+    mechanism: "regulatory_reference",
+    legalEffect:
+      "AFGBV references SOTIF in specific safety and state-of-the-art evidence constructions. Its legal significance comes from that regulatory use and should not be generalized into a claim that the ISO standard is mandatory for every German vehicle or purpose.",
+    source: DE_AFGBV,
+  },
+  ...(["united-states", "united-kingdom", "russia"] as const).map(
     (jurisdiction) => ({
       instrumentId: "iso-26262",
       jurisdiction,
