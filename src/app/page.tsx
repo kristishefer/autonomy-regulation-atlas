@@ -3,22 +3,13 @@ import Link from "next/link";
 
 import { EuropeJurisdictionMap } from "@/app/home/EuropeJurisdictionMap";
 import type { JurisdictionMapPoint } from "@/app/home/EuropeJurisdictionMap";
-import {
-  homeCopy,
-  localeLabels,
-  locales,
-  normalizeLocale,
-  type Locale,
-} from "@/app/home/home-i18n";
+import { homeCopy } from "@/app/home/home-i18n";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import type { Locale } from "@/app/i18n/locale";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 import { supabase } from "@/app/lib/supabase";
 
 export const dynamic = "force-dynamic";
-
-type PageProps = {
-  searchParams: Promise<{
-    lang?: string | string[];
-  }>;
-};
 
 type JurisdictionRow = {
   id: number;
@@ -107,9 +98,8 @@ async function translateJurisdictions(
   }));
 }
 
-export default async function Home({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const locale = normalizeLocale(params.lang);
+export default async function Home() {
+  const locale = await getRequestLocale();
   const t = homeCopy[locale];
   const { data, error } = await supabase
     .from("jurisdictions")
@@ -174,7 +164,7 @@ export default async function Home({ searchParams }: PageProps) {
               </a>
             </nav>
 
-            <LanguageSwitcher label={t.ui.language} locale={locale} />
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
@@ -401,46 +391,6 @@ export default async function Home({ searchParams }: PageProps) {
         </div>
       </footer>
     </main>
-  );
-}
-
-function LanguageSwitcher({
-  locale,
-  label,
-}: {
-  locale: Locale;
-  label: string;
-}) {
-  return (
-    <details className="atlas-language group relative">
-      <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full border border-[#10264a]/15 bg-white px-3 py-2 text-xs font-semibold tracking-[0.08em] shadow-sm transition hover:border-[#10264a]/30 sm:px-4 sm:py-2.5">
-        <span aria-hidden="true" className="text-sm">
-          ◎
-        </span>
-        <span className="hidden sm:inline">{label}</span>
-        <strong>{localeLabels[locale]}</strong>
-        <span className="text-[#10264a]/35" aria-hidden="true">
-          ⌄
-        </span>
-      </summary>
-
-      <div className="absolute right-0 top-[48px] z-[80] grid min-w-[150px] overflow-hidden rounded-2xl border border-[#10264a]/10 bg-white p-1.5 shadow-[0_18px_45px_rgba(16,38,74,.16)]">
-        {locales.map((item) => (
-          <Link
-            aria-current={item === locale ? "page" : undefined}
-            className={`rounded-xl px-3 py-2.5 text-sm transition hover:bg-[#f2eadc] ${
-              item === locale
-                ? "font-semibold text-[#147c73]"
-                : "text-[#10264a]/65"
-            }`}
-            href={`/?lang=${item}`}
-            key={item}
-          >
-            {localeLabels[item]}
-          </Link>
-        ))}
-      </div>
-    </details>
   );
 }
 

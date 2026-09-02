@@ -8,6 +8,17 @@ import {
   type RegulatoryConclusion,
   type StatusTone,
 } from "@/app/explore/regulatory-data";
+import {
+  getCommonUiCopy,
+  getCompareUiCopy,
+  getMethodologyStatusCopy,
+  type CommonUiCopy,
+  type CompareUiCopy,
+  type MethodologyStatusCopy,
+} from "@/app/i18n/global-ui-copy";
+import { LanguageNotice } from "@/app/i18n/LanguageNotice";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 
 const toneClasses: Record<StatusTone, string> = {
   positive: "border-[#147c73]/25 bg-[#e7f1ed] text-[#11665f]",
@@ -16,13 +27,11 @@ const toneClasses: Record<StatusTone, string> = {
   watch: "border-[#b97512]/25 bg-[#fff8e8] text-[#8f5f13]",
 };
 
-const confidenceLabels: Record<ConfidenceStatus, string> = {
-  established: "Established from identified sources",
-  unclear: "Unclear",
-  not_identified: "Not identified in the stated search scope",
-};
-
-export default function ComparePage() {
+export default async function ComparePage() {
+  const locale = await getRequestLocale();
+  const common = getCommonUiCopy(locale);
+  const compare = getCompareUiCopy(locale);
+  const methodology = getMethodologyStatusCopy(locale);
   const profiles = JURISDICTION_PROFILES;
   const jurisdictionColumns = {
     gridTemplateColumns: `repeat(${profiles.length}, minmax(250px, 1fr))`,
@@ -40,41 +49,49 @@ export default function ComparePage() {
               Autonomy Regulation Atlas
             </span>
           </Link>
-          <nav className="flex items-center gap-4 text-xs font-semibold text-[#10264a]/55 sm:gap-6 sm:text-sm">
-            <Link className="transition hover:text-[#10264a]" href="/explore/system-map">
-              System Map
-            </Link>
-            <Link className="text-[#147c73]" href="/explore/compare">
-              Compare
-            </Link>
-          </nav>
+          <div className="flex items-center gap-4 sm:gap-6">
+            <nav
+              aria-label={common.primaryNavigation}
+              className="hidden items-center gap-4 text-xs font-semibold text-[#10264a]/55 sm:flex sm:gap-6 sm:text-sm"
+            >
+              <Link className="transition hover:text-[#10264a]" href="/explore/system-map">
+                {common.systemMap}
+              </Link>
+              <Link className="text-[#147c73]" href="/explore/compare">
+                {common.compare}
+              </Link>
+            </nav>
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
+
+      <LanguageNotice locale={locale} />
 
       <section className="relative overflow-hidden border-b border-[#10264a]/10">
         <div className="atlas-hero-grid absolute inset-0 opacity-25" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10 lg:py-18">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
-            Jurisdiction comparison
+            {compare.eyebrow}
           </p>
-          <h1 className="mt-3 max-w-4xl font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl">
-            Same deployment question, different legal architecture
+          <h1 className="mt-3 max-w-4xl break-words hyphens-auto font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl">
+            {compare.title}
           </h1>
           <p className="mt-6 max-w-3xl text-base leading-7 text-[#10264a]/60">
-            Compare structured conclusions across a shared set of regulatory dimensions. Status, scope, uncertainty and exact legal basis stay attached to every answer.
+            {compare.intro}
           </p>
 
           <div className="mt-9 grid gap-px overflow-hidden rounded-[22px] border border-[#10264a]/10 bg-[#10264a]/10 sm:grid-cols-3">
-            <MethodItem label="Not identified" body="The stated official-source search did not identify a rule. It does not mean no rule exists." />
-            <MethodItem label="Unclear" body="The available authority does not support a binary conclusion; the reason remains visible." />
-            <MethodItem label="Scope first" body="A status is read with its vehicle, automation, road, use-case and human-role scope." />
+            <MethodItem label={methodology.notIdentified} body={compare.notIdentifiedBody} />
+            <MethodItem label={methodology.unclear} body={compare.unclearBody} />
+            <MethodItem label={methodology.scopeFirst} body={compare.scopeFirstBody} />
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10 lg:py-16">
         <p className="mb-3 flex items-center justify-between gap-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#147c73] sm:hidden">
-          <span>Swipe to compare Netherlands and Germany</span>
+          <span>{compare.swipe}</span>
           <span className="text-base" aria-hidden="true">
             →
           </span>
@@ -82,7 +99,7 @@ export default function ComparePage() {
 
         <div className="relative">
           <div
-            aria-label="Scrollable comparison of Netherlands and Germany"
+            aria-label={`${common.compareJurisdictions}: Netherlands, Germany`}
             className="overflow-x-auto pb-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#147c73]"
             tabIndex={0}
           >
@@ -132,8 +149,11 @@ export default function ComparePage() {
                         <div className="grid gap-3" style={jurisdictionColumns}>
                           {profiles.map((profile) => (
                             <ConclusionCell
+                              common={common}
+                              compare={compare}
                               conclusion={profile.conclusions[field.id]}
                               key={profile.slug}
+                              methodology={methodology}
                             />
                           ))}
                         </div>
@@ -155,8 +175,8 @@ export default function ComparePage() {
 
       <footer className="border-t border-[#10264a]/10 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-9 text-xs leading-5 text-[#10264a]/45 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
-          <span>Current-law comparison · sources last checked 31 Aug 2026</span>
-          <span>Atlas analysis is regulatory information, not legal advice</span>
+          <span>{compare.footerLeft}</span>
+          <span>{compare.footerRight}</span>
         </div>
       </footer>
     </main>
@@ -172,12 +192,29 @@ function MethodItem({ label, body }: { label: string; body: string }) {
   );
 }
 
-function ConclusionCell({ conclusion }: { conclusion: RegulatoryConclusion }) {
+function ConclusionCell({
+  common,
+  compare,
+  conclusion,
+  methodology,
+}: {
+  common: CommonUiCopy;
+  compare: CompareUiCopy;
+  conclusion: RegulatoryConclusion;
+  methodology: MethodologyStatusCopy;
+}) {
+  const confidenceLabels: Record<ConfidenceStatus, string> = {
+    established: methodology.establishedLong,
+    unclear: methodology.unclear,
+    not_identified: methodology.notIdentifiedLong,
+  };
+  const status = localizeStatus(conclusion.status, methodology);
+
   return (
     <article className="rounded-[18px] border border-[#10264a]/10 bg-white p-5">
       <div className="flex flex-wrap items-center gap-2">
         <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold ${toneClasses[conclusion.tone]}`}>
-          {conclusion.status}
+          {status}
         </span>
         <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#10264a]/34">
           {confidenceLabels[conclusion.confidenceStatus]}
@@ -186,24 +223,24 @@ function ConclusionCell({ conclusion }: { conclusion: RegulatoryConclusion }) {
 
       <p className="mt-4 text-sm leading-6 text-[#10264a]/68">{conclusion.summary}</p>
       <p className="mt-4 border-t border-[#10264a]/8 pt-3 text-[11px] leading-5 text-[#10264a]/45">
-        <strong className="text-[#10264a]/62">Scope:</strong> {conclusion.scopeLabel}
+        <strong className="text-[#10264a]/62">{common.scope}:</strong> {conclusion.scopeLabel}
       </p>
 
       {conclusion.uncertaintyReason ? (
         <p className="mt-2 text-[11px] leading-5 text-[#8f5f13]">
-          <strong>Why unclear:</strong> {conclusion.uncertaintyReason}
+          <strong>{methodology.whyUnclear}:</strong> {conclusion.uncertaintyReason}
         </p>
       ) : null}
       {conclusion.searchScope ? (
         <p className="mt-2 text-[11px] leading-5 text-[#8f5f13]">
-          <strong>Search scope:</strong> {conclusion.searchScope}
+          <strong>{methodology.searchScope}:</strong> {conclusion.searchScope}
         </p>
       ) : null}
 
       {conclusion.atlasAnalysis ? (
         <details className="mt-3 border-t border-[#10264a]/8 pt-3">
           <summary className="cursor-pointer list-none text-[11px] font-semibold text-[#147c73]">
-            Atlas interpretation +
+            {compare.atlasInterpretation} +
           </summary>
           <p className="mt-2 text-[11px] leading-5 text-[#10264a]/52">
             {conclusion.atlasAnalysis}
@@ -231,4 +268,21 @@ function ConclusionCell({ conclusion }: { conclusion: RegulatoryConclusion }) {
       </ul>
     </article>
   );
+}
+
+function localizeStatus(
+  status: string,
+  methodology: MethodologyStatusCopy,
+) {
+  const statusCopy: Record<string, string> = {
+    Conditional: methodology.conditional,
+    "Experimental only": methodology.experimentalOnly,
+    "Not identified": methodology.notIdentified,
+    "Not required": methodology.notRequired,
+    Permitted: methodology.permitted,
+    Required: methodology.required,
+    Unclear: methodology.unclear,
+  };
+
+  return statusCopy[status] ?? status;
 }

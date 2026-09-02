@@ -1,5 +1,10 @@
 import Link from "next/link";
 
+import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
+import { LanguageNotice } from "@/app/i18n/LanguageNotice";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import { getRequestLocale } from "@/app/i18n/request-locale";
+
 const pathwayGates = [
   {
     number: "01",
@@ -52,7 +57,10 @@ const statusLanguage = [
   "Research pending",
 ] as const;
 
-export default function DeployPage() {
+export default async function DeployPage() {
+  const locale = await getRequestLocale();
+  const common = getCommonUiCopy(locale);
+
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
       <header className="border-b border-[#10264a]/10 bg-[#fbf7ef]">
@@ -66,19 +74,27 @@ export default function DeployPage() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-5 text-sm text-[#10264a]/55">
-            <Link className="transition hover:text-[#10264a]" href="/">
-              Home
-            </Link>
-            <Link
-              className="transition hover:text-[#10264a]"
-              href="/explore/system-map"
+          <div className="flex items-center gap-4 sm:gap-5">
+            <nav
+              aria-label={common.primaryNavigation}
+              className="hidden items-center gap-5 text-sm text-[#10264a]/55 sm:flex"
             >
-              System Map
-            </Link>
+              <Link className="transition hover:text-[#10264a]" href="/">
+                {common.home}
+              </Link>
+              <Link
+                className="transition hover:text-[#10264a]"
+                href="/explore/system-map"
+              >
+                {common.systemMap}
+              </Link>
+            </nav>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
+
+      <LanguageNotice locale={locale} />
 
       <section className="border-b border-[#10264a]/10">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_0.72fr] lg:px-10 lg:py-20">

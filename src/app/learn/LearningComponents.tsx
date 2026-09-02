@@ -13,8 +13,26 @@ import {
   type KnowledgeStandard,
   type RealCase,
 } from "@/app/explore/learning-data";
+import {
+  getCommonUiCopy,
+  getLearningUiCopy,
+  getMethodologyStatusCopy,
+  type CommonUiCopy,
+  type LearningUiCopy,
+  type MethodologyStatusCopy,
+} from "@/app/i18n/global-ui-copy";
+import type { Locale } from "@/app/i18n/locale";
 
-export function ConceptUnit({ concept }: { concept: KnowledgeConcept }) {
+export function ConceptUnit({
+  concept,
+  locale,
+}: {
+  concept: KnowledgeConcept;
+  locale: Locale;
+}) {
+  const common = getCommonUiCopy(locale);
+  const learning = getLearningUiCopy(locale);
+  const methodology = getMethodologyStatusCopy(locale);
   const standards = concept.standardIds.map(getKnowledgeStandard);
   const overlays = concept.levels.applied.jurisdictionOverlayIds.map(
     getJurisdictionOverlay,
@@ -27,7 +45,7 @@ export function ConceptUnit({ concept }: { concept: KnowledgeConcept }) {
     <main>
       <section className="border-b border-[#10264a]/10">
         <div className="mx-auto max-w-5xl px-5 pb-14 pt-10 sm:px-8 sm:pb-16 sm:pt-14 lg:px-10">
-          <LearningBreadcrumb current={concept.title} />
+          <LearningBreadcrumb current={concept.title} locale={locale} />
           <p className="mt-9 text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
             Safety &amp; Standards
           </p>
@@ -46,16 +64,16 @@ export function ConceptUnit({ concept }: { concept: KnowledgeConcept }) {
       <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
         <CatExplains title={concept.title} body={concept.plainEnglish} />
 
-        <LearningLevel open title="Essentials" eyebrow="Start here">
+        <LearningLevel open title={learning.essentials} eyebrow="Start here">
           <p className="max-w-3xl text-base leading-7 text-[#10264a]/68">
             {concept.levels.essentials.summary}
           </p>
           <NumberedList items={concept.levels.essentials.keyPoints} />
-          <WhyItMatters items={concept.whyItMatters} />
-          <Confusions items={concept.commonConfusions} />
+          <WhyItMatters items={concept.whyItMatters} title={common.whyMattersHere} />
+          <Confusions items={concept.commonConfusions} title={common.commonConfusion} />
         </LearningLevel>
 
-        <LearningLevel title="Applied" eyebrow="Evidence and regulation">
+        <LearningLevel title={learning.applied} eyebrow="Evidence and regulation">
           <h3 className="font-serif text-2xl font-semibold">How it works</h3>
           <NumberedList items={concept.levels.applied.howItWorks} />
 
@@ -93,19 +111,24 @@ export function ConceptUnit({ concept }: { concept: KnowledgeConcept }) {
             </div>
           </div>
 
-          <StandardsSection standards={standards} />
-          <JurisdictionSection overlays={overlays} />
-          {cases.length ? <RealCases cases={cases} /> : null}
+          <StandardsSection learning={learning} standards={standards} />
+          <JurisdictionSection
+            common={common}
+            learning={learning}
+            methodology={methodology}
+            overlays={overlays}
+          />
+          {cases.length ? <RealCases cases={cases} learning={learning} /> : null}
           {concept.levels.applied.caseDisplayNote ? (
             <p className="mt-7 border-l-2 border-[#b97512] pl-4 text-xs leading-5 text-[#10264a]/55">
               {concept.levels.applied.caseDisplayNote}
             </p>
           ) : null}
 
-          <KnowledgeChecks checks={concept.levels.applied.checkYourUnderstanding} />
+          <KnowledgeChecks checks={concept.levels.applied.checkYourUnderstanding} title={learning.knowledgeCheck} />
         </LearningLevel>
 
-        <LearningLevel title="Deep Dive" eyebrow="Trace the reasoning">
+        <LearningLevel title={learning.deepDive} eyebrow="Trace the reasoning">
           <p className="max-w-3xl text-base leading-7 text-[#10264a]/68">
             {concept.levels.deepDive.summary}
           </p>
@@ -123,12 +146,12 @@ export function ConceptUnit({ concept }: { concept: KnowledgeConcept }) {
             </ul>
           </div>
           <div className="mt-8">
-            <h3 className="font-serif text-2xl font-semibold">Primary sources</h3>
+            <h3 className="font-serif text-2xl font-semibold">{learning.officialReferences}</h3>
             <SourceLinks ids={concept.levels.deepDive.sourceIds} />
           </div>
         </LearningLevel>
 
-        <RelatedConcepts concept={concept} />
+        <RelatedConcepts concept={concept} title={learning.relatedConcepts} />
         <p className="mt-8 text-[11px] leading-5 text-[#10264a]/45">
           Content and source status last verified {concept.lastVerified}
         </p>
@@ -137,11 +160,19 @@ export function ConceptUnit({ concept }: { concept: KnowledgeConcept }) {
   );
 }
 
-export function LearningBreadcrumb({ current }: { current?: string }) {
+export function LearningBreadcrumb({
+  current,
+  locale,
+}: {
+  current?: string;
+  locale: Locale;
+}) {
+  const common = getCommonUiCopy(locale);
+
   return (
     <nav aria-label="Breadcrumb" className="flex flex-wrap gap-2 text-xs font-semibold text-[#10264a]/48">
       <Link className="rounded-sm hover:text-[#147c73] focus-visible:ring-2 focus-visible:ring-[#b97512]" href="/learn">
-        Learning
+        {common.learning}
       </Link>
       <span aria-hidden="true">/</span>
       <Link className="rounded-sm hover:text-[#147c73] focus-visible:ring-2 focus-visible:ring-[#b97512]" href="/learn/safety-standards">
@@ -217,10 +248,10 @@ function NumberedList({ items }: { items: string[] }) {
   );
 }
 
-function WhyItMatters({ items }: { items: string[] }) {
+function WhyItMatters({ items, title }: { items: string[]; title: string }) {
   return (
     <div className="mt-10 bg-[#10264a] p-6 text-[#fbf7ef] sm:p-8">
-      <h3 className="font-serif text-2xl font-semibold">Why it matters</h3>
+      <h3 className="font-serif text-2xl font-semibold">{title}</h3>
       <ul className="mt-5 space-y-3">
         {items.map((item) => (
           <li className="flex gap-3 text-sm leading-6 text-white/70" key={item}>
@@ -233,10 +264,16 @@ function WhyItMatters({ items }: { items: string[] }) {
   );
 }
 
-function Confusions({ items }: { items: { title: string; body: string }[] }) {
+function Confusions({
+  items,
+  title,
+}: {
+  items: { title: string; body: string }[];
+  title: string;
+}) {
   return (
     <div className="mt-10">
-      <h3 className="font-serif text-2xl font-semibold">Common confusions</h3>
+      <h3 className="font-serif text-2xl font-semibold">{title}</h3>
       <div className="mt-5 divide-y divide-[#10264a]/10 border-y border-[#10264a]/10">
         {items.map((item) => (
           <article className="grid gap-2 py-5 sm:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] sm:gap-8" key={item.title}>
@@ -277,20 +314,34 @@ function NatmArchitecture() {
   );
 }
 
-function StandardsSection({ standards }: { standards: KnowledgeStandard[] }) {
+function StandardsSection({
+  learning,
+  standards,
+}: {
+  learning: LearningUiCopy;
+  standards: KnowledgeStandard[];
+}) {
   if (!standards.length) return null;
   return (
     <section className="mt-12 border-t border-[#10264a]/10 pt-8">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">Standards layer</p>
       <h3 className="mt-2 font-serif text-3xl font-semibold">Standards are evidence, not permission</h3>
       <div className="mt-6 space-y-5">
-        {standards.map((standard) => <StandardCard key={standard.id} standard={standard} />)}
+        {standards.map((standard) => (
+          <StandardCard key={standard.id} learning={learning} standard={standard} />
+        ))}
       </div>
     </section>
   );
 }
 
-function StandardCard({ standard }: { standard: KnowledgeStandard }) {
+function StandardCard({
+  learning,
+  standard,
+}: {
+  learning: LearningUiCopy;
+  standard: KnowledgeStandard;
+}) {
   const source = resolveLearningSource(standard.officialSourceId);
   return (
     <article className="border-l-2 border-[#b97512] pl-5 sm:pl-7">
@@ -317,7 +368,7 @@ function StandardCard({ standard }: { standard: KnowledgeStandard }) {
         return (
           <details className="group mt-5 border-t border-[#10264a]/10 pt-4" key={id}>
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-sm text-xs font-semibold text-[#8b5a10] focus-visible:ring-2 focus-visible:ring-[#b97512]">
-              <span>Standards Watch · {watch.title}</span>
+              <span>{learning.standardsWatch} · {watch.title}</span>
               <span aria-hidden="true" className="text-base transition-transform group-open:rotate-45">+</span>
             </summary>
             <div className="mt-3 bg-[#fff8e8] p-4 text-xs leading-5 text-[#10264a]/65">
@@ -343,25 +394,47 @@ function StandardList({ items, title }: { items: string[]; title: string }) {
   );
 }
 
-function JurisdictionSection({ overlays }: { overlays: JurisdictionOverlay[] }) {
+function JurisdictionSection({
+  common,
+  learning,
+  methodology,
+  overlays,
+}: {
+  common: CommonUiCopy;
+  learning: LearningUiCopy;
+  methodology: MethodologyStatusCopy;
+  overlays: JurisdictionOverlay[];
+}) {
   if (!overlays.length) return null;
   return (
     <section className="mt-12 border-t border-[#10264a]/10 pt-8">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">Jurisdiction context</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">{learning.jurisdictionExamples}</p>
       <h3 className="mt-2 font-serif text-3xl font-semibold">One concept, different legal effect</h3>
       <div className="mt-6 grid gap-5 md:grid-cols-2">
-        {overlays.map((overlay) => <JurisdictionCard key={overlay.id} overlay={overlay} />)}
+        {overlays.map((overlay) => (
+          <JurisdictionCard
+            key={overlay.id}
+            methodology={methodology}
+            overlay={overlay}
+          />
+        ))}
       </div>
       <Link className="mt-6 inline-flex rounded-sm text-sm font-semibold text-[#147c73] underline decoration-[#147c73]/25 underline-offset-4 focus-visible:ring-2 focus-visible:ring-[#b97512]" href="/explore/compare">
-        Compare the full jurisdiction models →
+        {common.compareJurisdictions} →
       </Link>
     </section>
   );
 }
 
-function JurisdictionCard({ overlay }: { overlay: JurisdictionOverlay }) {
+function JurisdictionCard({
+  methodology,
+  overlay,
+}: {
+  methodology: MethodologyStatusCopy;
+  overlay: JurisdictionOverlay;
+}) {
   const label = overlay.jurisdictionId === "germany" ? "Germany" : "Netherlands";
-  const status = overlay.confidenceStatus === "not_identified" ? "Not identified" : overlay.confidenceStatus === "unclear" ? "Unclear" : "Established";
+  const status = overlay.confidenceStatus === "not_identified" ? methodology.notIdentified : overlay.confidenceStatus === "unclear" ? methodology.unclear : methodology.established;
   return (
     <article className="border border-[#10264a]/12 bg-white p-5 sm:p-6">
       <div className="flex items-center justify-between gap-4">
@@ -372,10 +445,10 @@ function JurisdictionCard({ overlay }: { overlay: JurisdictionOverlay }) {
       <p className="mt-3 text-xs leading-5 text-[#10264a]/60">{overlay.legalContext}</p>
       <p className="mt-3 border-l border-[#b97512]/50 pl-3 text-xs leading-5 text-[#10264a]/60"><strong>Why the distinction matters:</strong> {overlay.whatIsDifferentHere}</p>
       {overlay.confidenceStatus === "not_identified" ? (
-        <p className="mt-3 bg-[#fff8e8] p-3 text-[11px] leading-5 text-[#10264a]/58"><strong>Search scope:</strong> {overlay.searchScope}</p>
+        <p className="mt-3 bg-[#fff8e8] p-3 text-[11px] leading-5 text-[#10264a]/58"><strong>{methodology.searchScope}:</strong> {overlay.searchScope}</p>
       ) : null}
       {overlay.confidenceStatus === "unclear" ? (
-        <p className="mt-3 bg-[#fff8e8] p-3 text-[11px] leading-5 text-[#10264a]/58"><strong>Why unclear:</strong> {overlay.uncertaintyReason}</p>
+        <p className="mt-3 bg-[#fff8e8] p-3 text-[11px] leading-5 text-[#10264a]/58"><strong>{methodology.whyUnclear}:</strong> {overlay.uncertaintyReason}</p>
       ) : null}
       <SourceLinks ids={overlay.sourceIds} compact />
       <Link className="mt-4 inline-flex rounded-sm text-xs font-semibold text-[#147c73] underline decoration-[#147c73]/25 underline-offset-4 focus-visible:ring-2 focus-visible:ring-[#b97512]" href={`/${overlay.jurisdictionId}`}>
@@ -385,10 +458,16 @@ function JurisdictionCard({ overlay }: { overlay: JurisdictionOverlay }) {
   );
 }
 
-function RealCases({ cases }: { cases: RealCase[] }) {
+function RealCases({
+  cases,
+  learning,
+}: {
+  cases: RealCase[];
+  learning: LearningUiCopy;
+}) {
   return (
     <section className="mt-12 border-t border-[#10264a]/10 pt-8">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">Officially established record</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">{learning.realCase}</p>
       <h3 className="mt-2 font-serif text-3xl font-semibold">Real cases, careful conclusions</h3>
       <div className="mt-6 space-y-6">
         {cases.map((item) => (
@@ -397,11 +476,11 @@ function RealCases({ cases }: { cases: RealCase[] }) {
               <span>{item.authority}</span><span>{item.date} · {item.jurisdiction}</span>
             </div>
             <h4 className="mt-4 max-w-3xl font-serif text-2xl font-semibold">{item.title}</h4>
-            <CaseList items={item.establishedFacts} title="Established facts" />
-            <CaseList items={item.authorityFindings} title="Authority findings" />
-            <CaseList items={item.atlasRelevance} title="Atlas relevance" />
+            <CaseList items={item.establishedFacts} title={learning.establishedFacts} />
+            <CaseList items={item.authorityFindings} title={learning.authorityFindings} />
+            <CaseList items={item.atlasRelevance} title={learning.atlasRelevance} />
             <div className="mt-6 border border-[#f1c780]/25 bg-white/[0.05] p-4">
-              <CaseList items={item.notToConclude} title="Do not conclude" />
+              <CaseList items={item.notToConclude} title={learning.notToConclude} />
             </div>
             <SourceLinks dark ids={item.sourceIds} />
           </article>
@@ -422,11 +501,17 @@ function CaseList({ items, title }: { items: string[]; title: string }) {
   );
 }
 
-function KnowledgeChecks({ checks }: { checks: { question: string; answer: string }[] }) {
+function KnowledgeChecks({
+  checks,
+  title,
+}: {
+  checks: { question: string; answer: string }[];
+  title: string;
+}) {
   if (!checks.length) return null;
   return (
     <section className="mt-12 border-t border-[#10264a]/10 pt-8">
-      <h3 className="font-serif text-3xl font-semibold">Check your understanding</h3>
+      <h3 className="font-serif text-3xl font-semibold">{title}</h3>
       <div className="mt-5 space-y-3">
         {checks.map((check) => (
           <details className="group border border-[#10264a]/12 bg-white" key={check.question}>
@@ -441,10 +526,16 @@ function KnowledgeChecks({ checks }: { checks: { question: string; answer: strin
   );
 }
 
-function RelatedConcepts({ concept }: { concept: KnowledgeConcept }) {
+function RelatedConcepts({
+  concept,
+  title,
+}: {
+  concept: KnowledgeConcept;
+  title: string;
+}) {
   return (
     <nav aria-label="Related Learning concepts" className="mt-12 border-t border-[#10264a]/12 pt-8">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">Continue through the evidence architecture</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">{title}</p>
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
         {concept.relatedConceptIds.map((id) => {
           const related = getKnowledgeConcept(id);

@@ -6,6 +6,7 @@ import {
   getKnowledgeConceptBySlug,
 } from "@/app/explore/learning-data";
 import { ConceptUnit } from "@/app/learn/LearningComponents";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 
 export function generateStaticParams() {
   return KNOWLEDGE_CONCEPTS.map((concept) => ({ slug: concept.slug }));
@@ -23,7 +24,8 @@ export async function generateMetadata({ params }: PageProps<"/learn/safety-stan
 
 export default async function LearningUnitPage({ params }: PageProps<"/learn/safety-standards/[slug]">) {
   const { slug } = await params;
+  const locale = await getRequestLocale();
   const concept = getKnowledgeConceptBySlug(slug);
   if (!concept) notFound();
-  return <ConceptUnit concept={concept} />;
+  return <ConceptUnit concept={concept} locale={locale} />;
 }

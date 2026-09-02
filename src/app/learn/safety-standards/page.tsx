@@ -3,20 +3,22 @@ import Link from "next/link";
 
 import { getKnowledgeConcept, getLearningPath } from "@/app/explore/learning-data";
 import { LearningBreadcrumb } from "@/app/learn/LearningComponents";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 
 export const metadata: Metadata = {
   title: "Safety & Standards | Atlas Learning",
   description: "Six connected units explaining ADS safety assurance, standards, scenario-based assessment and evidence.",
 };
 
-export default function SafetyStandardsPage() {
+export default async function SafetyStandardsPage() {
+  const locale = await getRequestLocale();
   const path = getLearningPath("safety-standards");
   if (!path) throw new Error("Missing Safety & Standards Learning path");
   return (
     <main>
       <section className="border-b border-[#10264a]/10">
         <div className="mx-auto max-w-6xl px-5 pb-14 pt-10 sm:px-8 sm:pb-16 sm:pt-14 lg:px-10">
-          <LearningBreadcrumb />
+          <LearningBreadcrumb locale={locale} />
           <p className="mt-9 text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">Learning path 02</p>
           <h1 className="mt-4 max-w-4xl font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl">{path.title}</h1>
           <p className="mt-6 max-w-3xl font-serif text-2xl leading-9 text-[#10264a]/78">{path.coreQuestion}</p>

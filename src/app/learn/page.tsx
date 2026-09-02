@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { LEARNING_PATHS, LEARNING_SEED_META } from "@/app/explore/learning-data";
+import { getCommonUiCopy, getLearningUiCopy } from "@/app/i18n/global-ui-copy";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 
 export const metadata: Metadata = {
   title: "Learning | Autonomy Regulation Atlas",
@@ -17,7 +19,10 @@ const plannedPaths = [
   ["06", "Liability & Insurance", "How responsibility and financial protection are allocated after harm."],
 ] as const;
 
-export default function LearningPage() {
+export default async function LearningPage() {
+  const locale = await getRequestLocale();
+  const common = getCommonUiCopy(locale);
+  const learning = getLearningUiCopy(locale);
   const path = LEARNING_PATHS[0];
   return (
     <main>
@@ -47,7 +52,7 @@ export default function LearningPage() {
                 <span className="block font-serif text-3xl font-semibold group-hover:text-[#147c73]">{path.title}</span>
                 <span className="mt-2 block max-w-2xl text-sm leading-6 text-[#10264a]/60">{path.description}</span>
               </span>
-              <span className="text-sm font-semibold text-[#147c73]">Open path →</span>
+              <span className="text-sm font-semibold text-[#147c73]">{learning.startPath} →</span>
             </Link>
             {plannedPaths.map(([number, title, description]) => (
               <div className="grid gap-3 border-b border-[#10264a]/10 py-6 last:border-b-0 sm:grid-cols-[56px_1fr_auto] sm:items-center" key={title}>
@@ -56,7 +61,7 @@ export default function LearningPage() {
                   <span className="block font-serif text-xl font-semibold text-[#10264a]/62">{title}</span>
                   <span className="mt-1 block text-xs leading-5 text-[#10264a]/45">{description}</span>
                 </span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/35">Planned</span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/35">{learning.planned}</span>
               </div>
             ))}
           </div>
@@ -70,7 +75,7 @@ export default function LearningPage() {
             <h2 className="mt-3 max-w-3xl font-serif text-3xl font-semibold">Concept → official term → legal effect → primary source</h2>
             <p className="mt-4 max-w-3xl text-sm leading-6 text-white/62">The glossary is a projection of the same knowledge objects—not a parallel list of simplified definitions.</p>
           </div>
-          <Link className="inline-flex w-fit rounded-sm border border-white/25 px-5 py-3 text-sm font-semibold text-[#9ce0d6] outline-none hover:border-[#9ce0d6] focus-visible:ring-2 focus-visible:ring-[#f1c780]" href="/learn/glossary">Open glossary →</Link>
+          <Link className="inline-flex w-fit rounded-sm border border-white/25 px-5 py-3 text-sm font-semibold text-[#9ce0d6] outline-none hover:border-[#9ce0d6] focus-visible:ring-2 focus-visible:ring-[#f1c780]" href="/learn/glossary">{common.open} {common.glossary} →</Link>
         </div>
       </section>
       <p className="mx-auto max-w-7xl px-5 py-5 text-[10px] text-[#10264a]/42 sm:px-8 lg:px-10">Knowledge seed v{LEARNING_SEED_META.schemaVersion} · source status verified {LEARNING_SEED_META.lastVerified}</p>

@@ -8,19 +8,24 @@ import {
   TERM_STATUS_LABELS,
   getJurisdictionTerms,
 } from "@/app/explore/regulatory-terminology";
+import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 
 export const metadata: Metadata = {
   title: "Glossary | Atlas Learning",
   description: "A source-backed projection of Atlas concepts, technical terms and jurisdiction-native terminology.",
 };
 
-export default function GlossaryPage() {
+export default async function GlossaryPage() {
+  const locale = await getRequestLocale();
+  const common = getCommonUiCopy(locale);
+
   return (
     <main>
       <section className="border-b border-[#10264a]/10">
         <div className="mx-auto max-w-6xl px-5 pb-14 pt-12 sm:px-8 sm:pb-16 lg:px-10">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">Shared knowledge projection</p>
-          <h1 className="mt-4 font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl">Glossary</h1>
+          <h1 className="mt-4 font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl">{common.glossary}</h1>
           <p className="mt-6 max-w-3xl text-base leading-7 text-[#10264a]/65">Universal analytical concepts and official technical terms are shown with their scope and sources. Jurisdiction-native vocabulary is mapped without assuming literal legal equivalence.</p>
         </div>
       </section>
@@ -57,7 +62,7 @@ export default function GlossaryPage() {
                   {entry.item.commonConfusions.length ? (
                     <details className="group mt-4 border-t border-[#10264a]/10 pt-3">
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-sm text-xs font-semibold text-[#8b5a10] focus-visible:ring-2 focus-visible:ring-[#b97512]">
-                        <span>Common confusions</span><span aria-hidden="true" className="text-base transition-transform group-open:rotate-45">+</span>
+                        <span>{common.commonConfusion}</span><span aria-hidden="true" className="text-base transition-transform group-open:rotate-45">+</span>
                       </summary>
                       <ul className="mt-3 space-y-2">
                         {entry.item.commonConfusions.map((item) => <li className="text-xs leading-5 text-[#10264a]/60" key={typeof item === "string" ? item : item.title}>— {typeof item === "string" ? item : `${item.title}: ${item.body}`}</li>)}

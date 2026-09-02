@@ -16,6 +16,11 @@ import {
   type JurisdictionProfile,
   type StatusTone,
 } from "@/app/explore/regulatory-data";
+import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
+import { LanguageNotice } from "@/app/i18n/LanguageNotice";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import type { Locale } from "@/app/i18n/locale";
+import { useLocale } from "@/app/i18n/LocaleProvider";
 import {
   CLUSTERS,
   EDGES,
@@ -43,6 +48,8 @@ const contextToneClasses: Record<StatusTone, string> = {
 };
 
 export default function SystemMapClient() {
+  const locale = useLocale();
+  const common = getCommonUiCopy(locale);
   const [query, setQuery] = useState("");
   const [cluster, setCluster] = useState<CoreClusterId | "all">("all");
   const [legalFilter, setLegalFilter] = useState<LegalFilter>("all");
@@ -123,18 +130,18 @@ export default function SystemMapClient() {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="rounded-full border border-[#10264a]/10 bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/40">
-              EN prototype
-            </span>
+            <LanguageSwitcher />
             <Link
               href="/"
               className="text-sm text-[#10264a]/50 transition hover:text-[#10264a]"
             >
-              Back to Atlas
+              {common.backToAtlas}
             </Link>
           </div>
         </div>
       </header>
+
+      <LanguageNotice locale={locale} />
 
       <main className="mx-auto max-w-[1500px] px-5 pb-14 pt-8 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
@@ -354,6 +361,7 @@ export default function SystemMapClient() {
                   return (
                     <Territory
                       key={territory.id}
+                      locale={locale}
                       territory={territory}
                       nodes={nodes}
                       visibleIds={visibleIds}
@@ -395,6 +403,7 @@ export default function SystemMapClient() {
             >
               {selected && (
                 <NodeDrawer
+                  locale={locale}
                   node={selected}
                   onClose={() => setSelected(null)}
                   onSelect={(id) => {
@@ -448,7 +457,7 @@ export default function SystemMapClient() {
                 {!contextProfile ? (
                   <UniversalContextLayer />
                 ) : (
-                  <JurisdictionContextLayer profile={contextProfile} />
+                  <JurisdictionContextLayer locale={locale} profile={contextProfile} />
                 )}
               </div>
             </div>
@@ -466,12 +475,14 @@ export default function SystemMapClient() {
 }
 
 function Territory({
+  locale,
   territory,
   nodes,
   visibleIds,
   selectedId,
   onSelect,
 }: {
+  locale: Locale;
   territory: (typeof CLUSTERS)[number];
   nodes: SystemNode[];
   visibleIds: Set<string>;
@@ -530,8 +541,9 @@ function Territory({
           return (
             <div key={node.id} className="relative">
               <NodeButton
-                node={node}
                 active={selectedId === node.id}
+                locale={locale}
+                node={node}
                 onClick={() => onSelect(node)}
               />
 
@@ -562,14 +574,17 @@ function Territory({
 }
 
 function NodeButton({
+  locale,
   node,
   active,
   onClick,
 }: {
+  locale: Locale;
   node: SystemNode;
   active: boolean;
   onClick: () => void;
 }) {
+  const common = getCommonUiCopy(locale);
   const learningNote = getSystemNodeLearning(node);
 
   return (
@@ -593,24 +608,26 @@ function NodeButton({
         <div className="flex shrink-0 items-center gap-2">
           {learningNote && (
             <span className="hidden rounded-full border border-[#b97512]/20 bg-[#fff8e8] px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#9a6513] sm:inline-flex">
-              Explain
+              {common.explain}
             </span>
           )}
         </div>
       </button>
 
       {learningNote ? (
-        <ExplainTooltip note={learningNote} title={`What is ${node.name}?`} />
+        <ExplainTooltip locale={locale} note={learningNote} title={`What is ${node.name}?`} />
       ) : null}
     </div>
   );
 }
 
 function NodeDrawer({
+  locale,
   node,
   onClose,
   onSelect,
 }: {
+  locale: Locale;
   node: SystemNode;
   onClose: () => void;
   onSelect: (id: string) => void;
@@ -647,7 +664,7 @@ function NodeDrawer({
       </div>
 
       {learningNote ? (
-        <ExplainDetails note={learningNote} title={node.name} />
+        <ExplainDetails locale={locale} note={learningNote} title={node.name} />
       ) : null}
 
       <DetailBlock label="What it is" text={node.whatItIs} />
@@ -727,8 +744,10 @@ function UniversalContextLayer() {
 }
 
 function JurisdictionContextLayer({
+  locale,
   profile,
 }: {
+  locale: Locale;
   profile: JurisdictionProfile;
 }) {
   const bindings = JURISDICTION_CONTEXT_BINDINGS[profile.slug];
@@ -810,6 +829,7 @@ function JurisdictionContextLayer({
 
               {learningConcept && learningNote ? (
                 <ExplainDetails
+                  locale={locale}
                   note={learningNote}
                   tone="dark"
                   title={learningConcept.name}

@@ -11,8 +11,11 @@ import {
   getRegulatorySource,
   legalStatusLabel,
 } from "@/app/explore/regulatory-data";
+import { getCommonUiCopy, type CommonUiCopy } from "@/app/i18n/global-ui-copy";
+import type { Locale } from "@/app/i18n/locale";
 
 type ExplainProps = {
+  locale: Locale;
   note: LearningNote;
   title: string;
   deeperHref?: string;
@@ -20,11 +23,13 @@ type ExplainProps = {
 };
 
 export function ExplainDetails({
+  locale,
   note,
   title,
   deeperHref,
   tone = "light",
 }: ExplainProps) {
+  const common = getCommonUiCopy(locale);
   const learnHref = deeperHref ?? note.deeperHref;
 
   return (
@@ -38,7 +43,7 @@ export function ExplainDetails({
             : "text-[#8b5a10] hover:text-[#147c73] focus-visible:ring-[#147c73]"
         }`}
       >
-          <span>Explain</span>
+          <span>{common.explain}</span>
           <span
             aria-hidden="true"
             className="text-lg font-normal leading-none transition-transform group-open:rotate-45"
@@ -71,12 +76,12 @@ export function ExplainDetails({
           {note.plain}
         </p>
         <p className="mt-3 text-sm leading-6 text-[#10264a]/58">
-          <strong className="text-[#10264a]/75">Why it matters here:</strong>{" "}
+          <strong className="text-[#10264a]/75">{common.whyMattersHere}:</strong>{" "}
           {note.why}
         </p>
         <div className="mt-3 rounded-xl bg-[#f4ead3] p-3">
           <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8b5a10]">
-            Common confusion
+            {common.commonConfusion}
           </div>
           <p className="mt-1 text-sm leading-6 text-[#10264a]/65">
             {note.confusion}
@@ -84,7 +89,7 @@ export function ExplainDetails({
         </div>
 
         {note.terminology?.length ? (
-          <TerminologyDetails terms={note.terminology} />
+          <TerminologyDetails common={common} terms={note.terminology} />
         ) : null}
 
         {learnHref || note.regulationHref ? (
@@ -94,7 +99,7 @@ export function ExplainDetails({
                 className="inline-flex rounded-sm text-xs font-semibold text-[#147c73] underline decoration-[#147c73]/30 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-4"
                 href={learnHref}
               >
-                Learn deeper →
+                {common.learnDeeper} →
               </Link>
             ) : null}
             {note.regulationHref ? (
@@ -113,9 +118,12 @@ export function ExplainDetails({
 }
 
 export function ExplainTooltip({
+  locale,
   note,
   title,
-}: Pick<ExplainProps, "note" | "title">) {
+}: Pick<ExplainProps, "locale" | "note" | "title">) {
+  const common = getCommonUiCopy(locale);
+
   return (
     <div
       className="pointer-events-none invisible absolute left-3 right-3 top-[calc(100%+8px)] z-[80] translate-y-1 rounded-[20px] border border-[#b97512]/18 bg-[#fffaf0] p-4 opacity-0 shadow-[0_18px_45px_rgba(16,38,74,.16)] transition duration-150 group-hover/node:visible group-hover/node:translate-y-0 group-hover/node:opacity-100 group-focus-within/node:visible group-focus-within/node:translate-y-0 group-focus-within/node:opacity-100 sm:left-auto sm:right-0 sm:w-[360px]"
@@ -141,13 +149,13 @@ export function ExplainTooltip({
       <p className="mt-3 text-xs leading-5 text-[#10264a]/65">{note.plain}</p>
       <div className="mt-3 border-t border-[#10264a]/8 pt-3">
         <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#10264a]/55">
-          Why it matters
+          {common.whyMattersHere}
         </div>
         <p className="mt-1 text-xs leading-5 text-[#10264a]/60">{note.why}</p>
       </div>
       <div className="mt-3 rounded-xl bg-[#f4ead3] p-3">
         <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8b5a10]">
-          Common confusion
+          {common.commonConfusion}
         </div>
         <p className="mt-1 text-xs leading-5 text-[#10264a]/65">
           {note.confusion}
@@ -156,7 +164,7 @@ export function ExplainTooltip({
       {note.terminology?.[0] ? (
         <div className="mt-3 border-t border-[#10264a]/8 pt-3">
           <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9a6513]">
-            Official terminology
+            {common.officialTerminology}
           </div>
           <p className="mt-1 text-xs leading-5 text-[#10264a]/68">
             <span
@@ -179,11 +187,17 @@ export function ExplainTooltip({
   );
 }
 
-function TerminologyDetails({ terms }: { terms: JurisdictionTerm[] }) {
+function TerminologyDetails({
+  common,
+  terms,
+}: {
+  common: CommonUiCopy;
+  terms: JurisdictionTerm[];
+}) {
   return (
     <div className="mt-5 border-t border-[#10264a]/10 pt-5">
       <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#147c73]">
-        Jurisdiction-native terminology
+        {common.officialTerminology}
       </div>
       <p className="mt-2 text-xs leading-5 text-[#10264a]/55">
         These source terms are mapped to Atlas concepts without assuming literal
@@ -221,7 +235,7 @@ function TerminologyDetails({ terms }: { terms: JurisdictionTerm[] }) {
                   <dd className="mt-1">{concept.analyticalLabel}</dd>
                 </div>
                 <div>
-                  <dt className="font-semibold text-[#10264a]/75">Scope</dt>
+                  <dt className="font-semibold text-[#10264a]/75">{common.scope}</dt>
                   <dd className="mt-1">{term.scope}</dd>
                 </div>
               </dl>
@@ -231,7 +245,7 @@ function TerminologyDetails({ terms }: { terms: JurisdictionTerm[] }) {
               </p>
               <p className="mt-2 text-xs leading-5 text-[#10264a]/62">
                 <strong className="text-[#10264a]/78">
-                  Why this term matters:
+                  {common.whyMattersHere}:
                 </strong>{" "}
                 {term.whyItMatters}
               </p>

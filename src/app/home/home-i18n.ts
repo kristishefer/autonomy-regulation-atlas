@@ -1,13 +1,4 @@
-export const locales = ["en", "de", "nl", "ru"] as const;
-
-export type Locale = (typeof locales)[number];
-
-export const localeLabels: Record<Locale, string> = {
-  en: "EN",
-  de: "DE",
-  nl: "NL",
-  ru: "RU",
-};
+import type { Locale } from "@/app/i18n/locale";
 
 type HomeCopy = {
   nav: {
@@ -418,10 +409,3 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
   },
 };
-
-export function normalizeLocale(
-  value: string | string[] | undefined,
-): Locale {
-  const candidate = Array.isArray(value) ? value[0] : value;
-  return locales.includes(candidate as Locale) ? (candidate as Locale) : "en";
-}

@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
 import { JurisdictionProfileView } from "@/app/explore/JurisdictionProfileView";
 import { getJurisdictionProfile } from "@/app/explore/regulatory-data";
+import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
+import { LanguageNotice } from "@/app/i18n/LanguageNotice";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 
 type PageProps = {
   params: Promise<{
@@ -12,10 +16,12 @@ type PageProps = {
 
 export default async function JurisdictionPage({ params }: PageProps) {
   const { slug } = await params;
+  const locale = await getRequestLocale();
+  const common = getCommonUiCopy(locale);
   const curatedProfile = getJurisdictionProfile(slug);
 
   if (curatedProfile) {
-    return <JurisdictionProfileView profile={curatedProfile} />;
+    return <JurisdictionProfileView locale={locale} profile={curatedProfile} />;
   }
 
   const { data: jurisdiction, error: jurisdictionError } = await supabase
@@ -124,11 +130,16 @@ export default async function JurisdictionPage({ params }: PageProps) {
             Autonomy Regulation Atlas
           </Link>
 
-          <span className="text-sm text-black/45">
-            {jurisdiction.code}
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-black/45">
+              {jurisdiction.code}
+            </span>
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
+
+      <LanguageNotice locale={locale} />
 
       <section className="mx-auto max-w-7xl px-6 pb-16 pt-16 lg:px-10 lg:pb-20 lg:pt-20">
         <div className="max-w-4xl">
@@ -136,11 +147,11 @@ export default async function JurisdictionPage({ params }: PageProps) {
             href="/"
             className="text-xs font-medium uppercase tracking-[0.16em] text-black/40"
           >
-            ← Jurisdictions
+            ← {common.jurisdictions}
           </Link>
 
           <div className="mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-black/40">
-            {jurisdiction.code} · Regulatory profile
+            {jurisdiction.code} · {common.regulatoryProfile}
           </div>
 
           <h1 className="mt-4 text-5xl font-semibold tracking-[-0.04em] sm:text-6xl">
@@ -231,7 +242,7 @@ export default async function JurisdictionPage({ params }: PageProps) {
                     {links.length > 0 && (
                       <div className="mt-8 border-t border-black/10 pt-6">
                         <div className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-black/35">
-                          Sources
+                          {common.sources}
                         </div>
 
                         <div className="space-y-4">
