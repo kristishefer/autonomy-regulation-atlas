@@ -145,7 +145,7 @@ export default async function DeployPage() {
             <div className="grid gap-3 sm:grid-cols-3">
               <ScenarioFact label="Road environment" value="Public roads" />
               <ScenarioFact label="In-vehicle driver" value="None" />
-              <ScenarioFact label="Initial coverage" value="Netherlands + Germany" />
+              <ScenarioFact label="Current coverage" value="Five jurisdiction profiles" />
             </div>
           </div>
         </div>
@@ -223,16 +223,15 @@ export default async function DeployPage() {
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
-              Initial coverage
+              Current coverage
             </p>
             <h2 className="mt-3 font-serif text-4xl font-semibold leading-tight tracking-[-0.035em]">
               Start with one scenario, compare legal architectures
             </h2>
             <p className="mt-5 max-w-xl text-sm leading-6 text-[#10264a]/60">
-              The first Deploy pathway is intentionally narrow. Netherlands and
-              Germany are the research pair for the same driverless passenger
-              vehicle scenario; broader vehicle types and jurisdictions come
-              later.
+              Current coverage includes five jurisdiction profiles: Netherlands,
+              Germany, United Kingdom, United States and Russia. Coverage expands
+              as additional jurisdictions are researched and verified.
             </p>
           </div>
 
@@ -241,13 +240,31 @@ export default async function DeployPage() {
               code="NL"
               href="/netherlands"
               name="Netherlands"
-              status="Partial profile available"
+              status="Profile available"
             />
             <JurisdictionCard
               code="DE"
               href="/germany"
               name="Germany"
-              status="Pathway research in progress"
+              status="Profile available"
+            />
+            <JurisdictionCard
+              code="GB"
+              href="/united-kingdom"
+              name="United Kingdom"
+              status="Profile available"
+            />
+            <JurisdictionCard
+              code="US"
+              href="/united-states"
+              name="United States"
+              status="Profile available"
+            />
+            <JurisdictionCard
+              code="RU"
+              href="/russia"
+              name="Russia"
+              status="Profile available"
             />
           </div>
         </div>

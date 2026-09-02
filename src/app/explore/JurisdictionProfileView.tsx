@@ -10,7 +10,9 @@ import {
   getRegulatorySource,
   legalStatusLabel,
   type JurisdictionProfile,
+  type LegalStatus,
   type SourceReference,
+  type SourceType,
   type StatusTone,
 } from "@/app/explore/regulatory-data";
 import { getCommonUiCopy, type CommonUiCopy } from "@/app/i18n/global-ui-copy";
@@ -30,6 +32,26 @@ const answerAccentClasses: Record<StatusTone, string> = {
   conditional: "border-[#b97512]",
   neutral: "border-[#10264a]/45",
   watch: "border-[#b97512]",
+};
+
+const sourceTypeLabels: Record<SourceType, string> = {
+  official_legislation: "Legislation",
+  official_regulation: "Regulation",
+  official_guidance: "Official guidance",
+  regulator_material: "Regulator material",
+  legislative_history: "Legislative history",
+  court_decision: "Court decision",
+  eu_legislation: "EU legislation",
+};
+
+const sourceStatusLabels: Record<LegalStatus, string> = {
+  in_force: "In force",
+  adopted_not_yet_effective: "Adopted · not yet effective",
+  proposed: "Proposed",
+  draft: "Draft",
+  guidance: "Guidance",
+  legislative_history: "Legislative history",
+  case_law: "Case law",
 };
 
 export function JurisdictionProfileView({
@@ -462,15 +484,17 @@ function OfficialSources({
         source.type,
       ),
   );
-  const interpretative = sources.filter(
-    (source) =>
-      source.type === "regulator_material" ||
-      ["guidance", "legislative_history", "case_law"].includes(
-        source.legalStatus,
-      ),
-  );
   const futureRules = sources.filter((source) =>
     ["adopted_not_yet_effective", "proposed", "draft"].includes(source.legalStatus),
+  );
+  const futureRuleIds = new Set(futureRules.map((source) => source.id));
+  const interpretative = sources.filter(
+    (source) =>
+      !futureRuleIds.has(source.id) &&
+      (source.type === "regulator_material" ||
+        ["guidance", "legislative_history", "case_law"].includes(
+          source.legalStatus,
+        )),
   );
 
   return (
@@ -535,7 +559,13 @@ function SourceGroup({
                 {source.title} ↗
               </a>
               <p className="mt-2 text-xs leading-5 text-[#10264a]/62">
-                {source.authority} · {source.statusLabel} · checked {formatSourceDate(source.lastChecked)}
+                Type: {formatSourceType(source.type)}
+              </p>
+              <p className="mt-1 text-xs leading-5 text-[#10264a]/62">
+                Status: {formatSourceStatus(source.legalStatus, source.statusLabel)}
+              </p>
+              <p className="mt-1 text-xs leading-5 text-[#10264a]/62">
+                {source.authority} · checked {formatSourceDate(source.lastChecked)}
               </p>
             </li>
           ))}
@@ -543,6 +573,18 @@ function SourceGroup({
       )}
     </div>
   );
+}
+
+function formatSourceType(type: SourceType) {
+  return sourceTypeLabels[type];
+}
+
+function formatSourceStatus(status: LegalStatus, detail: string) {
+  const label = sourceStatusLabels[status];
+
+  return detail.toLowerCase().startsWith(label.toLowerCase())
+    ? detail
+    : `${label} — ${detail}`;
 }
 
 function formatSourceDate(value: string) {
