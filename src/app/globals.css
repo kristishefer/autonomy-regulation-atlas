@@ -37,11 +37,6 @@ summary {
   mask-image: linear-gradient(to bottom right, black, transparent 78%);
 }
 
-.atlas-language[open] summary span {
-  display: inline-block;
-  transform: rotate(180deg);
-}
-
 .atlas-mode::before {
   background: var(--mode-accent);
   content: "";
