@@ -17,7 +17,6 @@ import {
   type MethodologyStatusCopy,
 } from "@/app/i18n/global-ui-copy";
 import { LanguageNotice } from "@/app/i18n/LanguageNotice";
-import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
 import { getRequestLocale } from "@/app/i18n/request-locale";
 
 const toneClasses: Record<StatusTone, string> = {
@@ -45,33 +44,6 @@ export default async function ComparePage() {
 
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
-      <header className="sticky top-0 z-50 border-b border-[#10264a]/10 bg-[#fbf7ef]/94 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-10">
-          <Link className="flex items-center gap-3" href="/">
-            <span className="grid size-9 place-items-center rounded-full border border-[#10264a]/20 font-serif font-semibold">
-              A
-            </span>
-            <span className="hidden text-xs font-semibold uppercase tracking-[0.08em] sm:inline">
-              Autonomy Regulation Atlas
-            </span>
-          </Link>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <nav
-              aria-label={common.primaryNavigation}
-              className="hidden items-center gap-4 text-xs font-semibold text-[#10264a]/55 sm:flex sm:gap-6 sm:text-sm"
-            >
-              <Link className="transition hover:text-[#10264a]" href="/explore/system-map">
-                {common.systemMap}
-              </Link>
-              <Link className="text-[#147c73]" href="/explore/compare">
-                {common.compare}
-              </Link>
-            </nav>
-            <LanguageSwitcher />
-          </div>
-        </div>
-      </header>
-
       <LanguageNotice locale={locale} />
 
       <section className="relative overflow-hidden border-b border-[#10264a]/10">

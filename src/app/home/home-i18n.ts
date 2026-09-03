@@ -96,7 +96,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "How do you want to use the Atlas?",
       deployTitle: "Understand the path to deployment",
       deployBody: "Apply the Atlas to a real scenario: see which regulatory layers, approvals, operating conditions and unresolved questions matter.",
-      deployCta: "Open Deploy",
+      deployCta: "Start with a deployment scenario",
       exploreTitle: "Navigate the regulatory landscape",
       exploreBody: "Explore jurisdictions, regulatory layers, standards, institutions and primary sources — and see how the pieces connect.",
       exploreCta: "Open the System Map",
@@ -178,7 +178,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       deployTitle: "Den Weg zum Einsatz nachvollziehen",
       deployBody:
         "Prüfen Sie ein konkretes Szenario und erkennen Sie, welche Regelungsebenen, Genehmigungen, Betriebsbedingungen und offenen Rechtsfragen für den Einsatz entscheidend sind.",
-      deployCta: "Szenario prüfen",
+      deployCta: "Mit einem Einsatzszenario beginnen",
       exploreTitle: "Die Regulierungslandschaft als System verstehen",
       exploreBody:
         "Erkunden Sie Rechtsordnungen, Regelungsebenen, Standards, Behörden und Primärquellen — und ihre Zusammenhänge.",
@@ -270,7 +270,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       deployTitle: "Breng de route naar inzet in kaart",
       deployBody:
         "Pas Atlas toe op een concreet scenario en zie welke regelgevingslagen, vergunningen, operationele voorwaarden en open rechtsvragen bepalend zijn.",
-      deployCta: "Scenario onderzoeken",
+      deployCta: "Begin met een inzetscenario",
       exploreTitle: "Bekijk de regelgeving als samenhangend systeem",
       exploreBody:
         "Verken jurisdicties, regelgevingslagen, normen, bevoegde instanties en primaire bronnen — en hun onderlinge verband.",
@@ -362,7 +362,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       deployTitle: "Проверить путь к эксплуатации",
       deployBody:
         "Разберите конкретный сценарий: какие уровни регулирования, разрешения, условия эксплуатации и открытые вопросы определяют возможность выхода на дорогу.",
-      deployCta: "Открыть сценарий",
+      deployCta: "Начать со сценария запуска",
       exploreTitle: "Понять систему регулирования",
       exploreBody:
         "Посмотрите, как связаны международные инструменты, национальные режимы, стандарты, компетентные органы и первичные источники.",

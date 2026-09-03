@@ -1,7 +1,4 @@
-import Link from "next/link";
-import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
 import { LanguageNotice } from "@/app/i18n/LanguageNotice";
-import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
 import { getRequestLocale } from "@/app/i18n/request-locale";
 
 export const metadata = {
@@ -11,22 +8,9 @@ export const metadata = {
 
 export default async function TermsPage() {
   const locale = await getRequestLocale();
-  const common = getCommonUiCopy(locale);
 
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
-      <header className="border-b border-[#10264a]/10">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-5 px-5 py-4 sm:px-8 lg:px-10">
-          <Link
-            className="text-sm font-semibold text-[#147c73] transition hover:text-[#10264a]"
-            href="/"
-          >
-            ← {common.backToAtlas}
-          </Link>
-          <LanguageSwitcher />
-        </div>
-      </header>
-
       <LanguageNotice locale={locale} variant="terms" />
 
       <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8 lg:px-10 lg:py-20">

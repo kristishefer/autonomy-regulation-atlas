@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { GlobalNavigation } from "@/app/i18n/GlobalNavigation";
 import { LocaleProvider } from "@/app/i18n/LocaleProvider";
 import { getRequestLocale } from "@/app/i18n/request-locale";
 import "./globals.css";
@@ -29,7 +30,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <LocaleProvider locale={locale}>{children}</LocaleProvider>
+        <LocaleProvider locale={locale}>
+          <GlobalNavigation />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

@@ -5,7 +5,6 @@ import { JurisdictionProfileView } from "@/app/explore/JurisdictionProfileView";
 import { getJurisdictionProfile } from "@/app/explore/regulatory-data";
 import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
 import { LanguageNotice } from "@/app/i18n/LanguageNotice";
-import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
 import { getRequestLocale } from "@/app/i18n/request-locale";
 
 type PageProps = {
@@ -124,21 +123,6 @@ export default async function JurisdictionPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-[#f7f7f4] text-[#171717]">
-      <header className="border-b border-black/10">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <Link href="/" className="text-sm font-semibold tracking-tight">
-            Autonomy Regulation Atlas
-          </Link>
-
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-black/45">
-              {jurisdiction.code}
-            </span>
-            <LanguageSwitcher />
-          </div>
-        </div>
-      </header>
-
       <LanguageNotice locale={locale} />
 
       <section className="mx-auto max-w-7xl px-6 pb-16 pt-16 lg:px-10 lg:pb-20 lg:pt-20">

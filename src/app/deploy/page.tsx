@@ -1,8 +1,6 @@
 import Link from "next/link";
 
-import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
 import { LanguageNotice } from "@/app/i18n/LanguageNotice";
-import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
 import { getRequestLocale } from "@/app/i18n/request-locale";
 
 const pathwayGates = [
@@ -59,41 +57,9 @@ const statusLanguage = [
 
 export default async function DeployPage() {
   const locale = await getRequestLocale();
-  const common = getCommonUiCopy(locale);
 
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
-      <header className="border-b border-[#10264a]/10 bg-[#fbf7ef]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-10">
-          <Link className="flex items-center gap-3" href="/">
-            <span className="grid size-10 place-items-center rounded-full border border-[#10264a]/20 font-serif text-base font-semibold">
-              A
-            </span>
-            <span className="hidden text-xs font-semibold uppercase tracking-[0.08em] sm:inline lg:text-sm">
-              Autonomy Regulation Atlas
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-4 sm:gap-5">
-            <nav
-              aria-label={common.primaryNavigation}
-              className="hidden items-center gap-5 text-sm text-[#10264a]/55 sm:flex"
-            >
-              <Link className="transition hover:text-[#10264a]" href="/">
-                {common.home}
-              </Link>
-              <Link
-                className="transition hover:text-[#10264a]"
-                href="/explore/system-map"
-              >
-                {common.systemMap}
-              </Link>
-            </nav>
-            <LanguageSwitcher />
-          </div>
-        </div>
-      </header>
-
       <LanguageNotice locale={locale} />
 
       <section className="border-b border-[#10264a]/10">

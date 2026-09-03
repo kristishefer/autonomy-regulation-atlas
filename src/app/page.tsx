@@ -5,7 +5,6 @@ import { JURISDICTION_PROFILES } from "@/app/explore/regulatory-data";
 import { EuropeJurisdictionMap } from "@/app/home/EuropeJurisdictionMap";
 import type { JurisdictionMapPoint } from "@/app/home/EuropeJurisdictionMap";
 import { homeCopy } from "@/app/home/home-i18n";
-import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
 import type { Locale } from "@/app/i18n/locale";
 import { getRequestLocale } from "@/app/i18n/request-locale";
 import { supabase } from "@/app/lib/supabase";
@@ -126,50 +125,6 @@ export default async function Home() {
       className="min-h-screen overflow-hidden bg-[#fbf7ef] text-[#10264a]"
       lang={locale}
     >
-      <header className="sticky top-0 z-50 border-b border-[#10264a]/10 bg-[#fbf7ef]/94 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 sm:px-8 lg:px-10">
-          <Link
-            className="flex min-w-0 items-center gap-3"
-            href={`/?lang=${locale}`}
-          >
-            <span className="grid size-10 shrink-0 place-items-center rounded-full border border-[#10264a]/20 font-serif text-base font-semibold">
-              A
-            </span>
-            <span className="hidden text-xs font-semibold uppercase tracking-[0.08em] sm:inline lg:text-sm">
-              Autonomy Regulation Atlas
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-5">
-            <nav
-              aria-label={t.ui.primaryNavigation}
-              className="hidden items-center gap-6 text-sm text-[#10264a]/55 lg:flex"
-            >
-              <Link className="transition hover:text-[#10264a]" href="/deploy">
-                {t.nav.deploy}
-              </Link>
-              <a className="transition hover:text-[#10264a]" href="#map">
-                {t.nav.jurisdictions}
-              </a>
-              <Link
-                className="transition hover:text-[#10264a]"
-                href="/explore/system-map"
-              >
-                {t.nav.landscape}
-              </Link>
-              <a className="transition hover:text-[#10264a]" href="#learn">
-                {t.nav.learn}
-              </a>
-              <a className="transition hover:text-[#10264a]" href="#method">
-                {t.nav.method}
-              </a>
-            </nav>
-
-            <LanguageSwitcher />
-          </div>
-        </div>
-      </header>
-
       <section className="relative border-b border-[#10264a]/10">
         <div className="atlas-hero-grid absolute inset-0 opacity-30" aria-hidden="true" />
         <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-16 pt-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:pb-20 lg:pt-16">

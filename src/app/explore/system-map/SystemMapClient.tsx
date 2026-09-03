@@ -22,7 +22,6 @@ import {
 } from "@/app/explore/regulatory-data";
 import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
 import { LanguageNotice } from "@/app/i18n/LanguageNotice";
-import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
 import type { Locale } from "@/app/i18n/locale";
 import { useLocale } from "@/app/i18n/LocaleProvider";
 import {
@@ -125,7 +124,6 @@ const applicabilityToneClasses: Record<ApplicabilityStatus, string> = {
 
 export default function SystemMapClient() {
   const locale = useLocale();
-  const common = getCommonUiCopy(locale);
   const [query, setQuery] = useState("");
   const [cluster, setCluster] = useState<CoreClusterId | "all">("all");
   const [legalFilter, setLegalFilter] = useState<LegalFilter>("all");
@@ -200,37 +198,6 @@ export default function SystemMapClient() {
 
   return (
     <div className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
-      <header className="sticky top-0 z-40 border-b border-[#10264a]/10 bg-[#fbf7ef]/94 backdrop-blur">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-6 px-5 py-4 lg:px-8">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="grid h-9 w-9 place-items-center rounded-full border border-[#10264a]/20 font-serif font-semibold"
-            >
-              A
-            </Link>
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/35">
-                Explore / Regulatory System Map
-              </div>
-              <div className="font-serif text-lg font-semibold">
-                Autonomy Regulation Atlas
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <Link
-              href="/"
-              className="text-sm text-[#10264a]/50 transition hover:text-[#10264a]"
-            >
-              {common.backToAtlas}
-            </Link>
-          </div>
-        </div>
-      </header>
-
       <LanguageNotice locale={locale} />
 
       <main className="mx-auto max-w-[1500px] px-5 pb-14 pt-8 lg:px-8">
