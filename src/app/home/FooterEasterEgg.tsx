@@ -4,14 +4,15 @@ export type FooterEasterEggCopy = {
   dog: string;
   fox: string;
   cat: string;
-  origin: string;
+  cloud: string;
+  cloudLabel: string;
 };
 
 const marks = [
   { id: "dog", label: "Dog" },
   { id: "fox", label: "Fox" },
   { id: "cat", label: "Cat" },
-  { id: "origin", label: "Origin" },
+  { id: "cloud", label: "" },
 ] as const;
 
 export function FooterEasterEgg({ copy }: { copy: FooterEasterEggCopy }) {
@@ -21,6 +22,7 @@ export function FooterEasterEgg({ copy }: { copy: FooterEasterEggCopy }) {
       <div className="atlas-footer-marks">
         {marks.map(({ id, label }) => {
           const descriptionId = `atlas-${id}-note`;
+          const visibleLabel = id === "cloud" ? copy.cloudLabel : label;
 
           return (
             <div className="atlas-footer-mark" key={id}>
@@ -30,7 +32,7 @@ export function FooterEasterEgg({ copy }: { copy: FooterEasterEggCopy }) {
                 type="button"
               >
                 <MarkGraphic mark={id} />
-                <span>{label}</span>
+                <span>{visibleLabel}</span>
               </button>
               <span className="atlas-footer-mark-line" id={descriptionId}>
                 {copy[id]}
@@ -58,12 +60,14 @@ function MarkGraphic({ mark }: { mark: MarkId }) {
     );
   }
 
-  if (mark === "origin") {
+  if (mark === "cloud") {
     return (
       <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-        <path className="atlas-signature-origin-orbit" d="M6 9A7 7 0 1 1 13 19" />
-        <path className="atlas-signature-origin-line" d="M11 12L19 6M11 12L21 15" />
-        <circle className="atlas-signature-origin-core" cx="11" cy="12" r="2.2" />
+        <path className="atlas-signature-cloud-arc" d="M3 15C7 8 14 7 21 11" />
+        <circle className="atlas-signature-cloud-point atlas-signature-cloud-point-core" cx="6" cy="13" r="1.7" />
+        <circle className="atlas-signature-cloud-point" cx="11" cy="9" r="1.2" />
+        <circle className="atlas-signature-cloud-point" cx="15" cy="15" r="1" />
+        <circle className="atlas-signature-cloud-point" cx="20" cy="11" r="1.35" />
       </svg>
     );
   }

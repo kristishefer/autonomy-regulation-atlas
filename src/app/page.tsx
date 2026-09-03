@@ -74,9 +74,9 @@ export default async function Home() {
       className={`${atlasSans.variable} ${atlasDisplay.variable} atlas-home min-h-screen overflow-hidden bg-[var(--atlas-paper)] text-[var(--atlas-ink)]`}
       lang={locale}
     >
-      <section className="relative">
+      <section className="atlas-home-hero relative">
         <HeroRegulatoryNetwork />
-        <div className="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-12 sm:px-8 lg:px-10 lg:pb-20 lg:pt-16">
+        <div className="atlas-home-hero-content mx-auto max-w-7xl px-5 pb-16 pt-12 sm:px-8 lg:px-10 lg:pb-20 lg:pt-16">
           <div className="flex max-w-4xl min-w-0 flex-col justify-center">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--atlas-teal)]">
               {t.hero.eyebrow}
@@ -121,7 +121,7 @@ export default async function Home() {
               href="/learn"
               image="/atlaslings/cat.png"
               name="Learn"
-              tone="gold"
+              tone="blue"
             />
           </div>
 
@@ -255,7 +255,7 @@ function PrimaryGuideLink({
   name: "Explore" | "Learn";
   body: string;
   action: string;
-  tone: "green" | "gold";
+  tone: "green" | "blue";
 }) {
   const tones = {
     green: {
@@ -263,7 +263,7 @@ function PrimaryGuideLink({
       border: "border-[rgba(79,143,130,0.16)]",
       text: "text-[var(--atlas-teal)]",
     },
-    gold: {
+    blue: {
       bg: "bg-[var(--atlas-field-blue)]",
       border: "border-[rgba(111,131,166,0.18)]",
       text: "text-[var(--atlas-space)]",

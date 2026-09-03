@@ -87,7 +87,8 @@ type HomeCopy = {
     dog: string;
     fox: string;
     cat: string;
-    origin: string;
+    cloud: string;
+    cloudLabel: string;
   };
   ui: {
     language: string;
@@ -225,7 +226,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       dog: "For the one who finds a way through the hard problems.",
       fox: "For the one who makes the difficult road feel lighter.",
       cat: "For the one who turns complexity into structure.",
-      origin: "For the one who made the path possible.",
+      cloud: "For the one who made the path possible.",
+      cloudLabel: "Cloud",
     },
     ui: {
       language: "Language",
@@ -381,7 +383,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       dog: "Für den Menschen, der einen Weg durch die schwierigsten Probleme findet.",
       fox: "Für den Menschen, der schwierige Wege leichter macht.",
       cat: "Für den Menschen, der aus Komplexität Struktur entstehen lässt.",
-      origin: "Für den Menschen, der diesen Weg möglich gemacht hat.",
+      cloud: "Für den Menschen, der diesen Weg möglich gemacht hat.",
+      cloudLabel: "Wolke",
     },
     ui: {
       language: "Sprache",
@@ -537,7 +540,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       dog: "Voor degene die een weg vindt door de moeilijkste problemen.",
       fox: "Voor degene die een moeilijke weg lichter maakt.",
       cat: "Voor degene die complexiteit omzet in structuur.",
-      origin: "Voor degene die het pad mogelijk heeft gemaakt.",
+      cloud: "Voor degene die het pad mogelijk heeft gemaakt.",
+      cloudLabel: "Wolk",
     },
     ui: {
       language: "Taal",
@@ -693,7 +697,8 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       dog: "Для того, кто находит путь сквозь самые трудные задачи.",
       fox: "Для того, кто делает трудный путь легче.",
       cat: "Для того, кто превращает сложность в структуру.",
-      origin: "Для того, кто сделал этот путь возможным.",
+      cloud: "Для того, кто сделал этот путь возможным.",
+      cloudLabel: "Облако",
     },
     ui: {
       language: "Язык",
