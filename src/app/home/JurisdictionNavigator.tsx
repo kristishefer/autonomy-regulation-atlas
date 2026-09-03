@@ -63,13 +63,38 @@ export function JurisdictionNavigator({
       return;
     }
 
-    panelRef.current?.animate(
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    panel.getAnimations().forEach((animation) => animation.cancel());
+    panel.animate(
       [
-        { opacity: 0, transform: "translateY(5px)" },
+        { opacity: 0.45, transform: "translateY(8px)" },
         { opacity: 1, transform: "translateY(0)" },
       ],
-      { duration: 180, easing: "ease-out" },
+      {
+        duration: 300,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
     );
+
+    panel
+      .querySelectorAll<HTMLElement>("[data-navigator-detail]")
+      .forEach((detail, index) => {
+        detail.getAnimations().forEach((animation) => animation.cancel());
+        detail.animate(
+          [
+            { opacity: 0, transform: "translateY(6px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ],
+          {
+            delay: 45 + index * 45,
+            duration: 260,
+            easing: "ease-out",
+            fill: "both",
+          },
+        );
+      });
   }, [selectedIndex]);
 
   if (!selected) {
@@ -164,7 +189,7 @@ export function JurisdictionNavigator({
         role="tabpanel"
       >
         <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-12">
-          <div>
+          <div data-navigator-detail>
             <div className="flex items-baseline gap-3">
               <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#147c73]">
                 {selected.code}
@@ -182,7 +207,7 @@ export function JurisdictionNavigator({
             </p>
           </div>
 
-          <div>
+          <div data-navigator-detail>
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/42">
               {copy.overviewLabel}
             </p>
@@ -192,7 +217,10 @@ export function JurisdictionNavigator({
           </div>
         </div>
 
-        <div className="mt-8 border-t border-[#10264a]/12 pt-6">
+        <div
+          className="mt-8 border-t border-[#10264a]/12 pt-6"
+          data-navigator-detail
+        >
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/42">
             {copy.snapshotLabel}
           </p>

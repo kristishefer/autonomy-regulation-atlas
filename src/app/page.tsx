@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { JURISDICTION_PROFILES } from "@/app/explore/regulatory-data";
+import { HeroRegulatoryNetwork } from "@/app/home/HeroRegulatoryNetwork";
 import { homeCopy } from "@/app/home/home-i18n";
+import { HomepageReveal } from "@/app/home/HomepageReveal";
 import { JurisdictionNavigator } from "@/app/home/JurisdictionNavigator";
 import { RegulatoryQuestionExplorer } from "@/app/home/RegulatoryQuestionExplorer";
 import { getRequestLocale } from "@/app/i18n/request-locale";
@@ -55,7 +57,8 @@ export default async function Home() {
     >
       <section className="relative border-b border-[#10264a]/10">
         <div className="atlas-hero-grid absolute inset-0 opacity-30" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-12 sm:px-8 lg:px-10 lg:pb-20 lg:pt-16">
+        <HeroRegulatoryNetwork />
+        <div className="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-12 sm:px-8 lg:px-10 lg:pb-20 lg:pt-16">
           <div className="flex max-w-4xl min-w-0 flex-col justify-center">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
               {t.hero.eyebrow}
@@ -74,52 +77,45 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-b border-[#10264a]/10 bg-[#f3ecdf]">
+      <HomepageReveal className="border-b border-[#10264a]/10 bg-[#f3ecdf]">
         <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
-                {t.hero.atlaslings}
-              </p>
-              <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">
-                {t.modes.title}
-              </h2>
-            </div>
-            <p className="max-w-sm text-xs leading-5 text-[#10264a]/45 sm:text-right">
-              {t.hero.atlaslingsSub}
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
+              {t.hero.atlaslings}
             </p>
+            <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">
+              {t.modes.title}
+            </h2>
           </div>
 
-          <div className="grid gap-3 lg:grid-cols-3">
-            <GuideLink
-              body={t.modes.deployBody}
-              href="/deploy"
-              image="/atlaslings/dog.png"
-              imagePosition="low"
-              name="Deploy"
-              tone="blue"
-            />
-            <GuideLink
+          <div className="grid gap-4 lg:grid-cols-2">
+            <PrimaryGuideLink
+              action={t.modes.exploreCta}
               body={t.modes.exploreBody}
               href="/explore/system-map"
               image="/atlaslings/fox.png"
-              imagePosition="center"
               name="Explore"
               tone="green"
             />
-            <GuideLink
+            <PrimaryGuideLink
+              action={t.modes.learnCta}
               body={t.modes.learnBody}
               href="/learn"
               image="/atlaslings/cat.png"
-              imagePosition="balanced"
               name="Learn"
               tone="gold"
             />
           </div>
-        </div>
-      </section>
 
-      <section
+          <DeployGuideLink
+            action={t.modes.deployCta}
+            body={t.modes.deployBody}
+            title={t.modes.deployTitle}
+          />
+        </div>
+      </HomepageReveal>
+
+      <HomepageReveal
         className="scroll-mt-20 border-b border-[#10264a]/15 bg-[#edf0e7]"
         id="map"
       >
@@ -143,9 +139,9 @@ export default async function Home() {
             jurisdictions={jurisdictions}
           />
         </div>
-      </section>
+      </HomepageReveal>
 
-      <section
+      <HomepageReveal
         className="scroll-mt-20 border-b border-[#10264a]/10 bg-[#fbf7ef]"
         id="questions"
       >
@@ -166,9 +162,9 @@ export default async function Home() {
 
           <RegulatoryQuestionExplorer copy={t.questionDemo} />
         </div>
-      </section>
+      </HomepageReveal>
 
-      <section
+      <HomepageReveal
         className="scroll-mt-20 bg-white"
         id="method"
       >
@@ -211,7 +207,7 @@ export default async function Home() {
             </ol>
           </div>
         </div>
-      </section>
+      </HomepageReveal>
 
       <footer className="border-t border-[#fbf7ef]/15 bg-[#0b1c36] text-[#fbf7ef]">
         <div className="mx-auto flex max-w-7xl flex-col gap-7 px-5 py-10 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:px-10">
@@ -235,27 +231,22 @@ export default async function Home() {
   );
 }
 
-function GuideLink({
+function PrimaryGuideLink({
   href,
   image,
-  imagePosition,
   name,
   body,
+  action,
   tone,
 }: {
   href: string;
   image: string;
-  imagePosition: "low" | "center" | "balanced";
-  name: "Deploy" | "Explore" | "Learn";
+  name: "Explore" | "Learn";
   body: string;
-  tone: "blue" | "green" | "gold";
+  action: string;
+  tone: "green" | "gold";
 }) {
   const tones = {
-    blue: {
-      bg: "bg-[#e9f0fa]",
-      border: "border-[#295ca8]/14",
-      text: "text-[#295ca8]",
-    },
     green: {
       bg: "bg-[#e7f1ed]",
       border: "border-[#147c73]/14",
@@ -268,45 +259,81 @@ function GuideLink({
     },
   } as const;
   const color = tones[tone];
-  const imagePositions = {
-    low: "items-end pt-7",
-    center: "items-center pt-1",
-    balanced: "items-end pt-3",
-  } as const;
 
   return (
     <Link
-      className={`group grid min-h-[132px] grid-cols-[90px_1fr_auto] items-center gap-4 rounded-[22px] border p-3 outline-none transition hover:-translate-y-0.5 hover:shadow-[0_14px_35px_rgba(16,38,74,.08)] focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 motion-reduce:transform-none motion-reduce:transition-none sm:min-h-[148px] sm:grid-cols-[110px_1fr_auto] sm:p-4 ${color.bg} ${color.border}`}
+      className={`atlas-primary-entry group grid min-h-[190px] grid-cols-[1fr_112px] items-center gap-4 rounded-[24px] border p-5 outline-none focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 sm:min-h-[220px] sm:grid-cols-[1fr_156px] sm:p-7 ${color.bg} ${color.border}`}
       href={href}
     >
-      <div
-        className={`flex h-[108px] justify-center overflow-visible sm:h-[116px] ${imagePositions[imagePosition]}`}
-      >
+      <div className="flex min-w-0 self-stretch flex-col justify-center">
+        <h3 className={`font-serif text-3xl font-semibold sm:text-4xl ${color.text}`}>
+          {name}
+        </h3>
+        <p className="mt-3 max-w-md text-sm leading-6 text-[#10264a]/60">
+          {body}
+        </p>
+        <p className={`mt-6 text-sm font-semibold ${color.text}`}>
+          {action}{" "}
+          <span className="atlas-entry-action-arrow inline-block" aria-hidden="true">
+            →
+          </span>
+        </p>
+      </div>
+
+      <div className="flex h-[142px] items-end justify-center overflow-visible sm:h-[174px]">
         <Image
           alt=""
-          className="max-h-[100px] w-full object-contain object-bottom sm:max-h-[110px]"
+          className="atlas-entry-mascot max-h-[138px] w-full object-contain object-bottom sm:max-h-[168px]"
           height={360}
           priority
           src={image}
           width={360}
         />
       </div>
+    </Link>
+  );
+}
 
-      <div className="min-w-0">
-        <h3 className={`font-serif text-2xl font-semibold ${color.text}`}>
-          {name}
+function DeployGuideLink({
+  action,
+  body,
+  title,
+}: {
+  action: string;
+  body: string;
+  title: string;
+}) {
+  return (
+    <Link
+      className="atlas-deploy-entry group relative mx-auto mt-5 grid max-w-3xl grid-cols-[82px_1fr] items-center gap-4 rounded-[20px] border border-[#295ca8]/12 bg-[#e9f0fa] px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 sm:grid-cols-[104px_1fr_auto] sm:gap-5 sm:px-5"
+      href="/deploy"
+    >
+      <div className="relative top-2 flex h-[82px] items-end justify-center sm:h-[88px]">
+        <Image
+          alt=""
+          className="atlas-entry-mascot max-h-[82px] w-full object-contain object-bottom sm:max-h-[88px]"
+          height={360}
+          priority
+          src="/atlaslings/dog.png"
+          width={360}
+        />
+      </div>
+
+      <div className="min-w-0 py-1">
+        <h3 className="font-serif text-lg font-semibold text-[#295ca8] sm:text-xl">
+          {title}
         </h3>
-        <p className="mt-2 max-w-sm text-xs leading-5 text-[#10264a]/58 sm:text-sm sm:leading-6">
+        <p className="mt-1 text-xs leading-5 text-[#10264a]/58 sm:text-sm">
           {body}
         </p>
       </div>
 
-      <span
-        aria-hidden="true"
-        className={`mr-1 text-xl transition group-hover:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none ${color.text}`}
-      >
-        →
-      </span>
+      <p className="col-start-2 pb-1 text-xs font-semibold text-[#295ca8] sm:col-start-auto sm:pb-0 sm:text-sm">
+        {action}{" "}
+        <span className="atlas-entry-action-arrow inline-block" aria-hidden="true">
+          →
+        </span>
+      </p>
     </Link>
   );
 }

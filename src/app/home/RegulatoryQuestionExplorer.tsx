@@ -28,8 +28,10 @@ export function RegulatoryQuestionExplorer({
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [selectedLayerIndex, setSelectedLayerIndex] = useState(0);
   const questionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const questionHeadingRef = useRef<HTMLHeadingElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const hasSelected = useRef(false);
+  const hasSelectedQuestion = useRef(false);
   const selectedQuestion = copy.questions[selectedQuestionIndex] ?? copy.questions[0];
   const selectedLayer = copy.layers[selectedLayerIndex] ?? copy.layers[0];
 
@@ -43,14 +45,47 @@ export function RegulatoryQuestionExplorer({
       return;
     }
 
-    previewRef.current?.animate(
+    const preview = previewRef.current;
+    if (!preview) return;
+
+    preview.getAnimations().forEach((animation) => animation.cancel());
+    preview.animate(
       [
-        { opacity: 0, transform: "translateY(4px)" },
-        { opacity: 1, transform: "translateY(0)" },
+        { opacity: 0.45, transform: "translateX(8px)" },
+        { opacity: 1, transform: "translateX(0)" },
       ],
-      { duration: 160, easing: "ease-out" },
+      {
+        duration: 280,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
     );
   }, [selectedLayerIndex, selectedQuestionIndex]);
+
+  useEffect(() => {
+    if (!hasSelectedQuestion.current) {
+      hasSelectedQuestion.current = true;
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const heading = questionHeadingRef.current;
+    if (!heading) return;
+
+    heading.getAnimations().forEach((animation) => animation.cancel());
+    heading.animate(
+      [
+        { opacity: 0.5, transform: "translateY(6px)" },
+        { opacity: 1, transform: "translateY(0)" },
+      ],
+      {
+        duration: 260,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+    );
+  }, [selectedQuestionIndex]);
 
   if (!selectedQuestion || !selectedLayer) {
     return null;
@@ -141,7 +176,10 @@ export function RegulatoryQuestionExplorer({
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">
               {copy.previewLabel}
             </p>
-            <h3 className="mt-3 max-w-xl font-serif text-2xl font-semibold leading-tight tracking-[-0.025em] sm:text-3xl">
+            <h3
+              className="mt-3 max-w-xl font-serif text-2xl font-semibold leading-tight tracking-[-0.025em] sm:text-3xl"
+              ref={questionHeadingRef}
+            >
               {selectedQuestion}
             </h3>
 

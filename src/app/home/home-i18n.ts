@@ -117,20 +117,20 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       line2: "Many legal worlds",
       line3: "Atlas connects the pieces",
       body: "Explore the regulatory landscape for autonomous mobility — and apply source-backed analysis to real deployment questions across jurisdictions, approvals, human roles, operating conditions and primary sources.",
-      atlaslings: "Meet the Atlaslings",
+      atlaslings: "Use the Atlas",
       atlaslingsSub: "Three guides. One regulatory map.",
     },
     modes: {
       title: "How do you want to use the Atlas?",
-      deployTitle: "Understand the path to deployment",
-      deployBody: "Apply Atlas to a concrete deployment or market-access scenario.",
-      deployCta: "Start with a deployment scenario",
+      deployTitle: "Working on a concrete deployment?",
+      deployBody: "Use Atlas for a specific deployment or market-access scenario.",
+      deployCta: "Start with Deploy",
       exploreTitle: "Navigate the regulatory landscape",
       exploreBody: "Research jurisdictions, compare regulatory systems and trace how the pieces connect.",
-      exploreCta: "Open the System Map",
+      exploreCta: "Explore the Atlas",
       learnTitle: "Understand how the pieces fit together",
       learnBody: "Build regulatory fluency through concepts, standards and source-backed examples.",
-      learnCta: "Start learning",
+      learnCta: "Go to Learning",
     },
     map: {
       eyebrow: "Interactive Atlas",
@@ -248,23 +248,23 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       line3: "Atlas zeigt die Zusammenhänge",
       body:
         "Erkunden Sie, wie autonome Mobilität in verschiedenen Rechtsordnungen reguliert wird, und nutzen Sie quellenbasierte Analysen für konkrete Einsatzfragen: Welche Genehmigungen sind erforderlich, welche menschlichen Rollen bestehen, wo darf das System betrieben werden und welche Anforderungen gelten fort?",
-      atlaslings: "Die Atlaslings",
+      atlaslings: "Atlas nutzen",
       atlaslingsSub: "Drei Begleiter. Drei Wege durch die Regulierung.",
     },
     modes: {
       title: "Wo möchten Sie beginnen?",
-      deployTitle: "Den Weg zum Einsatz nachvollziehen",
+      deployTitle: "Arbeiten Sie an einem konkreten Einsatz?",
       deployBody:
-        "Wenden Sie Atlas auf ein konkretes Einsatz- oder Marktzugangsszenario an.",
-      deployCta: "Mit einem Einsatzszenario beginnen",
+        "Nutzen Sie Atlas für ein konkretes Einsatz- oder Marktzugangsszenario.",
+      deployCta: "Mit Deploy beginnen",
       exploreTitle: "Die Regulierungslandschaft als System verstehen",
       exploreBody:
         "Erforschen und vergleichen Sie Rechtsordnungen und verfolgen Sie ihre regulatorischen Zusammenhänge.",
-      exploreCta: "Systemkarte öffnen",
+      exploreCta: "Atlas erkunden",
       learnTitle: "Verstehen, wie die Elemente zusammenwirken",
       learnBody:
         "Erschließen Sie Regulierung durch Begriffe, Standards und quellenbasierte Beispiele.",
-      learnCta: "Lernpfad starten",
+      learnCta: "Zum Lernbereich",
     },
     map: {
       eyebrow: "Interaktive Karte",
@@ -396,23 +396,23 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       line3: "Atlas laat de samenhang zien",
       body:
         "Ontdek hoe autonome mobiliteit in verschillende jurisdicties wordt gereguleerd en gebruik analyse op basis van officiële bronnen voor concrete vragen over inzet: welke toestemmingen zijn nodig, welke menselijke rollen blijven bestaan, waar mag het systeem worden gebruikt en welke regels blijven gelden?",
-      atlaslings: "Maak kennis met de Atlaslings",
+      atlaslings: "Gebruik de Atlas",
       atlaslingsSub: "Drie gidsen. Drie routes door de regelgeving.",
     },
     modes: {
       title: "Waar wilt u beginnen?",
-      deployTitle: "Breng de route naar inzet in kaart",
+      deployTitle: "Werkt u aan een concrete inzet?",
       deployBody:
-        "Pas Atlas toe op een concreet inzet- of markttoegangsscenario.",
-      deployCta: "Begin met een inzetscenario",
+        "Gebruik Atlas voor een specifiek inzet- of markttoegangsscenario.",
+      deployCta: "Start met Deploy",
       exploreTitle: "Bekijk de regelgeving als samenhangend systeem",
       exploreBody:
         "Onderzoek en vergelijk jurisdicties en volg hoe de regelgevingsonderdelen samenhangen.",
-      exploreCta: "Systeemkaart openen",
+      exploreCta: "Verken de Atlas",
       learnTitle: "Begrijp hoe de onderdelen samenhangen",
       learnBody:
         "Bouw regelgevingskennis op met begrippen, normen en brongebonden voorbeelden.",
-      learnCta: "Leerpad starten",
+      learnCta: "Naar Learning",
     },
     map: {
       eyebrow: "Interactieve kaart",
@@ -544,23 +544,23 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       line3: "Atlas показывает, как они устроены",
       body:
         "Atlas помогает понять, как в разных юрисдикциях устроено регулирование автономной мобильности: какие уровни права применяются, какие разрешения нужны, какие роли сохраняются за человеком, где допустима эксплуатация и на каких официальных источниках основан каждый вывод.",
-      atlaslings: "Проводники по Atlas",
+      atlaslings: "Используйте Atlas",
       atlaslingsSub: "Три режима работы с одной системой регулирования.",
     },
     modes: {
       title: "Что вы хотите сделать?",
-      deployTitle: "Проверить путь к эксплуатации",
+      deployTitle: "Работаете над конкретным сценарием запуска?",
       deployBody:
-        "Примените Atlas к конкретному сценарию эксплуатации или выхода на рынок.",
-      deployCta: "Начать со сценария запуска",
+        "Используйте Atlas для конкретного сценария эксплуатации или выхода на рынок.",
+      deployCta: "Начать с Deploy",
       exploreTitle: "Понять систему регулирования",
       exploreBody:
         "Исследуйте и сравнивайте юрисдикции и прослеживайте связи между элементами регулирования.",
-      exploreCta: "Открыть системную карту",
+      exploreCta: "Исследовать Atlas",
       learnTitle: "Разобраться в ключевых понятиях",
       learnBody:
         "Разберитесь в регулировании через понятия, стандарты и примеры с опорой на источники.",
-      learnCta: "Перейти к обучению",
+      learnCta: "Перейти в Learning",
     },
     map: {
       eyebrow: "Юрисдикции",
