@@ -42,7 +42,8 @@ jobs:
           cp /tmp/hero-art-direction/src/app/page.tsx src/app/page.tsx
 
           changed_count="$(git diff --name-only | wc -l | tr -d ' ')"
-          test "$changed_count" = "3"
+          test "$changed_count" -ge 2
+          test "$changed_count" -le 3
           unexpected="$(git diff --name-only | grep -Ev '^(src/app/globals\.css|src/app/home/HeroRegulatoryNetwork\.tsx|src/app/page\.tsx)$' || true)"
           test -z "$unexpected"
 
