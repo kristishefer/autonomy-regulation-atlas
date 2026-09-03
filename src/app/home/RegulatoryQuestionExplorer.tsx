@@ -140,7 +140,7 @@ export function RegulatoryQuestionExplorer({
     <div>
       <div
         aria-label={copy.questionsLabel}
-        className="atlas-question-tabs grid grid-cols-2 border-y border-[#10264a]/18 lg:grid-cols-4"
+        className="atlas-question-tabs grid grid-cols-2 border-y border-[rgba(24,50,74,0.12)] lg:grid-cols-4"
         role="tablist"
       >
         {copy.questions.map((question, index) => {
@@ -150,10 +150,10 @@ export function RegulatoryQuestionExplorer({
             <button
               aria-controls="regulatory-question-panel"
               aria-selected={active}
-              className={`atlas-question-tab min-h-24 border-b border-r border-[#10264a]/12 px-4 py-4 text-left text-sm font-semibold leading-5 outline-none transition focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-inset sm:min-h-20 ${
+              className={`atlas-question-tab min-h-24 border-b border-r border-[rgba(24,50,74,0.08)] px-4 py-4 text-left text-sm font-semibold leading-5 outline-none transition focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-inset sm:min-h-20 ${
                 active
-                  ? "is-active bg-[#10264a] text-white"
-                  : "bg-white/35 text-[#10264a]/65 hover:bg-white/75 hover:text-[#10264a]"
+                  ? "is-active bg-white/85 text-[var(--atlas-ink)]"
+                  : "bg-transparent text-[var(--atlas-ink-muted)] hover:bg-white/55 hover:text-[var(--atlas-ink)]"
               }`}
               id={`regulatory-question-tab-${index}`}
               key={question}
@@ -168,7 +168,7 @@ export function RegulatoryQuestionExplorer({
             >
               <span
                 className={`mb-2 block font-mono text-[9px] uppercase tracking-[0.16em] ${
-                  active ? "text-white/50" : "text-[#b97512]"
+                  active ? "text-[var(--atlas-origin)]" : "text-[rgba(197,139,82,0.72)]"
                 }`}
               >
                 {String(index + 1).padStart(2, "0")}
@@ -181,13 +181,13 @@ export function RegulatoryQuestionExplorer({
 
       <div
         aria-labelledby={`regulatory-question-tab-${selectedQuestionIndex}`}
-        className="atlas-lens-panel mt-4 border-y border-[#10264a]/18 bg-white/45"
+        className="atlas-lens-panel mt-4 border-y border-[rgba(24,50,74,0.12)] bg-[rgba(250,249,245,0.4)]"
         id="regulatory-question-panel"
         role="tabpanel"
       >
-        <div className="grid lg:grid-cols-[1.12fr_0.88fr] lg:divide-x lg:divide-[#10264a]/12">
+        <div className="grid lg:grid-cols-[1.12fr_0.88fr] lg:divide-x lg:divide-[rgba(24,50,74,0.08)]">
           <div className="px-1 py-7 sm:px-6 lg:pl-0 lg:pr-10">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#147c73]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--atlas-teal)]">
               {copy.previewLabel}
             </p>
 
@@ -217,10 +217,10 @@ export function RegulatoryQuestionExplorer({
                 return (
                   <button
                     aria-pressed={active}
-                    className={`atlas-lens-button atlas-lens-${layer.id} border px-3 py-3 text-left text-xs font-semibold leading-4 outline-none transition focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 ${
+                    className={`atlas-lens-button atlas-lens-${layer.id} border px-3 py-3 text-left text-xs font-semibold leading-4 outline-none transition focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-offset-2 ${
                       active
-                        ? "is-active border-[#147c73] bg-[#e7f1ed] text-[#10264a]"
-                        : "border-[#10264a]/12 bg-[#fbf7ef]/75 text-[#10264a]/58 hover:border-[#147c73]/35 hover:text-[#10264a]"
+                        ? "is-active border-[var(--atlas-teal)] bg-[rgba(79,143,130,0.1)] text-[var(--atlas-ink)]"
+                        : "border-[rgba(24,50,74,0.1)] bg-[rgba(250,249,245,0.62)] text-[var(--atlas-ink-muted)] hover:border-[rgba(79,143,130,0.35)] hover:text-[var(--atlas-ink)]"
                     }`}
                     key={layer.id}
                     onClick={() => setSelectedLayerIndex(index)}
@@ -235,11 +235,11 @@ export function RegulatoryQuestionExplorer({
 
           <div
             aria-live="polite"
-            className="flex min-h-64 flex-col justify-between border-t border-[#10264a]/12 bg-[#e7eceb]/55 px-5 py-7 sm:px-8 lg:border-t-0 lg:bg-transparent lg:pl-10 lg:pr-0"
+            className="flex min-h-64 flex-col justify-between border-t border-[rgba(24,50,74,0.08)] bg-[rgba(239,244,246,0.55)] px-5 py-7 sm:px-8 lg:border-t-0 lg:bg-transparent lg:pl-10 lg:pr-0"
             ref={previewRef}
           >
             <div>
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#b97512]">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--atlas-origin)]">
                 {String(selectedLayerIndex + 1).padStart(2, "0")} · {selectedLayer.label}
               </p>
               <p className="mt-5 max-w-2xl font-serif text-xl font-semibold leading-8 sm:text-2xl sm:leading-9">
@@ -249,7 +249,7 @@ export function RegulatoryQuestionExplorer({
 
             {selectedHref && selectedLayer.linkLabel ? (
               <Link
-                className="mt-8 w-fit rounded-sm text-sm font-semibold text-[#147c73] outline-none transition hover:text-[#10264a] focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-4"
+                className="mt-8 w-fit rounded-sm text-sm font-semibold text-[var(--atlas-teal)] outline-none transition hover:text-[var(--atlas-ink)] focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-offset-4"
                 href={selectedHref}
               >
                 {selectedLayer.linkLabel} →

@@ -1,32 +1,39 @@
 export type FooterEasterEggCopy = {
   ariaLabel: string;
+  intro: string;
   dog: string;
   fox: string;
   cat: string;
   origin: string;
 };
 
-const marks = ["dog", "fox", "cat", "origin"] as const;
+const marks = [
+  { id: "dog", label: "Dog" },
+  { id: "fox", label: "Fox" },
+  { id: "cat", label: "Cat" },
+  { id: "origin", label: "Origin" },
+] as const;
 
 export function FooterEasterEgg({ copy }: { copy: FooterEasterEggCopy }) {
   return (
     <div aria-label={copy.ariaLabel} className="atlas-footer-easter" role="group">
+      <p className="atlas-footer-easter-key">{copy.intro}</p>
       <div className="atlas-footer-marks">
-        {marks.map((mark) => {
-          const descriptionId = `atlas-${mark}-note`;
+        {marks.map(({ id, label }) => {
+          const descriptionId = `atlas-${id}-note`;
 
           return (
-            <div className="atlas-footer-mark" key={mark}>
+            <div className="atlas-footer-mark" key={id}>
               <button
                 aria-describedby={descriptionId}
-                aria-label={mark}
-                className={`atlas-footer-mark-button atlas-footer-mark-${mark}`}
+                className={`atlas-footer-mark-button atlas-footer-mark-${id}`}
                 type="button"
               >
-                <MarkGraphic mark={mark} />
+                <MarkGraphic mark={id} />
+                <span>{label}</span>
               </button>
               <span className="atlas-footer-mark-line" id={descriptionId}>
-                {copy[mark]}
+                {copy[id]}
               </span>
             </div>
           );
@@ -36,7 +43,9 @@ export function FooterEasterEgg({ copy }: { copy: FooterEasterEggCopy }) {
   );
 }
 
-function MarkGraphic({ mark }: { mark: (typeof marks)[number] }) {
+type MarkId = (typeof marks)[number]["id"];
+
+function MarkGraphic({ mark }: { mark: MarkId }) {
   if (mark === "cat") {
     return (
       <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">

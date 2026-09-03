@@ -9,78 +9,58 @@ export function HeroRegulatoryNetwork() {
       >
         <g className="atlas-network-system">
           <g className="atlas-network-origin">
-            <circle className="atlas-network-origin-field" cx="84" cy="116" r="23" />
-            <circle className="atlas-network-origin-ring" cx="84" cy="116" r="13" />
-            <circle className="atlas-network-origin-core" cx="84" cy="116" r="4" />
+            <circle className="atlas-network-origin-field" cx="84" cy="122" r="23" />
+            <circle className="atlas-network-origin-ring" cx="84" cy="122" r="13" />
+            <circle className="atlas-network-origin-core" cx="84" cy="122" r="4" />
           </g>
           <path
             className="atlas-network-line atlas-network-line-primary atlas-network-line-1"
-            d="M84 116H226L318 54H488"
+            d="M84 122C142 72 174 102 226 96S288 54 336 54"
             pathLength="1"
           />
           <path
             className="atlas-network-line atlas-network-line-secondary atlas-network-line-2"
-            d="M84 116L172 234H318L414 166H558"
+            d="M84 122C154 190 234 220 336 236S424 190 480 160"
             pathLength="1"
           />
           <path
             className="atlas-network-line atlas-network-line-background atlas-network-line-3"
-            d="M172 234L250 352H414L558 286"
+            d="M226 96C304 142 398 112 480 160"
             pathLength="1"
           />
           <path
             className="atlas-network-line atlas-network-line-background atlas-network-line-4"
-            d="M318 54V234L414 352V166"
+            d="M336 236C420 288 488 302 560 298"
             pathLength="1"
           />
           <path
             className="atlas-network-line atlas-network-line-secondary atlas-network-line-5"
-            d="M226 116L318 234L488 54L558 166V286"
+            d="M480 160C520 204 546 248 560 298"
             pathLength="1"
           />
 
           <g className="atlas-network-node atlas-network-node-2">
-            <circle cx="226" cy="116" r="8" />
+            <circle cx="226" cy="96" r="7" />
           </g>
           <g className="atlas-network-node atlas-network-node-3">
-            <circle cx="318" cy="54" r="8" />
-            <circle className="atlas-network-node-ring" cx="318" cy="54" r="16" />
+            <circle cx="336" cy="54" r="7" />
+            <circle className="atlas-network-node-ring" cx="336" cy="54" r="15" />
           </g>
           <g className="atlas-network-node atlas-network-node-4">
-            <circle cx="488" cy="54" r="7" />
+            <circle cx="336" cy="236" r="9" />
           </g>
           <g className="atlas-network-node atlas-network-node-5">
-            <circle cx="172" cy="234" r="8" />
+            <circle cx="480" cy="160" r="8" />
+            <circle className="atlas-network-node-ring" cx="480" cy="160" r="17" />
           </g>
           <g className="atlas-network-node atlas-network-node-6">
-            <circle cx="318" cy="234" r="11" />
-            <circle className="atlas-network-node-ring" cx="318" cy="234" r="21" />
-          </g>
-          <g className="atlas-network-node atlas-network-node-7">
-            <circle cx="414" cy="166" r="8" />
-          </g>
-          <g className="atlas-network-node atlas-network-node-8">
-            <circle cx="558" cy="166" r="9" />
-            <circle className="atlas-network-node-ring" cx="558" cy="166" r="18" />
-          </g>
-          <g className="atlas-network-node atlas-network-node-9">
-            <circle cx="250" cy="352" r="7" />
-          </g>
-          <g className="atlas-network-node atlas-network-node-10">
-            <circle cx="414" cy="352" r="8" />
-          </g>
-          <g className="atlas-network-node atlas-network-node-11">
-            <circle cx="558" cy="286" r="10" />
-            <circle className="atlas-network-node-ring" cx="558" cy="286" r="19" />
+            <circle cx="560" cy="298" r="8" />
           </g>
 
-          <text className="atlas-network-label" x="214" y="101">
+          <text className="atlas-network-label" x="210" y="80">
             RULE
           </text>
-          <text className="atlas-network-label" x="427" y="154">
-            STATUS
-          </text>
-          <text className="atlas-network-label" x="522" y="316">
+          <text className="atlas-network-label" x="530" y="324">
             SOURCE
           </text>
         </g>

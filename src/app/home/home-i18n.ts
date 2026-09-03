@@ -83,6 +83,7 @@ type HomeCopy = {
   };
   easterEgg: {
     ariaLabel: string;
+    intro: string;
     dog: string;
     fox: string;
     cat: string;
@@ -220,6 +221,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     easterEgg: {
       ariaLabel: "Hidden notes",
+      intro: "Four signatures are hidden in the Atlas.",
       dog: "For the one who finds a way through the hard problems.",
       fox: "For the one who makes the difficult road feel lighter.",
       cat: "For the one who turns complexity into structure.",
@@ -375,6 +377,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     easterEgg: {
       ariaLabel: "Verborgene Notizen",
+      intro: "Vier Signaturen sind im Atlas verborgen.",
       dog: "Für den Menschen, der einen Weg durch die schwierigsten Probleme findet.",
       fox: "Für den Menschen, der schwierige Wege leichter macht.",
       cat: "Für den Menschen, der aus Komplexität Struktur entstehen lässt.",
@@ -530,6 +533,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     easterEgg: {
       ariaLabel: "Verborgen notities",
+      intro: "Vier signaturen zijn in de Atlas verborgen.",
       dog: "Voor degene die een weg vindt door de moeilijkste problemen.",
       fox: "Voor degene die een moeilijke weg lichter maakt.",
       cat: "Voor degene die complexiteit omzet in structuur.",
@@ -685,6 +689,7 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     easterEgg: {
       ariaLabel: "Скрытые заметки",
+      intro: "В Atlas скрыты четыре подписи.",
       dog: "Для того, кто находит путь сквозь самые трудные задачи.",
       fox: "Для того, кто делает трудный путь легче.",
       cat: "Для того, кто превращает сложность в структуру.",
