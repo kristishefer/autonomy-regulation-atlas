@@ -1,15 +1,4 @@
-export const locales = ["en", "ru", "fr", "de", "nl", "es"] as const;
-
-export type Locale = (typeof locales)[number];
-
-export const localeLabels: Record<Locale, string> = {
-  en: "EN",
-  ru: "RU",
-  fr: "FR",
-  de: "DE",
-  nl: "NL",
-  es: "ES",
-};
+import type { Locale } from "@/app/i18n/locale";
 
 type HomeCopy = {
   nav: {
@@ -44,6 +33,8 @@ type HomeCopy = {
     eyebrow: string;
     title: string;
     body: string;
+    scopeNote: string;
+    additionalProfiles: string;
   };
   puzzle: {
     eyebrow: string;
@@ -61,6 +52,25 @@ type HomeCopy = {
     title: string;
     body: string;
     steps: [string, string, string, string];
+  };
+  ui: {
+    language: string;
+    primaryNavigation: string;
+    map: {
+      ariaLabel: string;
+      openProfile: string;
+      profileAvailable: string;
+      coverageDeveloping: string;
+      profilesOnMap: string;
+      disclaimer: string;
+      fallbackNames: {
+        netherlands: string;
+        germany: string;
+        "united-kingdom": string;
+        russia: string;
+      };
+    };
+    footerTagline: string;
   };
 };
 
@@ -97,7 +107,9 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     map: {
       eyebrow: "Interactive Atlas",
       title: "Same technology, different legal answers",
-      body: "Choose a beacon to open its jurisdiction profile. Locations and coverage states come from the Atlas database, so the map grows with the research.",
+      body: "Choose a beacon to open its jurisdiction profile. The geographic map stays deliberately coherent; profiles outside the current European frame remain available in the profile list below.",
+      scopeNote: "The map is a navigation surface, not a map of permit, EPR or operating-area boundaries. Russia and the United States remain available as profiles without being represented by an artificial point inside the European frame.",
+      additionalProfiles: "All jurisdiction profiles",
     },
     puzzle: {
       eyebrow: "Learn with Cat",
@@ -121,297 +133,302 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         "Exact source",
       ],
     },
-  },
-  ru: {
-    nav: {
-      deploy: "Запуск",
-      jurisdictions: "Юрисдикции",
-      landscape: "Карта системы",
-      learn: "Обучение",
-      method: "Методология",
-    },
-    hero: {
-      eyebrow: "Право × автономность × реальный запуск",
-      line1: "Одна технология",
-      line2: "Много правовых миров",
-      line3: "Atlas соединяет части",
-      body: "Исследуйте регуляторную систему автономной мобильности и применяйте анализ с опорой на источники к реальным вопросам запуска — через юрисдикции, разрешения, человеческие роли, условия эксплуатации и первичные источники.",
-      atlaslings: "Познакомьтесь с Atlaslings",
-      atlaslingsSub: "Три проводника. Одна регуляторная карта.",
-    },
-    modes: {
-      title: "Как вы хотите использовать Atlas?",
-      deployTitle: "Понять путь к запуску",
-      deployBody: "Примените Atlas к реальному сценарию: какие уровни регулирования, разрешения, условия эксплуатации и нерешённые вопросы имеют значение.",
-      deployCta: "Открыть Deploy",
-      exploreTitle: "Исследовать регуляторную систему",
-      exploreBody: "Изучайте юрисдикции, уровни регулирования, стандарты, институты и первичные источники — и смотрите, как они связаны.",
-      exploreCta: "Открыть карту системы",
-      learnTitle: "Понять, как связаны элементы",
-      learnBody: "Разбирайтесь в регулировании автономной мобильности через понятия, задачи и реальные примеры из юрисдикций и источников.",
-      learnCta: "Начать обучение",
-    },
-    map: {
-      eyebrow: "Интерактивный Atlas",
-      title: "Одна технология, разные правовые ответы",
-      body: "Выберите маяк, чтобы открыть профиль юрисдикции. Координаты и статус покрытия поступают из базы данных Atlas.",
-    },
-    puzzle: {
-      eyebrow: "Учимся с Котом",
-      title: "Тип одобрен. Почему система не может просто выехать на дорогу?",
-      body: "Одобрение продукта и разрешение на эксплуатацию на дорогах отвечают на разные правовые вопросы.",
-      reveal: "Показать регуляторную связку",
-      answer: "Одобрение типа может подтверждать соответствие транспортного средства или системы автоматизированного вождения применимому режиму одобрения продукта. Само по себе оно не решает все вопросы дорожного движения, оператора, разрешений или географии эксплуатации. Следующий уровень задаёт юрисдикция эксплуатации.",
-      secondaryOne: "В кресле водителя никого нет. Исчез ли водитель как правовая роль?",
-      secondaryOneConcept: "ADS · водитель · удалённый человек",
-      secondaryTwo: "Удалённое вождение и удалённая помощь звучат похоже. Равны ли они юридически?",
-      secondaryTwoConcept: "Удалённые операции",
-    },
-    method: {
-      eyebrow: "Опора на источники",
-      title: "Проследите каждый вывод до источника",
-      body: "Atlas отделяет содержание источника от юридической интерпретации и её операционного значения. Первичные источники остаются на языке оригинала.",
-      steps: [
-        "Положение источника",
-        "Юридическая интерпретация Atlas",
-        "Операционное значение",
-        "Точный источник",
-      ],
-    },
-  },
-  fr: {
-    nav: {
-      deploy: "Déploiement",
-      jurisdictions: "Juridictions",
-      landscape: "Carte du système",
-      learn: "Apprendre",
-      method: "Méthode",
-    },
-    hero: {
-      eyebrow: "Droit × autonomie × déploiement réel",
-      line1: "Une technologie",
-      line2: "Plusieurs mondes juridiques",
-      line3: "Atlas relie les pièces",
-      body: "Explorez le paysage réglementaire de la mobilité autonome et appliquez une analyse fondée sur les sources à des questions concrètes de déploiement — juridictions, autorisations, rôles humains, conditions d’exploitation et sources primaires.",
-      atlaslings: "Découvrez les Atlaslings",
-      atlaslingsSub: "Trois guides. Une carte réglementaire.",
-    },
-    modes: {
-      title: "Comment voulez-vous utiliser Atlas ?",
-      deployTitle: "Comprendre le parcours vers le déploiement",
-      deployBody: "Appliquez Atlas à un scénario réel : identifiez les niveaux réglementaires, autorisations, conditions d’exploitation et questions non résolues qui comptent.",
-      deployCta: "Ouvrir Deploy",
-      exploreTitle: "Naviguer dans le paysage réglementaire",
-      exploreBody: "Explorez les juridictions, niveaux réglementaires, normes, institutions et sources primaires — et voyez comment les pièces se relient.",
-      exploreCta: "Ouvrir la carte du système",
-      learnTitle: "Comprendre comment les pièces s’articulent",
-      learnBody: "Apprenez la réglementation de la mobilité autonome à travers des concepts, des problèmes et des exemples réels fondés sur les juridictions et les sources.",
-      learnCta: "Commencer à apprendre",
-    },
-    map: {
-      eyebrow: "Atlas interactif",
-      title: "Une même technologie, des réponses juridiques différentes",
-      body: "Choisissez un repère pour ouvrir le profil d’une juridiction. Les positions et l’état de couverture proviennent de la base Atlas.",
-    },
-    puzzle: {
-      eyebrow: "Apprendre avec le Chat",
-      title: "Homologué. Pourquoi ne peut-il pas simplement circuler ?",
-      body: "L’homologation d’un produit et l’autorisation de circuler sur la voie publique répondent à des questions juridiques différentes.",
-      reveal: "Révéler l’articulation réglementaire",
-      answer: "L’homologation peut établir qu’un véhicule ou un système de conduite automatisée satisfait à un régime applicable d’approbation du produit. Elle ne règle pas, à elle seule, toutes les conditions de circulation, d’opérateur, d’autorisation ou de zone de déploiement. La juridiction d’exploitation fournit ce niveau suivant.",
-      secondaryOne: "Personne n’est au volant. Le conducteur juridique a-t-il disparu ?",
-      secondaryOneConcept: "ADS · conducteur · humain à distance",
-      secondaryTwo: "Conduite à distance et assistance à distance se ressemblent. Sont-elles juridiquement identiques ?",
-      secondaryTwoConcept: "Opérations à distance",
-    },
-    method: {
-      eyebrow: "Fondé sur les sources",
-      title: "Remontez chaque conclusion à sa source",
-      body: "Atlas sépare le contenu de la source, son interprétation juridique et son impact opérationnel. Les sources primaires restent dans leur langue originale.",
-      steps: [
-        "Proposition de la source",
-        "Interprétation juridique Atlas",
-        "Impact opérationnel",
-        "Source exacte",
-      ],
+    ui: {
+      language: "Language",
+      primaryNavigation: "Primary navigation",
+      map: {
+        ariaLabel: "Atlas jurisdiction map",
+        openProfile: "Open jurisdiction profile",
+        profileAvailable: "Profile available",
+        coverageDeveloping: "Coverage developing",
+        profilesOnMap: "Profiles on map",
+        disclaimer:
+          "Geographic boundaries are shown for orientation and do not express a legal position on status or sovereignty. Basemap geometry: Natural Earth via world-atlas.",
+        fallbackNames: {
+          netherlands: "Netherlands",
+          germany: "Germany",
+          "united-kingdom": "United Kingdom",
+          russia: "Russia",
+        },
+      },
+      footerTagline:
+        "One technology · many legal worlds · one connected map",
     },
   },
   de: {
     nav: {
-      deploy: "Deployment",
-      jurisdictions: "Jurisdiktionen",
+      deploy: "Einsatz",
+      jurisdictions: "Rechtsordnungen",
       landscape: "Systemkarte",
       learn: "Lernen",
-      method: "Methode",
+      method: "Methodik",
     },
     hero: {
-      eyebrow: "Recht × Autonomie × realer Einsatz",
+      eyebrow: "Recht × autonome Mobilität × Einsatz in der Praxis",
       line1: "Eine Technologie",
-      line2: "Viele Rechtswelten",
-      line3: "Atlas verbindet die Teile",
-      body: "Erkunden Sie die regulatorische Landschaft autonomer Mobilität und wenden Sie quellenbasierte Analyse auf reale Deployment-Fragen an — über Jurisdiktionen, Genehmigungen, menschliche Rollen, Betriebsbedingungen und Primärquellen hinweg.",
+      line2: "Unterschiedliche Rechtsordnungen",
+      line3: "Atlas zeigt die Zusammenhänge",
+      body:
+        "Erkunden Sie, wie autonome Mobilität in verschiedenen Rechtsordnungen reguliert wird, und nutzen Sie quellenbasierte Analysen für konkrete Einsatzfragen: Welche Genehmigungen sind erforderlich, welche menschlichen Rollen bestehen, wo darf das System betrieben werden und welche Anforderungen gelten fort?",
       atlaslings: "Die Atlaslings",
-      atlaslingsSub: "Drei Guides. Eine regulatorische Karte.",
+      atlaslingsSub: "Drei Begleiter. Drei Wege durch die Regulierung.",
     },
     modes: {
-      title: "Wie möchten Sie Atlas nutzen?",
-      deployTitle: "Den Weg zum Deployment verstehen",
-      deployBody: "Wenden Sie Atlas auf ein reales Szenario an: Welche regulatorischen Ebenen, Genehmigungen, Betriebsbedingungen und offenen Fragen sind relevant?",
-      deployCta: "Deploy öffnen",
-      exploreTitle: "Die regulatorische Landschaft navigieren",
-      exploreBody: "Erkunden Sie Jurisdiktionen, regulatorische Ebenen, Standards, Institutionen und Primärquellen — und ihre Verbindungen.",
+      title: "Wo möchten Sie beginnen?",
+      deployTitle: "Den Weg zum Einsatz nachvollziehen",
+      deployBody:
+        "Prüfen Sie ein konkretes Szenario und erkennen Sie, welche Regelungsebenen, Genehmigungen, Betriebsbedingungen und offenen Rechtsfragen für den Einsatz entscheidend sind.",
+      deployCta: "Szenario prüfen",
+      exploreTitle: "Die Regulierungslandschaft als System verstehen",
+      exploreBody:
+        "Erkunden Sie Rechtsordnungen, Regelungsebenen, Standards, Behörden und Primärquellen — und ihre Zusammenhänge.",
       exploreCta: "Systemkarte öffnen",
-      learnTitle: "Verstehen, wie die Teile zusammenhängen",
-      learnBody: "Lernen Sie die Regulierung autonomer Mobilität anhand von Konzepten, Problemen und realen Beispielen aus Jurisdiktionen und Quellen.",
-      learnCta: "Lernen starten",
+      learnTitle: "Verstehen, wie die Elemente zusammenwirken",
+      learnBody:
+        "Erschließen Sie zentrale Begriffe anhand von Rechtsvorschriften, Standards und realen Fällen, deren Sachverhalt amtlich festgestellt wurde.",
+      learnCta: "Lernpfad starten",
     },
     map: {
-      eyebrow: "Interaktiver Atlas",
-      title: "Dieselbe Technologie, unterschiedliche Rechtsantworten",
-      body: "Wählen Sie einen Wegpunkt, um das Jurisdiktionsprofil zu öffnen. Positionen und Abdeckungsstatus stammen aus der Atlas-Datenbank.",
+      eyebrow: "Interaktive Karte",
+      title: "Eine Technologie — unterschiedliche rechtliche Rahmen",
+      body:
+        "Wählen Sie eine Markierung, um das Profil einer Rechtsordnung zu öffnen. Rechtsordnungen außerhalb des aktuellen europäischen Kartenausschnitts bleiben in der Profilliste darunter verfügbar.",
+      scopeNote:
+        "Die Karte dient der Navigation und zeigt keine Genehmigungs-, EPR- oder Betriebsgebietsgrenzen. Russland und die Vereinigten Staaten bleiben als Profile verfügbar, ohne durch einen künstlichen Punkt im europäischen Kartenausschnitt dargestellt zu werden.",
+      additionalProfiles: "Alle Rechtsordnungsprofile",
     },
     puzzle: {
-      eyebrow: "Lernen mit der Katze",
-      title: "Typgenehmigt. Warum darf es nicht einfach fahren?",
-      body: "Produktgenehmigung und die Erlaubnis zum Betrieb auf öffentlichen Straßen beantworten unterschiedliche Rechtsfragen.",
-      reveal: "Die regulatorische Verbindung zeigen",
-      answer: "Eine Typgenehmigung kann belegen, dass ein Fahrzeug oder automatisiertes Fahrsystem ein anwendbares Produktgenehmigungsregime erfüllt. Sie klärt allein nicht sämtliche verkehrsrechtlichen, betreiberbezogenen, genehmigungsrechtlichen oder geografischen Bedingungen für den Einsatz. Diese nächste Ebene bestimmt die Einsatzjurisdiktion.",
-      secondaryOne: "Niemand sitzt am Steuer. Ist die rechtliche Fahrerrolle verschwunden?",
-      secondaryOneConcept: "ADS · Fahrer · Mensch aus der Ferne",
-      secondaryTwo: "Fernsteuerung und Fernassistenz klingen ähnlich. Sind sie rechtlich gleich?",
+      eyebrow: "Die Katze erklärt",
+      title:
+        "Typgenehmigung erteilt. Warum darf das Fahrzeug trotzdem nicht einfach auf die Straße?",
+      body:
+        "Typgenehmigung und rechtliche Zulässigkeit des Betriebs auf öffentlichen Straßen beantworten unterschiedliche Fragen.",
+      reveal: "Zeigen, was noch fehlt",
+      answer:
+        "Eine Typgenehmigung kann bestätigen, dass ein Fahrzeug oder ADS die einschlägigen technischen Anforderungen erfüllt. Sie berechtigt jedoch nicht automatisch zum Betrieb auf öffentlichen Straßen. Je nach Rechtsordnung können zusätzliche Genehmigungen, ein festgelegter Betriebsbereich, Zulassung, Versicherung und weitere straßenverkehrsrechtliche Voraussetzungen erforderlich sein.",
+      secondaryOne:
+        "Niemand sitzt auf dem Fahrersitz. Bedeutet das auch rechtlich, dass es keinen Fahrer gibt?",
+      secondaryOneConcept: "ADS · Fahrerrolle · menschliche Aufsicht",
+      secondaryTwo:
+        "Remote Driving und Remote Assistance klingen ähnlich. Sind sie rechtlich dasselbe?",
       secondaryTwoConcept: "Remote Operations",
     },
     method: {
-      eyebrow: "Quellenbasiert",
-      title: "Verfolgen Sie jede Schlussfolgerung bis zur Quelle",
-      body: "Atlas trennt Quellenaussage, rechtliche Auslegung und operative Auswirkung. Primärquellen bleiben in ihrer Originalsprache.",
+      eyebrow: "Quellenbasiert und nachvollziehbar",
+      title: "Von der Schlussfolgerung zur konkreten Quelle",
+      body:
+        "Atlas trennt, was eine Quelle ausdrücklich sagt, wie wir sie rechtlich einordnen und welche praktische Bedeutung daraus folgt. Jede wesentliche Aussage lässt sich bis zur offiziellen Quelle zurückverfolgen; Primärquellen bleiben in der Originalsprache.",
       steps: [
-        "Quellenaussage",
-        "Rechtliche Atlas-Auslegung",
-        "Operative Auswirkung",
-        "Exakte Quelle",
+        "Aussage der Quelle",
+        "Rechtliche Einordnung durch Atlas",
+        "Praktische Bedeutung",
+        "Offizielle Quelle",
       ],
+    },
+    ui: {
+      language: "Sprache",
+      primaryNavigation: "Hauptnavigation",
+      map: {
+        ariaLabel: "Atlas-Karte der Rechtsordnungen",
+        openProfile: "Profil der Rechtsordnung öffnen",
+        profileAvailable: "Profil verfügbar",
+        coverageDeveloping: "Abdeckung im Aufbau",
+        profilesOnMap: "Profile auf der Karte",
+        disclaimer:
+          "Geografische Grenzen dienen nur der Orientierung und stellen keine rechtliche Position zum Status von Gebieten oder zur Souveränität dar. Kartengrundlage: Natural Earth über world-atlas.",
+        fallbackNames: {
+          netherlands: "Niederlande",
+          germany: "Deutschland",
+          "united-kingdom": "Vereinigtes Königreich",
+          russia: "Russland",
+        },
+      },
+      footerTagline:
+        "Eine Technologie · unterschiedliche Rechtsordnungen · eine verknüpfte Karte",
     },
   },
   nl: {
     nav: {
-      deploy: "Deployment",
+      deploy: "Inzet",
       jurisdictions: "Jurisdicties",
       landscape: "Systeemkaart",
       learn: "Leren",
-      method: "Methode",
+      method: "Methodiek",
     },
     hero: {
-      eyebrow: "Recht × autonomie × inzet in de praktijk",
+      eyebrow: "Recht × autonome mobiliteit × inzet in de praktijk",
       line1: "Eén technologie",
-      line2: "Veel juridische werelden",
-      line3: "Atlas verbindt de stukken",
-      body: "Verken het regelgevingslandschap voor autonome mobiliteit en pas brongebaseerde analyse toe op concrete deploymentvragen — over jurisdicties, goedkeuringen, menselijke rollen, operationele voorwaarden en primaire bronnen.",
+      line2: "Verschillende rechtsstelsels",
+      line3: "Atlas laat de samenhang zien",
+      body:
+        "Ontdek hoe autonome mobiliteit in verschillende jurisdicties wordt gereguleerd en gebruik analyse op basis van officiële bronnen voor concrete vragen over inzet: welke toestemmingen zijn nodig, welke menselijke rollen blijven bestaan, waar mag het systeem worden gebruikt en welke regels blijven gelden?",
       atlaslings: "Maak kennis met de Atlaslings",
-      atlaslingsSub: "Drie gidsen. Eén regelgevingskaart.",
+      atlaslingsSub: "Drie gidsen. Drie routes door de regelgeving.",
     },
     modes: {
-      title: "Hoe wil je Atlas gebruiken?",
-      deployTitle: "Begrijp het pad naar deployment",
-      deployBody: "Pas Atlas toe op een echt scenario: zie welke regelgevingslagen, goedkeuringen, operationele voorwaarden en open vragen relevant zijn.",
-      deployCta: "Open Deploy",
-      exploreTitle: "Navigeer door het regelgevingslandschap",
-      exploreBody: "Verken jurisdicties, regelgevingslagen, normen, instellingen en primaire bronnen — en zie hoe de onderdelen samenhangen.",
+      title: "Waar wilt u beginnen?",
+      deployTitle: "Breng de route naar inzet in kaart",
+      deployBody:
+        "Pas Atlas toe op een concreet scenario en zie welke regelgevingslagen, vergunningen, operationele voorwaarden en open rechtsvragen bepalend zijn.",
+      deployCta: "Scenario onderzoeken",
+      exploreTitle: "Bekijk de regelgeving als samenhangend systeem",
+      exploreBody:
+        "Verken jurisdicties, regelgevingslagen, normen, bevoegde instanties en primaire bronnen — en hun onderlinge verband.",
       exploreCta: "Systeemkaart openen",
       learnTitle: "Begrijp hoe de onderdelen samenhangen",
-      learnBody: "Leer regelgeving voor autonome mobiliteit via concepten, vraagstukken en echte voorbeelden uit jurisdicties en bronnen.",
-      learnCta: "Begin met leren",
+      learnBody:
+        "Leer kernbegrippen aan de hand van wetgeving, normen en reële zaken waarvan de feiten officieel zijn vastgesteld.",
+      learnCta: "Leerpad starten",
     },
     map: {
-      eyebrow: "Interactieve Atlas",
-      title: "Dezelfde technologie, andere juridische antwoorden",
-      body: "Kies een baken om het jurisdictieprofiel te openen. Locaties en dekkingsstatus komen uit de Atlas-database.",
+      eyebrow: "Interactieve kaart",
+      title: "Eén technologie — verschillende juridische kaders",
+      body:
+        "Kies een markering om het profiel van een jurisdictie te openen. Jurisdicties buiten het huidige Europese kaartvenster blijven beschikbaar in de profielenlijst eronder.",
+      scopeNote:
+        "De kaart is een navigatiemiddel en toont geen grenzen van vergunningen, EPR's of operationele gebieden. Rusland en de Verenigde Staten blijven als profiel beschikbaar zonder een kunstmatige locatiepunt in de Europese kaart.",
+      additionalProfiles: "Alle jurisdictieprofielen",
     },
     puzzle: {
-      eyebrow: "Leren met de Kat",
-      title: "Typegoedgekeurd. Waarom kan het niet gewoon rijden?",
-      body: "Productgoedkeuring en toestemming om op de openbare weg te rijden beantwoorden verschillende juridische vragen.",
-      reveal: "Toon de regelgevende schakel",
-      answer: "Typegoedkeuring kan aantonen dat een voertuig of geautomatiseerd rijsysteem aan een toepasselijk productgoedkeuringsregime voldoet. Daarmee zijn niet automatisch alle verkeers-, operator-, vergunnings- of geografische voorwaarden voor inzet vastgesteld. De operationele jurisdictie levert die volgende laag.",
-      secondaryOne: "Niemand zit achter het stuur. Is de juridische bestuurder verdwenen?",
-      secondaryOneConcept: "ADS · bestuurder · mens op afstand",
-      secondaryTwo: "Besturen op afstand en assistentie op afstand klinken hetzelfde. Zijn ze juridisch gelijk?",
-      secondaryTwoConcept: "Operaties op afstand",
+      eyebrow: "De kat legt uit",
+      title:
+        "Typegoedkeuring verleend. Waarom mag het voertuig dan nog niet zomaar de openbare weg op?",
+      body:
+        "Typegoedkeuring en toestemming voor gebruik op de openbare weg beantwoorden verschillende juridische vragen.",
+      reveal: "Bekijk wat nog ontbreekt",
+      answer:
+        "Een typegoedkeuring kan bevestigen dat een voertuig of ADS aan de toepasselijke technische eisen voldoet. Zij geeft op zichzelf nog geen recht op gebruik op de openbare weg. Afhankelijk van de jurisdictie kunnen aanvullende vergunningen, een afzonderlijk goedgekeurd gebied, registratie, verzekering en andere verkeersrechtelijke voorwaarden vereist zijn.",
+      secondaryOne:
+        "Er zit niemand op de bestuurdersstoel. Betekent dit juridisch ook dat er geen bestuurder is?",
+      secondaryOneConcept: "ADS · bestuurder · menselijk toezicht",
+      secondaryTwo:
+        "Besturing op afstand en assistentie op afstand klinken vergelijkbaar. Zijn ze juridisch hetzelfde?",
+      secondaryTwoConcept: "Besturing en ondersteuning op afstand",
     },
     method: {
-      eyebrow: "Brongebaseerd",
-      title: "Volg elke conclusie terug naar de bron",
-      body: "Atlas scheidt de bronstelling, juridische interpretatie en operationele impact. Primaire bronnen blijven in hun oorspronkelijke taal.",
+      eyebrow: "Gebaseerd op officiële bronnen",
+      title: "Van conclusie naar concrete bron",
+      body:
+        "Atlas maakt zichtbaar wat de bron zelf zegt, hoe wij die juridisch duiden en wat dat in de praktijk betekent. Elke wezenlijke conclusie is herleidbaar tot een officiële bron; primaire bronnen blijven in de oorspronkelijke taal.",
       steps: [
-        "Bronstelling",
-        "Juridische Atlas-interpretatie",
-        "Operationele impact",
-        "Exacte bron",
+        "Wat de bron zegt",
+        "Juridische duiding door Atlas",
+        "Betekenis in de praktijk",
+        "Officiële bron",
       ],
+    },
+    ui: {
+      language: "Taal",
+      primaryNavigation: "Hoofdnavigatie",
+      map: {
+        ariaLabel: "Atlas-kaart van jurisdicties",
+        openProfile: "Jurisdictieprofiel openen",
+        profileAvailable: "Profiel beschikbaar",
+        coverageDeveloping: "Dekking in ontwikkeling",
+        profilesOnMap: "Profielen op de kaart",
+        disclaimer:
+          "Geografische grenzen zijn uitsluitend ter oriëntatie weergegeven en geven geen juridisch standpunt weer over status of soevereiniteit. Kaartgeometrie: Natural Earth via world-atlas.",
+        fallbackNames: {
+          netherlands: "Nederland",
+          germany: "Duitsland",
+          "united-kingdom": "Verenigd Koninkrijk",
+          russia: "Rusland",
+        },
+      },
+      footerTagline:
+        "Eén technologie · verschillende rechtsstelsels · één verbonden kaart",
     },
   },
-  es: {
+  ru: {
     nav: {
-      deploy: "Despliegue",
-      jurisdictions: "Jurisdicciones",
-      landscape: "Mapa del sistema",
-      learn: "Aprender",
-      method: "Método",
+      deploy: "Сценарий",
+      jurisdictions: "Юрисдикции",
+      landscape: "Система регулирования",
+      learn: "Разобраться",
+      method: "Метод",
     },
     hero: {
-      eyebrow: "Derecho × autonomía × despliegue real",
-      line1: "Una tecnología",
-      line2: "Muchos mundos jurídicos",
-      line3: "Atlas conecta las piezas",
-      body: "Explora el panorama regulatorio de la movilidad autónoma y aplica un análisis basado en fuentes a preguntas reales de despliegue — entre jurisdicciones, homologaciones, roles humanos, condiciones operativas y fuentes primarias.",
-      atlaslings: "Conoce a los Atlaslings",
-      atlaslingsSub: "Tres guías. Un mapa regulatorio.",
+      eyebrow: "Регулирование автономной мобильности — от нормы к реальному сценарию",
+      line1: "Одна технология",
+      line2: "Разные правовые системы",
+      line3: "Atlas показывает, как они устроены",
+      body:
+        "Atlas помогает понять, как в разных юрисдикциях устроено регулирование автономной мобильности: какие уровни права применяются, какие разрешения нужны, какие роли сохраняются за человеком, где допустима эксплуатация и на каких официальных источниках основан каждый вывод.",
+      atlaslings: "Проводники по Atlas",
+      atlaslingsSub: "Три режима работы с одной системой регулирования.",
     },
     modes: {
-      title: "¿Cómo quieres utilizar Atlas?",
-      deployTitle: "Entender el camino hacia el despliegue",
-      deployBody: "Aplica Atlas a un escenario real: identifica las capas regulatorias, autorizaciones, condiciones operativas y preguntas abiertas que importan.",
-      deployCta: "Abrir Deploy",
-      exploreTitle: "Navegar por el panorama regulatorio",
-      exploreBody: "Explora jurisdicciones, capas regulatorias, normas, instituciones y fuentes primarias — y observa cómo se conectan.",
-      exploreCta: "Abrir el mapa del sistema",
-      learnTitle: "Entender cómo encajan las piezas",
-      learnBody: "Aprende regulación de movilidad autónoma mediante conceptos, problemas y ejemplos reales basados en jurisdicciones y fuentes.",
-      learnCta: "Empezar a aprender",
+      title: "Что вы хотите сделать?",
+      deployTitle: "Проверить путь к эксплуатации",
+      deployBody:
+        "Разберите конкретный сценарий: какие уровни регулирования, разрешения, условия эксплуатации и открытые вопросы определяют возможность выхода на дорогу.",
+      deployCta: "Открыть сценарий",
+      exploreTitle: "Понять систему регулирования",
+      exploreBody:
+        "Посмотрите, как связаны международные инструменты, национальные режимы, стандарты, компетентные органы и первичные источники.",
+      exploreCta: "Открыть системную карту",
+      learnTitle: "Разобраться в ключевых понятиях",
+      learnBody:
+        "Изучайте регулирование через понятия, нормы, стандарты и реальные кейсы с опорой на официальные источники.",
+      learnCta: "Перейти к обучению",
     },
     map: {
-      eyebrow: "Atlas interactivo",
-      title: "La misma tecnología, respuestas jurídicas diferentes",
-      body: "Elige un punto para abrir el perfil de la jurisdicción. Las ubicaciones y el estado de cobertura proceden de la base de datos Atlas.",
+      eyebrow: "Юрисдикции",
+      title: "Одна технология — разные правовые ответы",
+      body:
+        "Выберите отметку на карте, чтобы открыть профиль юрисдикции. На карту вынесены только профили, которые корректно помещаются в текущую европейскую рамку; остальные доступны в списке ниже.",
+      scopeNote:
+        "Карта нужна для навигации и не показывает границы конкретных разрешений, ЭПР или зон эксплуатации. Россия и США доступны в списке профилей и не обозначаются условной точкой внутри европейской карты.",
+      additionalProfiles: "Все профили",
     },
     puzzle: {
-      eyebrow: "Aprender con el Gato",
-      title: "Homologado. ¿Por qué no puede simplemente circular?",
-      body: "La homologación del producto y el permiso para operar en vías públicas responden a preguntas jurídicas diferentes.",
-      reveal: "Mostrar la conexión regulatoria",
-      answer: "La homologación puede establecer que un vehículo o sistema de conducción automatizada cumple un régimen aplicable de aprobación del producto. Por sí sola no resuelve todas las condiciones de tráfico, operador, autorización o ámbito geográfico del despliegue. La jurisdicción operativa aporta esa siguiente capa.",
-      secondaryOne: "No hay nadie al volante. ¿Desapareció el conductor jurídico?",
-      secondaryOneConcept: "ADS · conductor · humano remoto",
-      secondaryTwo: "La conducción remota y la asistencia remota suenan parecidas. ¿Son jurídicamente iguales?",
-      secondaryTwoConcept: "Operaciones remotas",
+      eyebrow: "Разобраться с Cat",
+      title:
+        "Одобрение типа есть. Почему этого недостаточно для выезда на дорогу?",
+      body:
+        "Техническое одобрение и право эксплуатации на дорогах отвечают на разные юридические вопросы.",
+      reveal: "Показать следующий правовой уровень",
+      answer:
+        "Одобрение типа может подтверждать соответствие транспортного средства или ADS применимому техническому режиму. Но само по себе оно не решает вопросы допуска к дорогам, условий эксплуатации, роли оператора, географии, регистрации или страхования. Эти требования определяются применимой юрисдикцией и конкретным режимом.",
+      secondaryOne:
+        "В салоне никого нет. Означает ли это, что право тоже не видит никакой человеческой роли?",
+      secondaryOneConcept: "ADS · водитель · дистанционные роли",
+      secondaryTwo:
+        "Remote driving и удалённая поддержка — это одна юридическая роль?",
+      secondaryTwoConcept: "Дистанционные роли",
     },
     method: {
-      eyebrow: "Basado en fuentes",
-      title: "Rastrea cada conclusión hasta su fuente",
-      body: "Atlas separa la proposición de la fuente, la interpretación jurídica y el impacto operativo. Las fuentes primarias permanecen en su idioma original.",
+      eyebrow: "Каждый вывод — к источнику",
+      title: "От правового вывода к официальному тексту",
+      body:
+        "Atlas отдельно показывает, что прямо следует из источника, как мы это юридически интерпретируем и что это меняет для эксплуатации. Официальные термины и первичные источники сохраняются на языке оригинала.",
       steps: [
-        "Proposición de la fuente",
-        "Interpretación jurídica de Atlas",
-        "Impacto operativo",
-        "Fuente exacta",
+        "Позиция источника",
+        "Юридический анализ Atlas",
+        "Практическое значение",
+        "Официальный источник",
       ],
+    },
+    ui: {
+      language: "Язык",
+      primaryNavigation: "Основная навигация",
+      map: {
+        ariaLabel: "Карта юрисдикций Atlas",
+        openProfile: "Открыть профиль",
+        profileAvailable: "Профиль готов",
+        coverageDeveloping: "Исследование продолжается",
+        profilesOnMap: "профиля на карте",
+        disclaimer:
+          "Границы показаны только для ориентации и не выражают позицию Atlas относительно статуса территорий или суверенитета. Картографическая основа: Natural Earth через world-atlas.",
+        fallbackNames: {
+          netherlands: "Нидерланды",
+          germany: "Германия",
+          "united-kingdom": "Великобритания",
+          russia: "Россия",
+        },
+      },
+      footerTagline:
+        "Одна технология · разные правовые системы · единая карта регулирования",
     },
   },
 };
-
-export function normalizeLocale(
-  value: string | string[] | undefined,
-): Locale {
-  const candidate = Array.isArray(value) ? value[0] : value;
-  return locales.includes(candidate as Locale) ? (candidate as Locale) : "en";
-}

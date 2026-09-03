@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { LocaleProvider } from "@/app/i18n/LocaleProvider";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,13 +20,17 @@ export const metadata: Metadata = {
     "Connecting autonomous-mobility technology, regulatory requirements and lawful deployment across jurisdictions.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getRequestLocale();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <LocaleProvider locale={locale}>{children}</LocaleProvider>
+      </body>
     </html>
   );
 }

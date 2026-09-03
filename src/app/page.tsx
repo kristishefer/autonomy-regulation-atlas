@@ -1,24 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { JURISDICTION_PROFILES } from "@/app/explore/regulatory-data";
 import { EuropeJurisdictionMap } from "@/app/home/EuropeJurisdictionMap";
 import type { JurisdictionMapPoint } from "@/app/home/EuropeJurisdictionMap";
-import {
-  homeCopy,
-  localeLabels,
-  locales,
-  normalizeLocale,
-  type Locale,
-} from "@/app/home/home-i18n";
+import { homeCopy } from "@/app/home/home-i18n";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import type { Locale } from "@/app/i18n/locale";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 import { supabase } from "@/app/lib/supabase";
 
 export const dynamic = "force-dynamic";
-
-type PageProps = {
-  searchParams: Promise<{
-    lang?: string | string[];
-  }>;
-};
 
 type JurisdictionRow = {
   id: number;
@@ -107,9 +99,8 @@ async function translateJurisdictions(
   }));
 }
 
-export default async function Home({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const locale = normalizeLocale(params.lang);
+export default async function Home() {
+  const locale = await getRequestLocale();
   const t = homeCopy[locale];
   const { data, error } = await supabase
     .from("jurisdictions")
@@ -151,7 +142,7 @@ export default async function Home({ searchParams }: PageProps) {
 
           <div className="flex items-center gap-5">
             <nav
-              aria-label="Primary navigation"
+              aria-label={t.ui.primaryNavigation}
               className="hidden items-center gap-6 text-sm text-[#10264a]/55 lg:flex"
             >
               <Link className="transition hover:text-[#10264a]" href="/deploy">
@@ -174,7 +165,7 @@ export default async function Home({ searchParams }: PageProps) {
               </a>
             </nav>
 
-            <LanguageSwitcher locale={locale} />
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
@@ -182,12 +173,12 @@ export default async function Home({ searchParams }: PageProps) {
       <section className="relative border-b border-[#10264a]/10">
         <div className="atlas-hero-grid absolute inset-0 opacity-30" aria-hidden="true" />
         <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-16 pt-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:pb-20 lg:pt-16">
-          <div className="flex flex-col justify-center">
+          <div className="flex min-w-0 flex-col justify-center">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
               {t.hero.eyebrow}
             </p>
 
-            <h1 className="mt-5 max-w-3xl font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+            <h1 className="mt-5 max-w-3xl break-words hyphens-auto font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
               <span className="block">{t.hero.line1}</span>
               <span className="block">{t.hero.line2}</span>
               <span className="block text-[#b97512]">{t.hero.line3}</span>
@@ -198,7 +189,7 @@ export default async function Home({ searchParams }: PageProps) {
             </p>
           </div>
 
-          <div className="rounded-[32px] border border-[#10264a]/10 bg-[#f3ecdf] p-4 shadow-[0_24px_70px_rgba(16,38,74,0.06)] sm:p-6">
+          <div className="min-w-0 rounded-[32px] border border-[#10264a]/10 bg-[#f3ecdf] p-4 shadow-[0_24px_70px_rgba(16,38,74,0.06)] sm:p-6">
             <div className="mb-5 flex items-end justify-between gap-5 px-1">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
@@ -235,7 +226,7 @@ export default async function Home({ searchParams }: PageProps) {
               <GuideLink
                 body={t.modes.learnBody}
                 cta={t.modes.learnCta}
-                href="#learn"
+                href="/learn"
                 image="/atlaslings/cat.png"
                 name="Learn"
                 title={t.modes.learnTitle}
@@ -265,13 +256,37 @@ export default async function Home({ searchParams }: PageProps) {
             </p>
           </div>
 
-          <EuropeJurisdictionMap jurisdictions={jurisdictions} />
+          <EuropeJurisdictionMap
+            copy={t.ui.map}
+            jurisdictions={jurisdictions}
+          />
 
           <p className="mt-4 text-[10px] leading-4 text-[#10264a]/45">
-            Geographic boundaries are shown for orientation and do not express
-            a legal position on status or sovereignty. Basemap geometry: Natural
-            Earth via world-atlas.
+            {t.ui.map.disclaimer}
           </p>
+          <p className="mt-3 max-w-3xl text-xs leading-5 text-[#10264a]/55">
+            {t.map.scopeNote}
+          </p>
+
+          <nav
+            aria-label={t.map.additionalProfiles}
+            className="mt-7 border-t border-[#10264a]/12 pt-5"
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/45">
+              {t.map.additionalProfiles}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-[#147c73]">
+              {JURISDICTION_PROFILES.map((profile) => (
+                <Link
+                  className="rounded-sm underline decoration-[#147c73]/25 underline-offset-4 outline-none hover:decoration-[#147c73] focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-2"
+                  href={`/${profile.slug}`}
+                  key={profile.slug}
+                >
+                  {profile.localizedNames?.[locale] ?? profile.name} · {profile.code}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
       </section>
 
@@ -309,7 +324,7 @@ export default async function Home({ searchParams }: PageProps) {
 
                 <div className="flex items-end justify-center self-stretch">
                   <Image
-                    alt="Learn Atlasling"
+                    alt=""
                     className="max-h-[285px] w-full object-contain object-bottom"
                     height={360}
                     loading="eager"
@@ -388,7 +403,7 @@ export default async function Home({ searchParams }: PageProps) {
               Autonomy Regulation Atlas
             </p>
             <p className="mt-2 max-w-xl text-xs leading-5 text-[#fbf7ef]/55">
-              One technology · many legal worlds · one connected map
+              {t.ui.footerTagline}
             </p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#fbf7ef]/65">
@@ -400,40 +415,6 @@ export default async function Home({ searchParams }: PageProps) {
         </div>
       </footer>
     </main>
-  );
-}
-
-function LanguageSwitcher({ locale }: { locale: Locale }) {
-  return (
-    <details className="atlas-language group relative">
-      <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full border border-[#10264a]/15 bg-white px-3 py-2 text-xs font-semibold tracking-[0.08em] shadow-sm transition hover:border-[#10264a]/30 sm:px-4 sm:py-2.5">
-        <span aria-hidden="true" className="text-sm">
-          ◎
-        </span>
-        <span className="hidden sm:inline">Language</span>
-        <strong>{localeLabels[locale]}</strong>
-        <span className="text-[#10264a]/35" aria-hidden="true">
-          ⌄
-        </span>
-      </summary>
-
-      <div className="absolute right-0 top-[48px] z-[80] grid min-w-[150px] overflow-hidden rounded-2xl border border-[#10264a]/10 bg-white p-1.5 shadow-[0_18px_45px_rgba(16,38,74,.16)]">
-        {locales.map((item) => (
-          <Link
-            aria-current={item === locale ? "page" : undefined}
-            className={`rounded-xl px-3 py-2.5 text-sm transition hover:bg-[#f2eadc] ${
-              item === locale
-                ? "font-semibold text-[#147c73]"
-                : "text-[#10264a]/65"
-            }`}
-            href={`/?lang=${item}`}
-            key={item}
-          >
-            {localeLabels[item]}
-          </Link>
-        ))}
-      </div>
-    </details>
   );
 }
 
@@ -480,7 +461,7 @@ function GuideLink({
     >
       <div className="flex h-[112px] items-center justify-center overflow-visible">
         <Image
-          alt={`${name} Atlasling`}
+          alt=""
           className="max-h-[112px] w-full object-contain"
           height={360}
           priority
@@ -493,7 +474,7 @@ function GuideLink({
         <p className={`text-[10px] font-semibold uppercase tracking-[0.14em] ${color.text}`}>
           {name}
         </p>
-        <h3 className="mt-1.5 font-serif text-xl font-semibold leading-tight sm:text-2xl">
+        <h3 className="mt-1.5 break-words hyphens-auto font-serif text-xl font-semibold leading-tight sm:text-2xl">
           {title}
         </h3>
         <p className="mt-2 text-xs leading-5 text-[#10264a]/55 sm:text-sm">

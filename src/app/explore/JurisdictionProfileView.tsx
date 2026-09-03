@@ -10,9 +10,16 @@ import {
   getRegulatorySource,
   legalStatusLabel,
   type JurisdictionProfile,
+  type LegalStatus,
   type SourceReference,
+  type SourceType,
   type StatusTone,
 } from "@/app/explore/regulatory-data";
+import { getCommonUiCopy, type CommonUiCopy } from "@/app/i18n/global-ui-copy";
+import { LanguageNotice } from "@/app/i18n/LanguageNotice";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import type { Locale } from "@/app/i18n/locale";
+import { assertNoFutureMaterialInCurrentLaw } from "@/app/explore/regulatory-model";
 
 const toneClasses: Record<StatusTone, string> = {
   positive: "border-[#147c73]/20 bg-[#e7f1ed] text-[#11665f]",
@@ -28,11 +35,37 @@ const answerAccentClasses: Record<StatusTone, string> = {
   watch: "border-[#b97512]",
 };
 
+const sourceTypeLabels: Record<SourceType, string> = {
+  official_legislation: "Legislation",
+  official_regulation: "Regulation",
+  official_guidance: "Official guidance",
+  regulator_material: "Regulator material",
+  legislative_history: "Legislative history",
+  court_decision: "Court decision",
+  eu_legislation: "EU legislation",
+};
+
+const sourceStatusLabels: Record<LegalStatus, string> = {
+  in_force: "In force",
+  adopted_not_yet_effective: "Adopted · not yet effective",
+  proposed: "Proposed",
+  draft: "Draft",
+  guidance: "Guidance",
+  legislative_history: "Legislative history",
+  case_law: "Case law",
+  mixed: "Staged / mixed legal status",
+};
+
 export function JurisdictionProfileView({
+  locale,
   profile,
 }: {
+  locale: Locale;
   profile: JurisdictionProfile;
 }) {
+  const common = getCommonUiCopy(locale);
+  const profileName = profile.localizedNames?.[locale] ?? profile.name;
+
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
       <header className="sticky top-0 z-50 border-b border-[#10264a]/10 bg-[#fbf7ef]/94 backdrop-blur">
@@ -46,46 +79,54 @@ export function JurisdictionProfileView({
             </span>
           </Link>
 
-          <nav className="flex items-center gap-4 text-xs font-semibold text-[#10264a]/55 sm:gap-6 sm:text-sm">
-            <Link className="transition hover:text-[#10264a]" href="/explore/system-map">
-              System Map
-            </Link>
-            <Link className="transition hover:text-[#10264a]" href="/explore/compare">
-              Compare
-            </Link>
-          </nav>
+          <div className="flex items-center gap-4 sm:gap-6">
+            <nav
+              aria-label={common.primaryNavigation}
+              className="hidden items-center gap-4 text-xs font-semibold text-[#10264a]/55 sm:flex sm:gap-6 sm:text-sm"
+            >
+              <Link className="transition hover:text-[#10264a]" href="/explore/system-map">
+                {common.systemMap}
+              </Link>
+              <Link className="transition hover:text-[#10264a]" href="/explore/compare">
+                {common.compare}
+              </Link>
+            </nav>
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
+
+      <LanguageNotice locale={locale} />
 
       <section className="relative overflow-hidden border-b border-[#10264a]/10">
         <div className="atlas-hero-grid absolute inset-0 opacity-25" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-5 pb-14 pt-10 sm:px-8 lg:px-10 lg:pb-20 lg:pt-14">
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/55">
             <Link className="hover:text-[#147c73]" href="/">
-              Explorer
+              {common.explorer}
             </Link>
             <span aria-hidden="true">/</span>
-            <span>Jurisdictions</span>
+            <span>{common.jurisdictions}</span>
             <span aria-hidden="true">/</span>
             <span>{profile.code}</span>
           </div>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-end">
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
-                Regulatory profile
+                {common.regulatoryProfile}
               </p>
-              <h1 className="mt-3 font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl lg:text-7xl">
-                {profile.name}
+              <h1 className="mt-3 break-words hyphens-auto font-serif text-5xl font-semibold leading-none tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+                {profileName}
               </h1>
               <p className="mt-5 max-w-3xl text-sm leading-6 text-[#10264a]/65">
-                {profile.scenario}
+                {profile.selectedScenario.label}
               </p>
             </div>
 
             <div className="border-l border-[#147c73]/35 pl-5">
               <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#147c73]">
-                Current-law review
+                {common.currentLawReview}
               </div>
               <p className="mt-2 text-sm leading-6 text-[#10264a]/68">
                 {profile.verifiedLabel}
@@ -96,7 +137,7 @@ export function JurisdictionProfileView({
           <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_330px] lg:items-start">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
-                Deployment answer
+                {common.deploymentAnswer}
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {profile.deploymentAnswers.map((item) => (
@@ -118,12 +159,12 @@ export function JurisdictionProfileView({
               </div>
             </div>
 
-            <aside className="border border-[#10264a]/12 bg-[#edf0e7]/70 p-5" aria-label="Scenario scope">
+            <aside className="border border-[#10264a]/12 bg-[#edf0e7]/70 p-5" aria-label={common.scenario}>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#147c73]">
-                Scenario
+                {common.scenario}
               </p>
               <dl className="mt-3 divide-y divide-[#10264a]/10">
-                {profile.scenarioScope.map((item) => (
+                {profile.selectedScenario.details.map((item) => (
                   <div className="py-3 first:pt-0 last:pb-0" key={item.label}>
                     <dt className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#10264a]/55">
                       {item.label}
@@ -140,13 +181,18 @@ export function JurisdictionProfileView({
           <div className="mt-8 max-w-5xl border-l-2 border-[#147c73] pl-5 font-serif text-xl font-semibold leading-8 tracking-[-0.015em] sm:text-2xl">
             {profile.primaryMessage}
           </div>
+          {profile.scopeNote ? (
+            <p className="mt-5 max-w-5xl border-l border-[#b97512]/55 pl-5 text-sm font-semibold leading-6 text-[#10264a]/68">
+              <span className="text-[#8f5f13]">Scope:</span> {profile.scopeNote}
+            </p>
+          ) : null}
         </div>
       </section>
 
       <section className="border-b border-[#10264a]/10 bg-white">
         <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10 lg:py-18">
           <SectionHeading
-            eyebrow="Regulatory snapshot"
+            eyebrow={common.regulatorySnapshot}
             title="The position for this scenario"
           />
 
@@ -163,7 +209,7 @@ export function JurisdictionProfileView({
                 </div>
                 {item.scope ? (
                   <p className="mt-5 border-t border-[#10264a]/10 pt-4 text-xs leading-5 text-[#10264a]/60">
-                    <strong className="text-[#10264a]/75">Scope:</strong>{" "}
+                    <strong className="text-[#10264a]/75">{common.scope}:</strong>{" "}
                     {item.scope}
                   </p>
                 ) : null}
@@ -174,12 +220,12 @@ export function JurisdictionProfileView({
       </section>
 
       <nav
-        aria-label="On this page"
+        aria-label={common.onThisPage}
         className="border-b border-[#10264a]/10 bg-[#fbf7ef]/96 lg:sticky lg:top-[69px] lg:z-40 lg:backdrop-blur"
       >
         <div className="mx-auto flex max-w-7xl items-center gap-4 overflow-x-auto px-5 py-4 sm:px-8 lg:px-10">
           <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-[#10264a]/60">
-            On this page
+            {common.onThisPage}
           </span>
           <span className="h-5 w-px shrink-0 bg-[#10264a]/15" aria-hidden="true" />
           <div className="flex min-w-max gap-5 pr-5 text-xs font-semibold text-[#10264a]/65">
@@ -189,7 +235,7 @@ export function JurisdictionProfileView({
                 href={item.href}
                 key={item.href}
               >
-                {item.label}
+                {localizePageNavigation(item.label, common)}
               </a>
             ))}
           </div>
@@ -200,7 +246,7 @@ export function JurisdictionProfileView({
         <div className="mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[260px_1fr] lg:px-10 lg:py-12">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
-              Regulatory architecture
+              {common.regulatoryArchitecture}
             </p>
             <h2 className="mt-3 font-serif text-3xl font-semibold leading-tight tracking-[-0.035em]">
               Separate layers, separate legal questions
@@ -277,7 +323,7 @@ export function JurisdictionProfileView({
                 {section.takeaway ? (
                   <div className="mt-7 rounded-[22px] bg-[#f2eadc] p-5 sm:p-6">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a6513]">
-                      Key takeaway
+                      {common.keyTakeaway}
                     </div>
                     <p className="mt-2 font-serif text-lg font-semibold leading-7">
                       {section.takeaway}
@@ -291,6 +337,7 @@ export function JurisdictionProfileView({
                     <ExplainDetails
                       deeperHref={concept.deeperHref}
                       key={conceptId}
+                      locale={locale}
                       note={getLearningNote(conceptId, profile.slug)}
                       title={concept.name}
                     />
@@ -304,13 +351,15 @@ export function JurisdictionProfileView({
         ))}
       </div>
 
-      <DeploymentReality jurisdiction={profile.slug} />
+      {profile.slug === "netherlands" || profile.slug === "germany" ? (
+        <DeploymentReality jurisdiction={profile.slug} />
+      ) : null}
 
       <section className="bg-[#10264a] text-[#fbf7ef]">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_0.75fr] lg:px-10 lg:py-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#77c7bd]">
-              What this means for deployment
+              {common.whatMeansDeployment}
             </p>
             <div className="mt-6 space-y-5">
               {profile.deploymentConclusion.map((paragraph, index) => (
@@ -329,7 +378,7 @@ export function JurisdictionProfileView({
           </div>
 
           <div className="rounded-[24px] border border-white/12 bg-white/[0.055] p-6">
-            <h2 className="font-serif text-2xl font-semibold">Questions for the deployment team</h2>
+            <h2 className="font-serif text-2xl font-semibold">{common.deploymentQuestions}</h2>
             <ol className="mt-6 space-y-4">
               {profile.practicalQuestions.map((question, index) => (
                 <li className="grid grid-cols-[28px_1fr] gap-3 text-sm leading-6 text-white/75" key={question}>
@@ -344,13 +393,13 @@ export function JurisdictionProfileView({
         </div>
       </section>
 
-      <OfficialSources profile={profile} />
+      <OfficialSources common={common} profile={profile} />
 
       <footer className="border-t border-[#10264a]/10 bg-[#fbf7ef]">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-9 text-xs text-[#10264a]/60 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
           <span>Autonomy Regulation Atlas · Regulatory information for operational analysis</span>
           <Link className="font-semibold text-[#147c73]" href="/explore/compare">
-            Compare jurisdictions →
+            {common.compareJurisdictions} →
           </Link>
         </div>
       </footer>
@@ -412,7 +461,7 @@ function SourceBasis({ references }: { references: SourceReference[] }) {
               </a>
               {reference.provision ? ` · ${reference.provision}` : ""}
               <span className="ml-2 text-[#10264a]/55">
-                {legalStatusLabel(source.legalStatus)}
+                {legalStatusLabel(reference.legalStatus ?? source.legalStatus)}
               </span>
             </li>
           );
@@ -422,20 +471,42 @@ function SourceBasis({ references }: { references: SourceReference[] }) {
   );
 }
 
-function OfficialSources({ profile }: { profile: JurisdictionProfile }) {
+function OfficialSources({
+  common,
+  profile,
+}: {
+  common: CommonUiCopy;
+  profile: JurisdictionProfile;
+}) {
   const sources = profile.sourceIds.map(getRegulatorySource);
-  const currentLaw = sources.filter((source) => source.legalStatus === "in_force");
-  const interpretative = sources.filter((source) =>
-    ["guidance", "legislative_history", "case_law"].includes(source.legalStatus),
+  const currentLaw = sources.filter(
+    (source) =>
+      source.legalStatus === "in_force" &&
+      ["official_legislation", "official_regulation", "eu_legislation"].includes(
+        source.type,
+      ),
   );
   const futureRules = sources.filter((source) =>
     ["adopted_not_yet_effective", "proposed", "draft"].includes(source.legalStatus),
   );
+  const stagedRules = sources.filter((source) => source.legalStatus === "mixed");
+  const futureRuleIds = new Set(futureRules.map((source) => source.id));
+  const stagedRuleIds = new Set(stagedRules.map((source) => source.id));
+  const interpretative = sources.filter(
+    (source) =>
+      !futureRuleIds.has(source.id) &&
+      !stagedRuleIds.has(source.id) &&
+      (source.type === "regulator_material" ||
+        ["guidance", "legislative_history", "case_law"].includes(
+          source.legalStatus,
+        )),
+  );
+  assertNoFutureMaterialInCurrentLaw(currentLaw);
 
   return (
     <section className="scroll-mt-32 bg-white" id="official-sources">
       <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10 lg:py-14">
-        <SectionHeading eyebrow="Official sources" title="Trace the analysis to authority" />
+        <SectionHeading eyebrow={common.officialSource} title="Trace the analysis to authority" />
         <p className="mt-5 max-w-3xl text-sm leading-6 text-[#10264a]/65">
           Binding instruments and interpretative materials are kept separate. Links point to official publishers; primary texts remain in their original language.
         </p>
@@ -445,15 +516,27 @@ function OfficialSources({ profile }: { profile: JurisdictionProfile }) {
             <span>Open full official source index</span>
             <span aria-hidden="true" className="text-lg font-normal transition-transform group-open:rotate-45">+</span>
           </summary>
-          <div className="mt-7 grid gap-8 border-t border-[#10264a]/10 pt-7 lg:grid-cols-3">
+          <div className="mt-7 grid gap-8 border-t border-[#10264a]/10 pt-7 lg:grid-cols-2 xl:grid-cols-4">
             <SourceGroup sources={currentLaw} title="Current law" />
-            <SourceGroup sources={interpretative} title="Guidance & legislative material" />
+            <SourceGroup sources={stagedRules} title="Staged / mixed instruments" />
+            <SourceGroup sources={interpretative} title="Official guidance & regulator material" />
             <SourceGroup sources={futureRules} title="Future / proposed rules" />
           </div>
         </details>
       </div>
     </section>
   );
+}
+
+function localizePageNavigation(label: string, common: CommonUiCopy) {
+  const labels: Record<string, string> = {
+    "Deployment answer": common.deploymentAnswer,
+    "Official sources": common.sources,
+    "Regulatory architecture": common.regulatoryArchitecture,
+    "Regulatory snapshot": common.regulatorySnapshot,
+  };
+
+  return labels[label] ?? label;
 }
 
 function SourceGroup({
@@ -483,7 +566,13 @@ function SourceGroup({
                 {source.title} ↗
               </a>
               <p className="mt-2 text-xs leading-5 text-[#10264a]/62">
-                {source.authority} · {source.statusLabel} · checked 31 Aug 2026
+                Type: {formatSourceType(source.type)}
+              </p>
+              <p className="mt-1 text-xs leading-5 text-[#10264a]/62">
+                Status: {formatSourceStatus(source.legalStatus, source.statusLabel)}
+              </p>
+              <p className="mt-1 text-xs leading-5 text-[#10264a]/62">
+                {source.authority} · checked {formatSourceDate(source.lastChecked)}
               </p>
             </li>
           ))}
@@ -491,4 +580,29 @@ function SourceGroup({
       )}
     </div>
   );
+}
+
+function formatSourceType(type: SourceType) {
+  return sourceTypeLabels[type];
+}
+
+function formatSourceStatus(status: LegalStatus, detail: string) {
+  const label = sourceStatusLabels[status];
+
+  return detail.toLowerCase().startsWith(label.toLowerCase())
+    ? detail
+    : `${label} — ${detail}`;
+}
+
+function formatSourceDate(value: string) {
+  const parsed = new Date(`${value}T00:00:00Z`);
+
+  return Number.isNaN(parsed.getTime())
+    ? value
+    : new Intl.DateTimeFormat("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(parsed);
 }

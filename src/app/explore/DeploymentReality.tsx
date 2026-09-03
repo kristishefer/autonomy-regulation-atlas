@@ -68,7 +68,7 @@ export function DeploymentReality({
                     {DEPLOYMENT_STATUS_LABELS[entry.status]}
                   </span>
                   <span className="text-xs font-semibold text-[#10264a]/58">
-                    Verified {formatVerifiedDate(entry.lastVerified)}
+                    Evidence checked {formatVerifiedDate(entry.asOf)}
                   </span>
                 </div>
 
@@ -131,10 +131,10 @@ export function DeploymentReality({
 
                 <div className="mt-5 rounded-[20px] bg-[#f2eadc] p-5">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a6513]">
-                    Why it matters
+                    Atlas analysis · Why it matters
                   </p>
                   <p className="mt-2 font-serif text-lg font-semibold leading-7">
-                    {entry.whyItMatters}
+                    {entry.atlasAnalysis}
                   </p>
                 </div>
 
@@ -166,6 +166,18 @@ export function DeploymentReality({
                         <span className="ml-2 text-[#10264a]/58">
                           {source.authority}
                         </span>
+                        <span className="mt-1 block text-[#10264a]/48">
+                          {formatEvidenceType(source.sourceType)} · {source.legalStatus ? formatEvidenceStatus(source.legalStatus) : "no independent legal status"}
+                          {source.sourceDate ? ` · ${formatVerifiedDate(source.sourceDate)}` : " · source date not stated"}
+                        </span>
+                        <span className="mt-1 block text-[#10264a]/58">
+                          Supports: {source.claimSupported.join("; ")}
+                        </span>
+                        {source.authorityFinding ? (
+                          <span className="mt-1 block text-[#10264a]/58">
+                            Authority finding: {source.authorityFinding}
+                          </span>
+                        ) : null}
                       </li>
                     ))}
                     {entry.legalSourceIds?.map((sourceId) => {
@@ -226,4 +238,14 @@ function formatVerifiedDate(value: string) {
   };
 
   return `${Number(day)} ${monthNames[month] ?? month} ${year}`;
+}
+
+function formatEvidenceType(value: string) {
+  return value.replaceAll("_", " ").replace(/^./, (character) =>
+    character.toUpperCase(),
+  );
+}
+
+function formatEvidenceStatus(value: string) {
+  return value.replaceAll("_", " ");
 }

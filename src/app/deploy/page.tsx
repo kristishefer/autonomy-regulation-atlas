@@ -1,5 +1,10 @@
 import Link from "next/link";
 
+import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
+import { LanguageNotice } from "@/app/i18n/LanguageNotice";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import { getRequestLocale } from "@/app/i18n/request-locale";
+
 const pathwayGates = [
   {
     number: "01",
@@ -52,7 +57,10 @@ const statusLanguage = [
   "Research pending",
 ] as const;
 
-export default function DeployPage() {
+export default async function DeployPage() {
+  const locale = await getRequestLocale();
+  const common = getCommonUiCopy(locale);
+
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
       <header className="border-b border-[#10264a]/10 bg-[#fbf7ef]">
@@ -66,19 +74,27 @@ export default function DeployPage() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-5 text-sm text-[#10264a]/55">
-            <Link className="transition hover:text-[#10264a]" href="/">
-              Home
-            </Link>
-            <Link
-              className="transition hover:text-[#10264a]"
-              href="/explore/system-map"
+          <div className="flex items-center gap-4 sm:gap-5">
+            <nav
+              aria-label={common.primaryNavigation}
+              className="hidden items-center gap-5 text-sm text-[#10264a]/55 sm:flex"
             >
-              System Map
-            </Link>
+              <Link className="transition hover:text-[#10264a]" href="/">
+                {common.home}
+              </Link>
+              <Link
+                className="transition hover:text-[#10264a]"
+                href="/explore/system-map"
+              >
+                {common.systemMap}
+              </Link>
+            </nav>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
+
+      <LanguageNotice locale={locale} />
 
       <section className="border-b border-[#10264a]/10">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_0.72fr] lg:px-10 lg:py-20">
@@ -129,7 +145,7 @@ export default function DeployPage() {
             <div className="grid gap-3 sm:grid-cols-3">
               <ScenarioFact label="Road environment" value="Public roads" />
               <ScenarioFact label="In-vehicle driver" value="None" />
-              <ScenarioFact label="Initial coverage" value="Netherlands + Germany" />
+              <ScenarioFact label="Current coverage" value="Five jurisdiction profiles" />
             </div>
           </div>
         </div>
@@ -207,16 +223,15 @@ export default function DeployPage() {
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
-              Initial coverage
+              Current coverage
             </p>
             <h2 className="mt-3 font-serif text-4xl font-semibold leading-tight tracking-[-0.035em]">
               Start with one scenario, compare legal architectures
             </h2>
             <p className="mt-5 max-w-xl text-sm leading-6 text-[#10264a]/60">
-              The first Deploy pathway is intentionally narrow. Netherlands and
-              Germany are the research pair for the same driverless passenger
-              vehicle scenario; broader vehicle types and jurisdictions come
-              later.
+              Current coverage includes five jurisdiction profiles: Netherlands,
+              Germany, United Kingdom, United States and Russia. Coverage expands
+              as additional jurisdictions are researched and verified.
             </p>
           </div>
 
@@ -225,13 +240,31 @@ export default function DeployPage() {
               code="NL"
               href="/netherlands"
               name="Netherlands"
-              status="Partial profile available"
+              status="Profile available"
             />
             <JurisdictionCard
               code="DE"
               href="/germany"
               name="Germany"
-              status="Pathway research in progress"
+              status="Profile available"
+            />
+            <JurisdictionCard
+              code="GB"
+              href="/united-kingdom"
+              name="United Kingdom"
+              status="Profile available"
+            />
+            <JurisdictionCard
+              code="US"
+              href="/united-states"
+              name="United States"
+              status="Profile available"
+            />
+            <JurisdictionCard
+              code="RU"
+              href="/russia"
+              name="Russia"
+              status="Profile available"
             />
           </div>
         </div>

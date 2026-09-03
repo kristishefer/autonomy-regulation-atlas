@@ -25,6 +25,18 @@ export type DeploymentRealitySource = {
   title: string;
   authority: string;
   url: string;
+  sourceType:
+    | "binding_law"
+    | "regulator_decision"
+    | "official_authority_statement"
+    | "public_project_statement"
+    | "operator_statement"
+    | "company_announcement";
+  sourceDate: string | null;
+  claimSupported: string[];
+  authorityFinding?: string;
+  legalStatus?: "in_force" | "proposed" | "draft" | "adopted_not_yet_effective";
+  asOf: "2026-09-03";
 };
 
 export type DeploymentRealityEntry = {
@@ -45,8 +57,12 @@ export type DeploymentRealityEntry = {
   legalRoute: string;
   relevantAuthority: string;
   whyItMatters: string;
+  atlasAnalysis: string;
   uncertaintyNote?: string;
   lastVerified: "2026-09-01";
+  asOf: "2026-09-03";
+  nextReviewAt: "2026-10-01";
+  stale: boolean;
   legalSourceIds?: SourceId[];
   sources: DeploymentRealitySource[];
 };
@@ -76,9 +92,24 @@ export const REMOTE_HUMAN_LABELS: Record<RemoteHumanRole, string> = {
   "none-unknown": "None / unknown",
 };
 
-export const DEPLOYMENT_REALITY: Record<
+type RawDeploymentRealityEntry = Omit<
+  DeploymentRealityEntry,
+  "asOf" | "nextReviewAt" | "stale" | "atlasAnalysis" | "sources"
+> & {
+  sources: Omit<
+    DeploymentRealitySource,
+    | "sourceType"
+    | "sourceDate"
+    | "claimSupported"
+    | "authorityFinding"
+    | "legalStatus"
+    | "asOf"
+  >[];
+};
+
+const RAW_DEPLOYMENT_REALITY: Record<
   DeploymentRealityJurisdiction,
-  DeploymentRealityEntry[]
+  RawDeploymentRealityEntry[]
 > = {
   netherlands: [
     {
@@ -362,6 +393,188 @@ export const DEPLOYMENT_REALITY: Record<
       ],
     },
   ],
+};
+
+type EvidenceProvenance = Omit<
+  DeploymentRealitySource,
+  "title" | "authority" | "url" | "asOf"
+>;
+
+const SOURCE_PROVENANCE: Record<string, EvidenceProvenance> = {
+  "https://www.rdw.nl/over-rdw/campagnes/veilige-voertuigen/zelfrijdende-bus": {
+    sourceType: "official_authority_statement",
+    sourceDate: null,
+    claimSupported: [
+      "RDW testing and temporary national approval under the Prototyperegeling",
+      "Public-road route and continuing onboard safety-driver condition",
+    ],
+    authorityFinding:
+      "RDW states that the bus received temporary national approval subject to conditions; the page is an authority explanation, not the approval instrument itself.",
+  },
+  "https://www.rdw.nl/nieuws/2025/rdw-verleent-goedkeuring-aan-eerste-zelfrijdende-bus": {
+    sourceType: "official_authority_statement",
+    sourceDate: "2025-07-11",
+    claimSupported: [
+      "Temporary national individual approval under the Prototyperegeling",
+      "Defined-area operation with a qualified onboard safety driver",
+    ],
+    authorityFinding:
+      "RDW reports its own approval decision and its stated operating conditions; Atlas does not treat the news release as a generally available deployment route.",
+  },
+  "https://www.karsan.com/es/prensa/noticias-actuales/karsan-launches-autonomous-passenger-services-at-rotterdam-airport-with-autonomous-e-atak": {
+    sourceType: "company_announcement",
+    sourceDate: "2025-07-11",
+    claimSupported: [
+      "Vehicle identity and announced passenger-service launch",
+      "Route between Meijersplein and Rotterdam The Hague Airport",
+    ],
+  },
+  "https://www.efteling.com/en/blog/nieuws/self-driving-bus-makes-it-easier-to-reach-the-efteling-accommodation-locations": {
+    sourceType: "operator_statement",
+    sourceDate: "2026-08-12",
+    claimSupported: [
+      "Eight-week free passenger trial and published operating arrangement",
+      "Onboard Arriva safety driver and separate onboard data monitor",
+      "RDW route approval without identification of the precise approval instrument",
+    ],
+  },
+  "https://www.brabant.nl/actueel/nieuws/eerste-zelfrijdende-bus-brabant-efteling/": {
+    sourceType: "public_project_statement",
+    sourceDate: "2026-08-07",
+    claimSupported: [
+      "Mixed public-road and private-site route",
+      "Passenger-trial timing, onboard safety driver and RDW route approval",
+    ],
+    authorityFinding:
+      "The provincial statement confirms route approval but does not identify the legal approval instrument.",
+  },
+  "https://www.schiphol.nl/en/innovation/blog/towards-autonomous-transport-at-schiphol/": {
+    sourceType: "public_project_statement",
+    sourceDate: "2026-08-27",
+    claimSupported: [
+      "January–July 2026 controlled airport-site pilot",
+      "Transition from onboard safety operator to remote control-room monitoring",
+      "Employee-passenger scope and future airport-deployment work",
+    ],
+  },
+  "https://www.rmv.de/c/de/ueber-uns/presse/aktuelle-pressemitteilungen/31032026-autonome-kira-shuttles-fahren-laenger-und-bedienen-neue-orte": {
+    sourceType: "public_project_statement",
+    sourceDate: "2026-03-31",
+    claimSupported: [
+      "Free rides for registered test users and expanded 2026 operating hours and area",
+      "Passenger operation remains a pilot rather than ordinary public transport service",
+    ],
+  },
+  "https://kira-autonom.de/": {
+    sourceType: "public_project_statement",
+    sourceDate: null,
+    claimSupported: [
+      "AFGBV-based testing context",
+      "Onboard trained safety personnel and trial use of Technische Aufsicht",
+    ],
+  },
+  "https://www.moia.io/en/news/moia-launches-passenger-test-operation-in-hamburg": {
+    sourceType: "operator_statement",
+    sourceDate: "2026-07-15",
+    claimSupported: [
+      "Start of free rides for selected pre-registered test users",
+      "Onboard trained safety operator and defined ALIKE pilot area",
+    ],
+  },
+  "https://www.buergerschaft-hh.de/parldok/dokument/93459/23_01072_autonomes_fahren_in_hamburg_zeitplan_realisierbarkeit_und_rolle_von_moia": {
+    sourceType: "official_authority_statement",
+    sourceDate: "2025-08-05",
+    claimSupported: [
+      "ALIKE closed-user testing with an onboard safety driver",
+      "AFGBV § 16 Erprobungsgenehmigung as the stated test route",
+    ],
+    authorityFinding:
+      "The Hamburg Senate response distinguishes the testing authorization from later Betriebserlaubnis and operating-area approval.",
+  },
+  "https://www.moia.io/en/passengers/autonomous/technology": {
+    sourceType: "operator_statement",
+    sourceDate: null,
+    claimSupported: [
+      "Onboard trained safety driver during testing",
+      "Fleet-control-centre monitoring and passenger support",
+    ],
+  },
+  "https://www.hochbahn.de/de/presse/pressemitteilungen/meilenstein-holon-und-hochbahn-erhalten-genehmigung-fuer-autonomes-fahren-111518": {
+    sourceType: "public_project_statement",
+    sourceDate: "2025-11-13",
+    claimSupported: [
+      "KBA AFGBV § 16 testing authorization through the end of 2026",
+      "Public-road testing with a safety driver; passenger rides described as a future phase",
+    ],
+    authorityFinding:
+      "The operator reports a testing authorization, not regular operation or confirmed passenger-service approval.",
+  },
+  "https://www.hochbahn.de/de/presse/pressemitteilungen/stabil-auf-rekordniveau-hochbahn-verfolgt-groesste-investitionsoffensive-der-unternehmensgeschichte-119088": {
+    sourceType: "public_project_statement",
+    sourceDate: "2026-07-01",
+    claimSupported: [
+      "HOLON shuttles regularly testing on Hamburg roads",
+      "No confirmation in this source that passenger operation had started",
+    ],
+  },
+  "https://waymo.com/blog/2026/08/waymo-in-munich/": {
+    sourceType: "company_announcement",
+    sourceDate: "2026-08-25",
+    claimSupported: [
+      "Manual mapping followed by planned testing with trained specialists",
+      "Company target of public commercial service toward the end of 2027",
+      "Regulatory approvals still being pursued",
+    ],
+  },
+  "https://waymo.com/waymo-in-germany/": {
+    sourceType: "company_announcement",
+    sourceDate: null,
+    claimSupported: [
+      "Current Munich preparation and validation narrative",
+      "No evidence on this page of present commercial passenger operation in Munich",
+    ],
+  },
+  "https://www.stmwi.bayern.de/presse/pressemeldungen/385-2026/": {
+    sourceType: "official_authority_statement",
+    sourceDate: "2026-08-25",
+    claimSupported: [
+      "Bavarian authority acknowledgment of Waymo's announced Munich test activity",
+      "The authority describes planned testing, not an issued operating approval",
+    ],
+    authorityFinding:
+      "The ministry welcomes the announced tests; it does not state that a deployment authorization has been granted.",
+  },
+};
+
+function withEvidenceProvenance(
+  entry: RawDeploymentRealityEntry,
+): DeploymentRealityEntry {
+  return {
+    ...entry,
+    asOf: "2026-09-03",
+    nextReviewAt: "2026-10-01",
+    stale: false,
+    atlasAnalysis: entry.whyItMatters,
+    sources: entry.sources.map((source) => {
+      const provenance = SOURCE_PROVENANCE[source.url];
+      if (!provenance) {
+        throw new Error(`Missing deployment evidence provenance for ${source.url}`);
+      }
+      return {
+        ...source,
+        ...provenance,
+        asOf: "2026-09-03" as const,
+      };
+    }),
+  };
+}
+
+export const DEPLOYMENT_REALITY: Record<
+  DeploymentRealityJurisdiction,
+  DeploymentRealityEntry[]
+> = {
+  netherlands: RAW_DEPLOYMENT_REALITY.netherlands.map(withEvidenceProvenance),
+  germany: RAW_DEPLOYMENT_REALITY.germany.map(withEvidenceProvenance),
 };
 
 export function getDeploymentReality(

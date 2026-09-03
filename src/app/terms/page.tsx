@@ -1,22 +1,36 @@
 import Link from "next/link";
+import { getCommonUiCopy } from "@/app/i18n/global-ui-copy";
+import { LanguageNotice } from "@/app/i18n/LanguageNotice";
+import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
+import { getRequestLocale } from "@/app/i18n/request-locale";
 
 export const metadata = {
   title: "Terms of Use | Autonomy Regulation Atlas",
   description: "Terms governing use and reuse of Autonomy Regulation Atlas.",
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const locale = await getRequestLocale();
+  const common = getCommonUiCopy(locale);
+
   return (
     <main className="min-h-screen bg-[#fbf7ef] text-[#10264a]">
-      <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
-        <Link
-          className="text-sm font-semibold text-[#147c73] transition hover:text-[#10264a]"
-          href="/"
-        >
-          ← Autonomy Regulation Atlas
-        </Link>
+      <header className="border-b border-[#10264a]/10">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-5 px-5 py-4 sm:px-8 lg:px-10">
+          <Link
+            className="text-sm font-semibold text-[#147c73] transition hover:text-[#10264a]"
+            href="/"
+          >
+            ← {common.backToAtlas}
+          </Link>
+          <LanguageSwitcher />
+        </div>
+      </header>
 
-        <p className="mt-12 text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
+      <LanguageNotice locale={locale} variant="terms" />
+
+      <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
           Legal
         </p>
         <h1 className="mt-3 font-serif text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">

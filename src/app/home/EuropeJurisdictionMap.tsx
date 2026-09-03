@@ -1,6 +1,10 @@
 import "server-only";
 
-import { geoBounds, geoMercator, geoPath } from "d3-geo";
+import {
+  geoBounds,
+  geoConicConformal,
+  geoPath,
+} from "d3-geo";
 import type { Feature, FeatureCollection, Geometry, Polygon } from "geojson";
 import { feature } from "topojson-client";
 import type { GeometryCollection, Topology } from "topojson-specification";
@@ -17,24 +21,50 @@ export type JurisdictionMapPoint = {
   profileStatus: string | null;
 };
 
+export type JurisdictionMapCopy = {
+  ariaLabel: string;
+  openProfile: string;
+  profileAvailable: string;
+  coverageDeveloping: string;
+  profilesOnMap: string;
+  fallbackNames: {
+    netherlands: string;
+    germany: string;
+    "united-kingdom": string;
+    russia: string;
+  };
+};
+
 type WorldTopology = Topology<{
   countries: GeometryCollection;
 }>;
 
 const WIDTH = 840;
-const HEIGHT = 560;
+const HEIGHT = 540;
+
+/**
+ * The homepage map is a navigation surface, not a legal operating-area map.
+ * Keep its geographic frame coherent instead of placing remote discovery
+ * markers (for example Moscow for a Russia-wide EPR profile) inside it.
+ */
 const EUROPE_BOUNDS: Polygon = {
   type: "Polygon",
   coordinates: [
     [
-      [-26, 33],
-      [-26, 72.5],
-      [46, 72.5],
-      [46, 33],
-      [-26, 33],
+      [-14, 35],
+      [-14, 64],
+      [32, 64],
+      [32, 35],
+      [-14, 35],
     ],
   ],
 };
+
+const MAP_PROFILE_SLUGS = new Set([
+  "netherlands",
+  "germany",
+  "united-kingdom",
+]);
 
 const CORE_JURISDICTIONS: JurisdictionMapPoint[] = [
   {
@@ -57,6 +87,16 @@ const CORE_JURISDICTIONS: JurisdictionMapPoint[] = [
     mapStatus: "active",
     profileStatus: "ready",
   },
+  {
+    id: -3,
+    name: "United Kingdom",
+    code: "GB",
+    slug: "united-kingdom",
+    mapLat: 53.2,
+    mapLng: -2.5,
+    mapStatus: "active",
+    profileStatus: "ready",
+  },
 ];
 
 const visibleProfileStatuses = new Set([
@@ -70,7 +110,7 @@ const visibleProfileStatuses = new Set([
 
 function isInEuropeWindow(item: Feature<Geometry>) {
   const [[west, south], [east, north]] = geoBounds(item);
-  return east >= -28 && west <= 48 && north >= 32 && south <= 74;
+  return east >= -16 && west <= 34 && north >= 33 && south <= 66;
 }
 
 function isProfileAvailable(item: JurisdictionMapPoint) {
@@ -78,34 +118,58 @@ function isProfileAvailable(item: JurisdictionMapPoint) {
   return visibleProfileStatuses.has(status);
 }
 
-function withCoreJurisdictions(jurisdictions: JurisdictionMapPoint[]) {
+function withMappedProfiles(
+  jurisdictions: JurisdictionMapPoint[],
+  fallbackNames: JurisdictionMapCopy["fallbackNames"],
+) {
   const bySlug = new Map(
-    CORE_JURISDICTIONS.map((jurisdiction) => [jurisdiction.slug, jurisdiction]),
+    CORE_JURISDICTIONS.map((jurisdiction) => [
+      jurisdiction.slug,
+      {
+        ...jurisdiction,
+        name: fallbackNames[jurisdiction.slug as keyof typeof fallbackNames],
+      },
+    ]),
   );
 
-  jurisdictions.forEach((jurisdiction) => {
-    bySlug.set(jurisdiction.slug, jurisdiction);
-  });
+  jurisdictions
+    .filter((jurisdiction) => MAP_PROFILE_SLUGS.has(jurisdiction.slug))
+    .forEach((jurisdiction) => {
+      const fallback = bySlug.get(jurisdiction.slug);
+      bySlug.set(
+        jurisdiction.slug,
+        fallback ? { ...jurisdiction, name: fallback.name } : jurisdiction,
+      );
+    });
 
   return Array.from(bySlug.values());
 }
 
 export function EuropeJurisdictionMap({
   jurisdictions,
+  copy,
 }: {
   jurisdictions: JurisdictionMapPoint[];
+  copy: JurisdictionMapCopy;
 }) {
-  const mappedJurisdictions = withCoreJurisdictions(jurisdictions);
+  const mappedJurisdictions = withMappedProfiles(
+    jurisdictions,
+    copy.fallbackNames,
+  );
   const topology = world as unknown as WorldTopology;
   const countries = feature(
     topology,
     topology.objects.countries,
   ) as unknown as FeatureCollection<Geometry>;
-  const projection = geoMercator()
+
+  const projection = geoConicConformal()
+    .parallels([38, 62])
+    .rotate([-9, 0])
+    .center([0, 50])
     .fitExtent(
       [
-        [24, 22],
-        [WIDTH - 24, HEIGHT - 22],
+        [30, 24],
+        [WIDTH - 30, HEIGHT - 24],
       ],
       EUROPE_BOUNDS,
     )
@@ -113,6 +177,7 @@ export function EuropeJurisdictionMap({
       [0, 0],
       [WIDTH, HEIGHT],
     ]);
+
   const path = geoPath(projection);
   const mapCountries = countries.features.filter(
     (country) =>
@@ -120,10 +185,10 @@ export function EuropeJurisdictionMap({
   );
 
   return (
-    <div className="overflow-hidden border border-[#10264a]/15 bg-[#dceae5]">
-      <div className="relative aspect-[3/2] w-full">
+    <div className="overflow-hidden rounded-[26px] border border-[#10264a]/15 bg-[#dceae5] shadow-[0_18px_45px_rgba(16,38,74,.05)]">
+      <div className="relative aspect-[14/9] w-full">
         <svg
-          aria-label={`Map of Europe with ${mappedJurisdictions.length} Atlas jurisdiction ${mappedJurisdictions.length === 1 ? "beacon" : "beacons"}`}
+          aria-label={copy.ariaLabel}
           className="h-full w-full"
           role="img"
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
@@ -133,7 +198,6 @@ export function EuropeJurisdictionMap({
           <g aria-hidden="true">
             {mapCountries.map((country, index) => {
               const countryPath = path(country);
-
               return countryPath ? (
                 <path
                   className="atlas-map-country"
@@ -147,28 +211,28 @@ export function EuropeJurisdictionMap({
           <g>
             {mappedJurisdictions.map((item) => {
               const projected = projection([item.mapLng, item.mapLat]);
-
               if (!projected) return null;
 
               const [x, y] = projected;
               const available = isProfileAvailable(item);
-              const labelOnLeft = x > WIDTH - 135;
+              const labelOnLeft = x > WIDTH - 155;
+              const profileLabel = `${copy.openProfile}: ${item.name}`;
 
               return (
                 <a
-                  aria-label={`Open ${item.name} jurisdiction profile`}
+                  aria-label={profileLabel}
                   className="atlas-map-link"
                   href={`/${item.slug}`}
                   key={item.slug}
                 >
                   <title>{`${item.name} — ${
-                    available ? "profile available" : "coverage developing"
+                    available ? copy.profileAvailable : copy.coverageDeveloping
                   }`}</title>
                   <circle
                     className="atlas-map-hit-area"
                     cx={x}
                     cy={y}
-                    r="21"
+                    r="23"
                   />
                   <circle
                     className={
@@ -189,7 +253,7 @@ export function EuropeJurisdictionMap({
                   <text
                     className="atlas-map-code"
                     textAnchor={labelOnLeft ? "end" : "start"}
-                    x={x + (labelOnLeft ? -15 : 15)}
+                    x={x + (labelOnLeft ? -16 : 16)}
                     y={y + 4}
                   >
                     {item.code}
@@ -202,14 +266,14 @@ export function EuropeJurisdictionMap({
 
         {mappedJurisdictions.map((item) => {
           const projected = projection([item.mapLng, item.mapLat]);
-
           if (!projected) return null;
 
           const [x, y] = projected;
+          const profileLabel = `${copy.openProfile}: ${item.name}`;
 
           return (
             <a
-              aria-label={`Open ${item.name} jurisdiction profile`}
+              aria-label={profileLabel}
               className="absolute z-10 size-14 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#b97512]"
               href={`/${item.slug}`}
               key={`html-hit-${item.slug}`}
@@ -217,9 +281,9 @@ export function EuropeJurisdictionMap({
                 left: `${(x / WIDTH) * 100}%`,
                 top: `${(y / HEIGHT) * 100}%`,
               }}
-              title={`Open ${item.name} jurisdiction profile`}
+              title={profileLabel}
             >
-              <span className="sr-only">Open {item.name} jurisdiction profile</span>
+              <span className="sr-only">{profileLabel}</span>
             </a>
           );
         })}
@@ -227,16 +291,16 @@ export function EuropeJurisdictionMap({
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#10264a]/15 bg-[#fbf7ef] px-5 py-4 text-[11px] uppercase tracking-[0.14em] text-[#10264a]/60 sm:px-7">
         <span>
-          {mappedJurisdictions.length} mapped {mappedJurisdictions.length === 1 ? "profile" : "profiles"}
+          {mappedJurisdictions.length} {copy.profilesOnMap}
         </span>
         <span className="flex flex-wrap gap-x-5 gap-y-2">
           <span className="inline-flex items-center gap-2">
             <span className="size-2 bg-[#147c73]" aria-hidden="true" />
-            Profile available
+            {copy.profileAvailable}
           </span>
           <span className="inline-flex items-center gap-2">
             <span className="size-2 bg-[#b97512]" aria-hidden="true" />
-            Coverage developing
+            {copy.coverageDeveloping}
           </span>
         </span>
       </div>
