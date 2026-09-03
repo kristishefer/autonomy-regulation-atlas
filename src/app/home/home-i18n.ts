@@ -1,5 +1,21 @@
 import type { Locale } from "@/app/i18n/locale";
 
+export type HomeQuestionDemoCopy = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  questionsLabel: string;
+  previewLabel: string;
+  layersLabel: string;
+  questions: [string, string, string, string];
+  layers: Array<{
+    id: "jurisdictions" | "compare" | "system-map" | "sources";
+    label: string;
+    body: string;
+    linkLabel?: string;
+  }>;
+};
+
 type HomeCopy = {
   nav: {
     deploy: string;
@@ -47,6 +63,7 @@ type HomeCopy = {
     openProfile: string;
     compareJurisdictions: string;
   };
+  questionDemo: HomeQuestionDemoCopy;
   puzzle: {
     eyebrow: string;
     title: string;
@@ -106,13 +123,13 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     modes: {
       title: "How do you want to use the Atlas?",
       deployTitle: "Understand the path to deployment",
-      deployBody: "Apply the Atlas to a real scenario: see which regulatory layers, approvals, operating conditions and unresolved questions matter.",
+      deployBody: "Apply Atlas to a concrete deployment or market-access scenario.",
       deployCta: "Start with a deployment scenario",
       exploreTitle: "Navigate the regulatory landscape",
-      exploreBody: "Explore jurisdictions, regulatory layers, standards, institutions and primary sources — and see how the pieces connect.",
+      exploreBody: "Research jurisdictions, compare regulatory systems and trace how the pieces connect.",
       exploreCta: "Open the System Map",
       learnTitle: "Understand how the pieces fit together",
-      learnBody: "Learn autonomous-mobility regulation through concepts, puzzles and real examples grounded in jurisdictions and sources.",
+      learnBody: "Build regulatory fluency through concepts, standards and source-backed examples.",
       learnCta: "Start learning",
     },
     map: {
@@ -132,6 +149,45 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       snapshotLabel: "At a glance",
       openProfile: "Open profile",
       compareJurisdictions: "Compare jurisdictions",
+    },
+    questionDemo: {
+      eyebrow: "Connected research paths",
+      title: "Follow a regulatory question",
+      body: "See how one question can be investigated through connected Atlas layers.",
+      questionsLabel: "Choose a regulatory question",
+      previewLabel: "Selected question",
+      layersLabel: "Choose an Atlas layer",
+      questions: [
+        "Can it operate without a driver?",
+        "What approval is required?",
+        "Who remains legally responsible?",
+        "What happens after an incident?",
+      ],
+      layers: [
+        {
+          id: "jurisdictions",
+          label: "Jurisdictions",
+          body: "See the source-native legal pathway in each jurisdiction.",
+          linkLabel: "Explore jurisdictions",
+        },
+        {
+          id: "compare",
+          label: "Compare",
+          body: "Compare the same regulatory question across jurisdictions.",
+          linkLabel: "Compare this question",
+        },
+        {
+          id: "system-map",
+          label: "System Map",
+          body: "Understand how the relevant legal, technical and regulatory concepts connect.",
+          linkLabel: "Open System Map",
+        },
+        {
+          id: "sources",
+          label: "Sources",
+          body: "Trace the conclusion to the underlying authority and legal status.",
+        },
+      ],
     },
     puzzle: {
       eyebrow: "Learn with Cat",
@@ -199,15 +255,15 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "Wo möchten Sie beginnen?",
       deployTitle: "Den Weg zum Einsatz nachvollziehen",
       deployBody:
-        "Prüfen Sie ein konkretes Szenario und erkennen Sie, welche Regelungsebenen, Genehmigungen, Betriebsbedingungen und offenen Rechtsfragen für den Einsatz entscheidend sind.",
+        "Wenden Sie Atlas auf ein konkretes Einsatz- oder Marktzugangsszenario an.",
       deployCta: "Mit einem Einsatzszenario beginnen",
       exploreTitle: "Die Regulierungslandschaft als System verstehen",
       exploreBody:
-        "Erkunden Sie Rechtsordnungen, Regelungsebenen, Standards, Behörden und Primärquellen — und ihre Zusammenhänge.",
+        "Erforschen und vergleichen Sie Rechtsordnungen und verfolgen Sie ihre regulatorischen Zusammenhänge.",
       exploreCta: "Systemkarte öffnen",
       learnTitle: "Verstehen, wie die Elemente zusammenwirken",
       learnBody:
-        "Erschließen Sie zentrale Begriffe anhand von Rechtsvorschriften, Standards und realen Fällen, deren Sachverhalt amtlich festgestellt wurde.",
+        "Erschließen Sie Regulierung durch Begriffe, Standards und quellenbasierte Beispiele.",
       learnCta: "Lernpfad starten",
     },
     map: {
@@ -230,6 +286,50 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       snapshotLabel: "Auf einen Blick",
       openProfile: "Profil öffnen",
       compareJurisdictions: "Rechtsordnungen vergleichen",
+    },
+    questionDemo: {
+      eyebrow: "Verknüpfte Recherchewege",
+      title: "Einer regulatorischen Frage folgen",
+      body:
+        "Sehen Sie, wie sich eine Frage über die verbundenen Ebenen von Atlas untersuchen lässt.",
+      questionsLabel: "Regulatorische Frage auswählen",
+      previewLabel: "Ausgewählte Frage",
+      layersLabel: "Atlas-Ebene auswählen",
+      questions: [
+        "Kann das System ohne Fahrer betrieben werden?",
+        "Welche Genehmigung ist erforderlich?",
+        "Wer bleibt rechtlich verantwortlich?",
+        "Was geschieht nach einem Vorfall?",
+      ],
+      layers: [
+        {
+          id: "jurisdictions",
+          label: "Rechtsordnungen",
+          body:
+            "Sehen Sie den Rechtsweg mit den amtlichen Begriffen der jeweiligen Rechtsordnung.",
+          linkLabel: "Rechtsordnungen erkunden",
+        },
+        {
+          id: "compare",
+          label: "Vergleich",
+          body:
+            "Vergleichen Sie dieselbe regulatorische Frage über mehrere Rechtsordnungen hinweg.",
+          linkLabel: "Diese Frage vergleichen",
+        },
+        {
+          id: "system-map",
+          label: "Systemkarte",
+          body:
+            "Verstehen Sie, wie die einschlägigen rechtlichen, technischen und regulatorischen Begriffe zusammenhängen.",
+          linkLabel: "Systemkarte öffnen",
+        },
+        {
+          id: "sources",
+          label: "Quellen",
+          body:
+            "Verfolgen Sie die Schlussfolgerung bis zur zugrunde liegenden Autorität und ihrem Rechtsstatus.",
+        },
+      ],
     },
     puzzle: {
       eyebrow: "Die Katze erklärt",
@@ -303,15 +403,15 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "Waar wilt u beginnen?",
       deployTitle: "Breng de route naar inzet in kaart",
       deployBody:
-        "Pas Atlas toe op een concreet scenario en zie welke regelgevingslagen, vergunningen, operationele voorwaarden en open rechtsvragen bepalend zijn.",
+        "Pas Atlas toe op een concreet inzet- of markttoegangsscenario.",
       deployCta: "Begin met een inzetscenario",
       exploreTitle: "Bekijk de regelgeving als samenhangend systeem",
       exploreBody:
-        "Verken jurisdicties, regelgevingslagen, normen, bevoegde instanties en primaire bronnen — en hun onderlinge verband.",
+        "Onderzoek en vergelijk jurisdicties en volg hoe de regelgevingsonderdelen samenhangen.",
       exploreCta: "Systeemkaart openen",
       learnTitle: "Begrijp hoe de onderdelen samenhangen",
       learnBody:
-        "Leer kernbegrippen aan de hand van wetgeving, normen en reële zaken waarvan de feiten officieel zijn vastgesteld.",
+        "Bouw regelgevingskennis op met begrippen, normen en brongebonden voorbeelden.",
       learnCta: "Leerpad starten",
     },
     map: {
@@ -334,6 +434,50 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       snapshotLabel: "In één oogopslag",
       openProfile: "Profiel openen",
       compareJurisdictions: "Jurisdicties vergelijken",
+    },
+    questionDemo: {
+      eyebrow: "Verbonden onderzoeksroutes",
+      title: "Volg een regelgevingsvraag",
+      body:
+        "Bekijk hoe één vraag via de verbonden Atlas-lagen kan worden onderzocht.",
+      questionsLabel: "Kies een regelgevingsvraag",
+      previewLabel: "Geselecteerde vraag",
+      layersLabel: "Kies een Atlas-laag",
+      questions: [
+        "Kan het systeem zonder bestuurder worden ingezet?",
+        "Welke goedkeuring is vereist?",
+        "Wie blijft juridisch verantwoordelijk?",
+        "Wat gebeurt er na een incident?",
+      ],
+      layers: [
+        {
+          id: "jurisdictions",
+          label: "Jurisdicties",
+          body:
+            "Bekijk het juridische traject met de officiële termen van elke jurisdictie.",
+          linkLabel: "Jurisdicties verkennen",
+        },
+        {
+          id: "compare",
+          label: "Vergelijken",
+          body:
+            "Vergelijk dezelfde regelgevingsvraag tussen jurisdicties.",
+          linkLabel: "Deze vraag vergelijken",
+        },
+        {
+          id: "system-map",
+          label: "Systeemkaart",
+          body:
+            "Begrijp hoe de relevante juridische, technische en regelgevingsbegrippen samenhangen.",
+          linkLabel: "Systeemkaart openen",
+        },
+        {
+          id: "sources",
+          label: "Bronnen",
+          body:
+            "Herleid de conclusie tot de onderliggende autoriteit en juridische status.",
+        },
+      ],
     },
     puzzle: {
       eyebrow: "De kat legt uit",
@@ -407,15 +551,15 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       title: "Что вы хотите сделать?",
       deployTitle: "Проверить путь к эксплуатации",
       deployBody:
-        "Разберите конкретный сценарий: какие уровни регулирования, разрешения, условия эксплуатации и открытые вопросы определяют возможность выхода на дорогу.",
+        "Примените Atlas к конкретному сценарию эксплуатации или выхода на рынок.",
       deployCta: "Начать со сценария запуска",
       exploreTitle: "Понять систему регулирования",
       exploreBody:
-        "Посмотрите, как связаны международные инструменты, национальные режимы, стандарты, компетентные органы и первичные источники.",
+        "Исследуйте и сравнивайте юрисдикции и прослеживайте связи между элементами регулирования.",
       exploreCta: "Открыть системную карту",
       learnTitle: "Разобраться в ключевых понятиях",
       learnBody:
-        "Изучайте регулирование через понятия, нормы, стандарты и реальные кейсы с опорой на официальные источники.",
+        "Разберитесь в регулировании через понятия, стандарты и примеры с опорой на источники.",
       learnCta: "Перейти к обучению",
     },
     map: {
@@ -438,6 +582,50 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       snapshotLabel: "Кратко",
       openProfile: "Открыть профиль",
       compareJurisdictions: "Сравнить юрисдикции",
+    },
+    questionDemo: {
+      eyebrow: "Связанные пути исследования",
+      title: "Проследить регуляторный вопрос",
+      body:
+        "Посмотрите, как один вопрос исследуется через связанные уровни Atlas.",
+      questionsLabel: "Выберите регуляторный вопрос",
+      previewLabel: "Выбранный вопрос",
+      layersLabel: "Выберите уровень Atlas",
+      questions: [
+        "Может ли система работать без водителя?",
+        "Какое разрешение требуется?",
+        "Кто сохраняет юридическую ответственность?",
+        "Что происходит после инцидента?",
+      ],
+      layers: [
+        {
+          id: "jurisdictions",
+          label: "Юрисдикции",
+          body:
+            "Посмотрите правовой путь в каждой юрисдикции с её официальной терминологией.",
+          linkLabel: "Изучить юрисдикции",
+        },
+        {
+          id: "compare",
+          label: "Сравнение",
+          body:
+            "Сравните один и тот же регуляторный вопрос в разных юрисдикциях.",
+          linkLabel: "Сравнить этот вопрос",
+        },
+        {
+          id: "system-map",
+          label: "Системная карта",
+          body:
+            "Разберитесь, как связаны соответствующие правовые, технические и регуляторные понятия.",
+          linkLabel: "Открыть системную карту",
+        },
+        {
+          id: "sources",
+          label: "Источники",
+          body:
+            "Проследите вывод до первичного источника и его юридического статуса.",
+        },
+      ],
     },
     puzzle: {
       eyebrow: "Разобраться с Cat",
