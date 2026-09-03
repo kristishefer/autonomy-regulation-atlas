@@ -65,8 +65,14 @@ type LatentPoint = Point & {
   depth: "far" | "middle" | "near";
   shimmer: boolean;
   luminous?: boolean;
+  nearNode?: "question" | "source";
   delay: number;
   duration: number;
+};
+
+type CurveOffset = {
+  c1: Point;
+  c2: Point;
 };
 
 type CloudComposition = {
@@ -140,18 +146,18 @@ const desktopComposition: NetworkComposition = {
     { x: 470, y: 35, r: 0.75, depth: "far", shimmer: false, delay: 1530, duration: 13.4 },
     { x: 535, y: 64, r: 1.25, depth: "middle", shimmer: false, delay: 1480, duration: 9.8 },
     { x: 610, y: 45, r: 0.9, depth: "far", shimmer: false, delay: 1570, duration: 12.2 },
-    { x: 205, y: 180, r: 0.8, depth: "far", shimmer: false, delay: 1460, duration: 11.6 },
+    { x: 205, y: 180, r: 0.8, depth: "far", shimmer: false, nearNode: "question", delay: 1460, duration: 11.6 },
     { x: 280, y: 270, r: 1.25, depth: "middle", shimmer: false, delay: 1510, duration: 10.4 },
     { x: 375, y: 285, r: 0.75, depth: "far", shimmer: false, delay: 1590, duration: 12.6 },
     { x: 490, y: 145, r: 1.35, depth: "middle", shimmer: false, delay: 1540, duration: 9.6 },
-    { x: 540, y: 255, r: 1.85, depth: "near", shimmer: true, luminous: true, delay: 1490, duration: 13.2 },
-    { x: 580, y: 380, r: 0.85, depth: "far", shimmer: false, delay: 1620, duration: 11.8 },
+    { x: 540, y: 255, r: 1.85, depth: "near", shimmer: true, luminous: true, delay: 1490, duration: 11.7 },
+    { x: 580, y: 380, r: 0.85, depth: "far", shimmer: false, nearNode: "source", delay: 1620, duration: 11.8 },
     { x: 730, y: 60, r: 1.25, depth: "middle", shimmer: false, delay: 1550, duration: 10.2 },
     { x: 780, y: 95, r: 0.8, depth: "far", shimmer: false, delay: 1600, duration: 12.4 },
-    { x: 815, y: 180, r: 1.7, depth: "near", shimmer: true, delay: 1520, duration: 9.4 },
+    { x: 815, y: 180, r: 1.7, depth: "near", shimmer: true, delay: 1520, duration: 7.4 },
     { x: 760, y: 245, r: 1.15, depth: "middle", shimmer: false, delay: 1580, duration: 11.4 },
     { x: 825, y: 285, r: 0.85, depth: "far", shimmer: false, delay: 1640, duration: 13.6 },
-    { x: 790, y: 365, r: 1.75, depth: "near", shimmer: true, delay: 1560, duration: 12.2 },
+    { x: 790, y: 365, r: 1.75, depth: "near", shimmer: true, delay: 1560, duration: 9.8 },
     { x: 845, y: 420, r: 0.75, depth: "far", shimmer: false, delay: 1660, duration: 10.8 },
     { x: 160, y: 430, r: 1.2, depth: "middle", shimmer: false, delay: 1530, duration: 11.9 },
     { x: 250, y: 475, r: 0.8, depth: "far", shimmer: false, delay: 1610, duration: 10.5 },
@@ -244,15 +250,22 @@ const mobileComposition: NetworkComposition = {
 };
 
 const drift = {
-  question: { period: 21, phase: 0.3, x: 3.8, y: 2.5 },
-  jurisdiction: { period: 25, phase: 1.4, x: 2.8, y: 3.4 },
-  system: { period: 23, phase: 2.1, x: 3.1, y: 2.7 },
-  scope: { period: 27, phase: 0.8, x: 2.5, y: 3.1 },
-  rule: { period: 19, phase: 2.8, x: 4.2, y: 2.4 },
-  status: { period: 26, phase: 1.9, x: 2.2, y: 2.8 },
-  source: { period: 24, phase: 3.6, x: 3.6, y: 3.1 },
-  secondary: { period: 29, phase: 2.4, x: 1.9, y: 2.3 },
+  question: { period: 17, phase: 0.3, x: 7.2, y: 5 },
+  jurisdiction: { period: 22, phase: 1.4, x: 5, y: 6 },
+  system: { period: 19, phase: 2.1, x: 5.8, y: 4.5 },
+  scope: { period: 24, phase: 0.8, x: 4.6, y: 5.4 },
+  rule: { period: 14.5, phase: 2.8, x: 8.2, y: 4.8 },
+  status: { period: 21, phase: 1.9, x: 4.2, y: 5 },
+  source: { period: 18.5, phase: 3.6, x: 6.8, y: 5.8 },
+  secondary: { period: 23.5, phase: 2.4, x: 3.2, y: 2.4 },
 } satisfies Record<NetworkNodeId, { period: number; phase: number; x: number; y: number }>;
+
+const arcBreathing: Record<string, { period: number; phase: number; c1: Point; c2: Point }> = {
+  "source-question-lower": { period: 22, phase: 0.4, c1: { x: 5, y: -12 }, c2: { x: -7, y: 9 } },
+  "question-status-upper": { period: 18, phase: 1.6, c1: { x: -8, y: 10 }, c2: { x: 8, y: -9 } },
+  "jurisdiction-edge-upper": { period: 26, phase: 2.8, c1: { x: 7, y: -8 }, c2: { x: -6, y: 7 } },
+  "question-source-orbit": { period: 24, phase: 1.1, c1: { x: 3, y: -4 }, c2: { x: -3, y: 3 } },
+};
 
 function subscribeToMobile(callback: () => void) {
   const query = window.matchMedia("(max-width: 639px)");
@@ -286,6 +299,7 @@ function pathFor(
   composition: NetworkComposition,
   relationship: Relationship,
   offsets: Partial<Record<NetworkNodeId, Point>> = {},
+  curveOffset?: CurveOffset,
 ) {
   const fromBase = basePoint(composition, relationship.from);
   const toBase = basePoint(composition, relationship.to);
@@ -293,10 +307,42 @@ function pathFor(
   const toOffset = offsets[relationship.to as NetworkNodeId] ?? { x: 0, y: 0 };
   const from = { x: fromBase.x + fromOffset.x, y: fromBase.y + fromOffset.y };
   const to = { x: toBase.x + toOffset.x, y: toBase.y + toOffset.y };
-  const c1 = { x: relationship.c1.x + fromOffset.x, y: relationship.c1.y + fromOffset.y };
-  const c2 = { x: relationship.c2.x + toOffset.x, y: relationship.c2.y + toOffset.y };
+  const c1 = {
+    x: relationship.c1.x + fromOffset.x + (curveOffset?.c1.x ?? 0),
+    y: relationship.c1.y + fromOffset.y + (curveOffset?.c1.y ?? 0),
+  };
+  const c2 = {
+    x: relationship.c2.x + toOffset.x + (curveOffset?.c2.x ?? 0),
+    y: relationship.c2.y + toOffset.y + (curveOffset?.c2.y ?? 0),
+  };
 
   return `M${formatPoint(from)}C${formatPoint(c1)} ${formatPoint(c2)} ${formatPoint(to)}`;
+}
+
+function curveOffsetFor(relationshipId: string, time: number, scale: number): CurveOffset | undefined {
+  const settings = arcBreathing[relationshipId];
+  if (!settings) return undefined;
+
+  const radians = (time / (settings.period * 1000)) * Math.PI * 2 + settings.phase;
+  const secondaryRadians = radians * 0.71 + settings.phase * 0.5;
+
+  return {
+    c1: {
+      x: Math.sin(radians) * settings.c1.x * scale,
+      y: Math.cos(secondaryRadians) * settings.c1.y * scale,
+    },
+    c2: {
+      x: Math.cos(radians * 0.87) * settings.c2.x * scale,
+      y: Math.sin(secondaryRadians * 1.09) * settings.c2.y * scale,
+    },
+  };
+}
+
+function semanticMomentFor(nodeId: NetworkNodeId): "a" | "b" | "both" | "none" {
+  if (nodeId === "question") return "both";
+  if (nodeId === "jurisdiction" || nodeId === "rule" || nodeId === "source") return "a";
+  if (nodeId === "system" || nodeId === "scope") return "b";
+  return "none";
 }
 
 function motionOffset(nodeId: NetworkNodeId, time: number, scale: number): Point {
@@ -320,6 +366,7 @@ function NetworkNodeMarker({
 }) {
   const isActive = node.id === activeNode;
   const isMuted = Boolean(activeNode && !isActive);
+  const semanticMoment = semanticMomentFor(node.id);
 
   return (
     <g
@@ -327,6 +374,12 @@ function NetworkNodeMarker({
       data-node-id={node.id}
       style={{ "--atlas-node-delay": `${node.delay}ms` } as CSSProperties}
     >
+      {semanticMoment !== "none" ? (
+        <circle
+          className={`atlas-network-moment-halo atlas-network-node-moment-${semanticMoment}`}
+          r={node.kind === "question" ? 23 : node.kind === "evidence" ? 19 : 16}
+        />
+      ) : null}
       {node.kind === "question" ? (
         <>
           <circle className="atlas-network-node-halo atlas-network-node-question-halo" fill={`url(#${gradientPrefix}-question-light)`} r="49" />
@@ -383,7 +436,7 @@ export function HeroRegulatoryNetwork() {
 
     function render(time: number) {
       const offsets: Partial<Record<NetworkNodeId, Point>> = {};
-      const scale = isMobile ? 0.42 : 1;
+      const scale = isMobile ? 0.25 : 1;
 
       for (const node of composition.nodes) {
         const offset = motionOffset(node.id, time, scale);
@@ -395,9 +448,10 @@ export function HeroRegulatoryNetwork() {
       }
 
       for (const relationship of composition.relationships) {
+        const curveOffset = curveOffsetFor(relationship.id, time, isMobile ? 0.42 : 1);
         relationshipRefs.current[relationship.id]?.setAttribute(
           "d",
-          pathFor(composition, relationship, offsets),
+          pathFor(composition, relationship, offsets, curveOffset),
         );
       }
 
@@ -595,7 +649,7 @@ export function HeroRegulatoryNetwork() {
                   />
                 ) : null}
                 <circle
-                  className={`atlas-network-latent atlas-network-latent-${point.depth} ${point.shimmer ? "atlas-network-latent-shimmer" : ""}`}
+                  className={`atlas-network-latent atlas-network-latent-${point.depth} ${point.shimmer ? "atlas-network-latent-shimmer" : ""} ${point.nearNode ? `atlas-network-latent-near-${point.nearNode}` : ""}`}
                   cx={point.x}
                   cy={point.y}
                   r={point.r}
