@@ -4,6 +4,7 @@ import { GlobalNavigation } from "@/app/i18n/GlobalNavigation";
 import { LocaleProvider } from "@/app/i18n/LocaleProvider";
 import { getRequestLocale } from "@/app/i18n/request-locale";
 import "./globals.css";
+import "./home/fox-constellation-proof.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
