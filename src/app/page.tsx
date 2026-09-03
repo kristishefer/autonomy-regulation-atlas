@@ -82,7 +82,7 @@ export default async function Home() {
               {t.hero.eyebrow}
             </p>
 
-            <h1 className="mt-5 max-w-[44rem] break-words hyphens-auto font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-[4.25rem]">
+            <h1 className="mt-5 max-w-[40rem] break-words hyphens-auto font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-[4.05rem]">
               <span className="block">{t.hero.line1}</span>
               <span className="block">{t.hero.line2}</span>
               <span className="block text-[var(--atlas-dusk)]">{t.hero.line3}</span>
