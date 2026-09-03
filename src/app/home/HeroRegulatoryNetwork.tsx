@@ -6,14 +6,14 @@ import type { CSSProperties, PointerEvent } from "react";
 const viewBox = { width: 720, height: 460 };
 
 const nodes = [
-  { id: "question", x: 194, y: 198, label: "QUESTION", labelX: -29, labelY: -20, kind: "core", delay: 500 },
-  { id: "jurisdiction", x: 326, y: 108, label: "JURISDICTION", labelX: -40, labelY: -21, kind: "context", delay: 590 },
-  { id: "system", x: 276, y: 330, label: "SYSTEM", labelX: -21, labelY: 29, kind: "context", delay: 620 },
-  { id: "scope", x: 428, y: 352, label: "SCOPE", labelX: -16, labelY: 28, kind: "context", delay: 800, quiet: true },
-  { id: "rule", x: 474, y: 176, label: "RULE", labelX: -13, labelY: -21, kind: "core", delay: 720 },
-  { id: "status", x: 608, y: 108, label: "STATUS", labelX: -19, labelY: -19, kind: "context", delay: 880, quiet: true },
-  { id: "source", x: 590, y: 294, label: "SOURCE", labelX: -21, labelY: 32, kind: "evidence", delay: 840 },
-  { id: "secondary", x: 520, y: 404, label: "", labelX: 0, labelY: 0, kind: "secondary", delay: 960 },
+  { id: "question", x: 194, y: 198, label: "QUESTION", labelX: -29, labelY: -22, kind: "core", delay: 680 },
+  { id: "jurisdiction", x: 326, y: 108, label: "JURISDICTION", labelX: -40, labelY: -22, kind: "context", delay: 960 },
+  { id: "system", x: 276, y: 330, label: "SYSTEM", labelX: -21, labelY: 30, kind: "context", delay: 1020 },
+  { id: "scope", x: 428, y: 352, label: "SCOPE", labelX: -16, labelY: 29, kind: "context", delay: 1240, quiet: true },
+  { id: "rule", x: 474, y: 176, label: "RULE", labelX: -13, labelY: -22, kind: "core", delay: 1060 },
+  { id: "status", x: 608, y: 108, label: "STATUS", labelX: -19, labelY: -20, kind: "context", delay: 1320, quiet: true },
+  { id: "source", x: 590, y: 294, label: "SOURCE", labelX: -21, labelY: 34, kind: "evidence", delay: 1200 },
+  { id: "secondary", x: 520, y: 404, label: "", labelX: 0, labelY: 0, kind: "secondary", delay: 1380 },
 ] as const;
 
 type NetworkNode = (typeof nodes)[number];
@@ -22,7 +22,7 @@ type Point = { x: number; y: number };
 type AnchorId = NetworkNodeId | "cloudAnchor" | "edgeUpper" | "edgeLower";
 
 const fixedAnchors: Record<Exclude<AnchorId, NetworkNodeId>, Point> = {
-  cloudAnchor: { x: 76, y: 224 },
+  cloudAnchor: { x: 98, y: 224 },
   edgeUpper: { x: 724, y: 176 },
   edgeLower: { x: 724, y: 344 },
 };
@@ -42,20 +42,21 @@ type Relationship = {
 };
 
 const relationships: readonly Relationship[] = [
-  { id: "cloud-question", from: "cloudAnchor", to: "question", nodes: ["question"], c1: { x: 112, y: 212 }, c2: { x: 150, y: 206 }, weight: "cloud", delay: 300 },
-  { id: "question-jurisdiction", from: "question", to: "jurisdiction", nodes: ["question", "jurisdiction"], c1: { x: 236, y: 184 }, c2: { x: 280, y: 124 }, weight: "secondary", delay: 620, moment: "a" },
-  { id: "question-system", from: "question", to: "system", nodes: ["question", "system"], c1: { x: 190, y: 250 }, c2: { x: 228, y: 312 }, weight: "background", delay: 680, moment: "b" },
-  { id: "question-rule", from: "question", to: "rule", nodes: ["question", "rule"], c1: { x: 286, y: 248 }, c2: { x: 388, y: 126 }, weight: "primary", delay: 710, moment: "a" },
-  { id: "jurisdiction-scope", from: "jurisdiction", to: "scope", nodes: ["jurisdiction", "scope"], c1: { x: 304, y: 190 }, c2: { x: 366, y: 308 }, weight: "secondary", delay: 760 },
-  { id: "jurisdiction-rule", from: "jurisdiction", to: "rule", nodes: ["jurisdiction", "rule"], c1: { x: 374, y: 114 }, c2: { x: 428, y: 156 }, weight: "background", delay: 790, moment: "a" },
-  { id: "system-scope", from: "system", to: "scope", nodes: ["system", "scope"], c1: { x: 326, y: 294 }, c2: { x: 382, y: 372 }, weight: "secondary", delay: 830, moment: "b" },
-  { id: "rule-status", from: "rule", to: "status", nodes: ["rule", "status"], c1: { x: 522, y: 166 }, c2: { x: 558, y: 122 }, weight: "background", delay: 860 },
-  { id: "rule-source", from: "rule", to: "source", nodes: ["rule", "source"], c1: { x: 530, y: 204 }, c2: { x: 550, y: 268 }, weight: "primary", delay: 890, moment: "a" },
-  { id: "scope-source", from: "scope", to: "source", nodes: ["scope", "source"], c1: { x: 484, y: 372 }, c2: { x: 538, y: 284 }, weight: "background", delay: 920 },
-  { id: "source-question", from: "source", to: "question", nodes: ["source", "question"], c1: { x: 460, y: 426 }, c2: { x: 252, y: 350 }, weight: "orbit", delay: 960 },
-  { id: "secondary-source", from: "secondary", to: "source", nodes: ["secondary", "source"], c1: { x: 548, y: 382 }, c2: { x: 572, y: 330 }, weight: "background", delay: 990 },
-  { id: "status-edge", from: "status", to: "edgeUpper", nodes: ["status"], c1: { x: 650, y: 110 }, c2: { x: 690, y: 144 }, weight: "continuation", delay: 1040 },
-  { id: "source-edge", from: "source", to: "edgeLower", nodes: ["source"], c1: { x: 642, y: 286 }, c2: { x: 684, y: 332 }, weight: "continuation", delay: 1080 },
+  { id: "cloud-question", from: "cloudAnchor", to: "question", nodes: ["question"], c1: { x: 130, y: 212 }, c2: { x: 160, y: 206 }, weight: "cloud", delay: 460 },
+  { id: "question-jurisdiction", from: "question", to: "jurisdiction", nodes: ["question", "jurisdiction"], c1: { x: 236, y: 184 }, c2: { x: 280, y: 124 }, weight: "secondary", delay: 900, moment: "a" },
+  { id: "question-system", from: "question", to: "system", nodes: ["question", "system"], c1: { x: 190, y: 250 }, c2: { x: 228, y: 312 }, weight: "background", delay: 960, moment: "b" },
+  { id: "question-rule", from: "question", to: "rule", nodes: ["question", "rule"], c1: { x: 286, y: 248 }, c2: { x: 388, y: 126 }, weight: "primary", delay: 990, moment: "a" },
+  { id: "jurisdiction-scope", from: "jurisdiction", to: "scope", nodes: ["jurisdiction", "scope"], c1: { x: 304, y: 190 }, c2: { x: 366, y: 308 }, weight: "secondary", delay: 1080 },
+  { id: "jurisdiction-rule", from: "jurisdiction", to: "rule", nodes: ["jurisdiction", "rule"], c1: { x: 374, y: 114 }, c2: { x: 428, y: 156 }, weight: "background", delay: 1110, moment: "a" },
+  { id: "system-scope", from: "system", to: "scope", nodes: ["system", "scope"], c1: { x: 326, y: 294 }, c2: { x: 382, y: 372 }, weight: "secondary", delay: 1150, moment: "b" },
+  { id: "rule-status", from: "rule", to: "status", nodes: ["rule", "status"], c1: { x: 522, y: 166 }, c2: { x: 558, y: 122 }, weight: "background", delay: 1190 },
+  { id: "rule-source", from: "rule", to: "source", nodes: ["rule", "source"], c1: { x: 530, y: 204 }, c2: { x: 550, y: 268 }, weight: "primary", delay: 1220, moment: "a" },
+  { id: "scope-source", from: "scope", to: "source", nodes: ["scope", "source"], c1: { x: 484, y: 372 }, c2: { x: 538, y: 284 }, weight: "background", delay: 1260 },
+  { id: "source-question", from: "source", to: "question", nodes: ["source", "question"], c1: { x: 460, y: 426 }, c2: { x: 252, y: 350 }, weight: "orbit", delay: 1320 },
+  { id: "question-status-arc", from: "question", to: "status", nodes: ["question", "status"], c1: { x: 310, y: 24 }, c2: { x: 530, y: 22 }, weight: "orbit", delay: 1400 },
+  { id: "secondary-source", from: "secondary", to: "source", nodes: ["secondary", "source"], c1: { x: 548, y: 382 }, c2: { x: 572, y: 330 }, weight: "background", delay: 1360 },
+  { id: "status-edge", from: "status", to: "edgeUpper", nodes: ["status"], c1: { x: 650, y: 110 }, c2: { x: 690, y: 144 }, weight: "continuation", delay: 1440 },
+  { id: "source-edge", from: "source", to: "edgeLower", nodes: ["source"], c1: { x: 642, y: 286 }, c2: { x: 684, y: 332 }, weight: "continuation", delay: 1480 },
 ] as const;
 
 type RelationshipId = string;
@@ -72,21 +73,21 @@ const drift = {
 } satisfies Record<NetworkNodeId, { period: number; phase: number; x: number; y: number }>;
 
 const latentPoints = [
-  { x: 132, y: 84, r: 1.7, mobile: false, shimmer: true, delay: 1120, duration: 9.7 },
-  { x: 184, y: 66, r: 1.1, mobile: true, shimmer: false, delay: 1180, duration: 11.2 },
-  { x: 390, y: 48, r: 1.8, mobile: true, shimmer: true, delay: 1080, duration: 12.4 },
-  { x: 426, y: 62, r: 1, mobile: false, shimmer: false, delay: 1240, duration: 10.2 },
-  { x: 654, y: 46, r: 1.4, mobile: false, shimmer: true, delay: 1200, duration: 8.6 },
-  { x: 682, y: 142, r: 1.8, mobile: true, shimmer: false, delay: 1130, duration: 10.8 },
-  { x: 706, y: 158, r: 0.9, mobile: false, shimmer: true, delay: 1290, duration: 12.8 },
-  { x: 650, y: 228, r: 1.2, mobile: true, shimmer: true, delay: 1160, duration: 7.9 },
-  { x: 700, y: 272, r: 1.5, mobile: false, shimmer: false, delay: 1260, duration: 11.5 },
-  { x: 510, y: 428, r: 1.6, mobile: true, shimmer: true, delay: 1220, duration: 10.6 },
-  { x: 544, y: 442, r: 0.9, mobile: false, shimmer: false, delay: 1320, duration: 9.2 },
-  { x: 354, y: 420, r: 1.3, mobile: true, shimmer: false, delay: 1190, duration: 12.1 },
-  { x: 162, y: 370, r: 1.6, mobile: false, shimmer: true, delay: 1270, duration: 8.9 },
-  { x: 102, y: 334, r: 1, mobile: true, shimmer: false, delay: 1340, duration: 10.9 },
-  { x: 686, y: 408, r: 1.7, mobile: false, shimmer: true, delay: 1300, duration: 11.8 },
+  { x: 168, y: 72, r: 1.15, depth: "far", mobile: false, shimmer: false, delay: 1110, duration: 11.2 },
+  { x: 206, y: 55, r: 1.6, depth: "middle", mobile: true, shimmer: false, delay: 1180, duration: 10.4 },
+  { x: 390, y: 48, r: 2, depth: "near", mobile: true, shimmer: true, delay: 1080, duration: 12.6 },
+  { x: 431, y: 68, r: 0.9, depth: "far", mobile: false, shimmer: false, delay: 1260, duration: 10.2 },
+  { x: 650, y: 42, r: 1.7, depth: "near", mobile: false, shimmer: true, delay: 1210, duration: 9.4 },
+  { x: 681, y: 139, r: 1.45, depth: "middle", mobile: true, shimmer: false, delay: 1160, duration: 10.8 },
+  { x: 706, y: 166, r: 0.85, depth: "far", mobile: false, shimmer: false, delay: 1300, duration: 12.8 },
+  { x: 655, y: 228, r: 1.55, depth: "near", mobile: true, shimmer: true, delay: 1190, duration: 13.7 },
+  { x: 704, y: 280, r: 1.05, depth: "far", mobile: false, shimmer: false, delay: 1280, duration: 11.5 },
+  { x: 510, y: 428, r: 1.75, depth: "near", mobile: true, shimmer: true, delay: 1240, duration: 10.8 },
+  { x: 548, y: 444, r: 0.8, depth: "far", mobile: false, shimmer: false, delay: 1340, duration: 9.2 },
+  { x: 354, y: 420, r: 1.25, depth: "middle", mobile: true, shimmer: false, delay: 1210, duration: 12.1 },
+  { x: 171, y: 382, r: 1.35, depth: "middle", mobile: false, shimmer: false, delay: 1290, duration: 8.9 },
+  { x: 112, y: 342, r: 0.95, depth: "far", mobile: true, shimmer: false, delay: 1360, duration: 10.9 },
+  { x: 684, y: 410, r: 1.45, depth: "middle", mobile: false, shimmer: false, delay: 1320, duration: 11.8 },
 ] as const;
 
 function basePoint(id: AnchorId): Point {
@@ -215,15 +216,40 @@ export function HeroRegulatoryNetwork() {
         viewBox={`0 0 ${viewBox.width} ${viewBox.height}`}
         xmlns="http://www.w3.org/2000/svg"
       >
+        <defs>
+          <radialGradient id="atlas-network-question-light">
+            <stop offset="0" stopColor="#a9bbc8" stopOpacity="0.44" />
+            <stop offset="0.38" stopColor="#a9bbc8" stopOpacity="0.18" />
+            <stop offset="1" stopColor="#d8e1e7" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="atlas-network-source-light">
+            <stop offset="0" stopColor="#d8e1e7" stopOpacity="0.58" />
+            <stop offset="0.34" stopColor="#a9bbc8" stopOpacity="0.22" />
+            <stop offset="1" stopColor="#a9bbc8" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="atlas-network-cloud-light">
+            <stop offset="0" stopColor="#faf9f5" stopOpacity="0.64" />
+            <stop offset="0.44" stopColor="#eff4f6" stopOpacity="0.34" />
+            <stop offset="1" stopColor="#eff4f6" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="atlas-network-orbit-line" gradientUnits="userSpaceOnUse" x1="180" x2="635" y1="180" y2="270">
+            <stop offset="0" stopColor="#6f83a6" stopOpacity="0" />
+            <stop offset="0.2" stopColor="#6f83a6" stopOpacity="0.44" />
+            <stop offset="0.72" stopColor="#a9bbc8" stopOpacity="0.4" />
+            <stop offset="1" stopColor="#a9bbc8" stopOpacity="0" />
+          </linearGradient>
+        </defs>
         <rect className="atlas-network-pointer-field" height={viewBox.height} width={viewBox.width} />
         <g className="atlas-network-system">
           <g className="atlas-network-cloud">
-            <ellipse className="atlas-network-cloud-haze" cx="77" cy="224" rx="66" ry="48" />
-            <path className="atlas-network-cloud-arc" d="M24 241C52 198 99 183 142 201" />
-            <path className="atlas-network-cloud-arc atlas-network-cloud-arc-faint" d="M48 260C84 231 113 228 151 240" />
-            <circle className="atlas-network-cloud-companion atlas-network-cloud-companion-one" cx="57" cy="215" r="2.1" />
-            <circle className="atlas-network-cloud-companion atlas-network-cloud-companion-two" cx="81" cy="239" r="1.45" />
-            <circle className="atlas-network-cloud-companion atlas-network-cloud-companion-three" cx="105" cy="207" r="1.1" />
+            <ellipse className="atlas-network-cloud-haze" cx="98" cy="224" fill="url(#atlas-network-cloud-light)" rx="72" ry="51" />
+            <path className="atlas-network-cloud-arc" d="M42 242C69 199 112 185 157 202" />
+            <path className="atlas-network-cloud-arc atlas-network-cloud-arc-faint" d="M66 261C96 232 126 228 165 242" />
+            <circle className="atlas-network-cloud-latent atlas-network-cloud-latent-one" cx="66" cy="244" r="0.85" />
+            <circle className="atlas-network-cloud-latent atlas-network-cloud-latent-two" cx="146" cy="220" r="0.7" />
+            <circle className="atlas-network-cloud-companion atlas-network-cloud-companion-one" cx="76" cy="213" r="2.1" />
+            <circle className="atlas-network-cloud-companion atlas-network-cloud-companion-two" cx="101" cy="241" r="1.45" />
+            <circle className="atlas-network-cloud-companion atlas-network-cloud-companion-three" cx="126" cy="207" r="1.1" />
           </g>
 
           <g className="atlas-network-relationships">
@@ -254,7 +280,7 @@ export function HeroRegulatoryNetwork() {
           <g className="atlas-network-latent-field">
             {latentPoints.map((point, index) => (
               <circle
-                className={`atlas-network-latent ${point.shimmer ? "atlas-network-latent-shimmer" : ""} ${point.mobile ? "" : "atlas-network-latent-mobile-hide"}`}
+                className={`atlas-network-latent atlas-network-latent-${point.depth} ${point.shimmer ? "atlas-network-latent-shimmer" : ""} ${point.mobile ? "" : "atlas-network-latent-mobile-hide"}`}
                 cx={point.x}
                 cy={point.y}
                 key={`${point.x}-${point.y}`}
@@ -264,7 +290,7 @@ export function HeroRegulatoryNetwork() {
                     "--atlas-latent-delay": `${point.delay}ms`,
                     "--atlas-latent-duration": `${point.duration}s`,
                     "--atlas-latent-shimmer-delay": `${1.2 + ((index * 1.7) % 6.5)}s`,
-                    "--atlas-latent-opacity": index % 3 === 0 ? 0.32 : 0.22,
+                    "--atlas-latent-opacity": point.depth === "near" ? 0.46 : point.depth === "middle" ? 0.3 : 0.17,
                   } as CSSProperties
                 }
               />
@@ -290,9 +316,8 @@ export function HeroRegulatoryNetwork() {
                   >
                     {node.kind === "evidence" ? (
                       <>
-                        <circle className="atlas-network-node-halo" r="24" />
-                        <circle className="atlas-network-node-ring" r="11" />
-                        <circle className="atlas-network-node-core" r="3.5" />
+                        <circle className="atlas-network-node-halo atlas-network-node-source-halo" fill="url(#atlas-network-source-light)" r="32" />
+                        <circle className="atlas-network-node-core atlas-network-node-source-core" r="4.4" />
                       </>
                     ) : node.kind === "context" ? (
                       <>
@@ -303,7 +328,9 @@ export function HeroRegulatoryNetwork() {
                       <circle className="atlas-network-node-secondary" r="2.2" />
                     ) : (
                       <>
-                        {node.id === "question" ? <circle className="atlas-network-node-halo" r="19" /> : null}
+                        {node.id === "question" ? (
+                          <circle className="atlas-network-node-halo atlas-network-node-question-halo" fill="url(#atlas-network-question-light)" r="27" />
+                        ) : null}
                         <circle className="atlas-network-node-core" r={node.id === "question" ? 5.5 : 4.5} />
                       </>
                     )}

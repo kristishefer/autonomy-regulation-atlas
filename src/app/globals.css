@@ -28,6 +28,7 @@ body {
   --atlas-ink-muted: #567083;
   --atlas-teal: #4f8f82;
   --atlas-origin: #c58b52;
+  --atlas-dusk: #435f79;
   --atlas-space: #6f83a6;
   --atlas-starlight: #a9bbc8;
   --atlas-space-faint: #d8e1e7;
@@ -69,30 +70,38 @@ summary {
 
 .atlas-home-hero {
   background:
-    radial-gradient(ellipse 42% 88% at 92% 38%, rgba(111, 131, 166, 0.2), transparent 74%),
-    radial-gradient(ellipse 32% 62% at 73% 52%, rgba(169, 187, 200, 0.18), transparent 75%),
-    radial-gradient(ellipse 18% 48% at 58% 33%, rgba(216, 225, 231, 0.35), transparent 82%),
+    radial-gradient(ellipse 34% 88% at 103% 27%, rgba(67, 95, 121, 0.3), transparent 72%),
+    radial-gradient(ellipse 34% 66% at 84% 56%, rgba(111, 131, 166, 0.31), transparent 73%),
+    radial-gradient(ellipse 24% 58% at 67% 38%, rgba(169, 187, 200, 0.3), transparent 79%),
+    radial-gradient(ellipse 17% 42% at 72% 46%, rgba(250, 249, 245, 0.72), transparent 82%),
+    radial-gradient(ellipse 46% 92% at 96% 58%, rgba(216, 225, 231, 0.48), transparent 82%),
     var(--atlas-paper);
   isolation: isolate;
 }
 
 .atlas-home-hero::before {
   background:
-    radial-gradient(circle at 74% 38%, rgba(239, 244, 246, 0.7), transparent 24%),
-    radial-gradient(ellipse at 91% 58%, rgba(86, 112, 131, 0.08), transparent 52%);
+    radial-gradient(ellipse 21% 54% at 70% 42%, rgba(250, 249, 245, 0.62), transparent 76%),
+    radial-gradient(ellipse 31% 64% at 87% 62%, rgba(86, 112, 131, 0.15), transparent 72%),
+    radial-gradient(ellipse 18% 38% at 98% 20%, rgba(67, 95, 121, 0.14), transparent 76%);
   content: "";
-  filter: blur(18px);
+  filter: blur(22px);
   inset: 0;
-  mask-image: linear-gradient(to right, transparent 38%, black 68%);
+  mask-image: linear-gradient(to right, transparent 36%, rgba(0, 0, 0, 0.72) 58%, black 74%);
   pointer-events: none;
   position: absolute;
 }
 
 .atlas-home-hero::after {
-  background: linear-gradient(to bottom, transparent, var(--atlas-field-warm));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(247, 242, 234, 0.55) 54%,
+    var(--atlas-field-warm)
+  );
   bottom: 0;
   content: "";
-  height: 70px;
+  height: 108px;
   inset-inline: 0;
   pointer-events: none;
   position: absolute;
@@ -117,9 +126,9 @@ summary {
   inset: 0;
   mask-image: linear-gradient(
     to right,
-    transparent 38%,
-    rgba(0, 0, 0, 0.58) 54%,
-    black 70%
+    transparent 30%,
+    rgba(0, 0, 0, 0.72) 43%,
+    black 60%
   );
   overflow: hidden;
   pointer-events: none;
@@ -129,13 +138,13 @@ summary {
 
 .atlas-hero-network {
   height: auto;
-  opacity: 0.62;
+  opacity: 0.82;
   overflow: visible;
   pointer-events: auto;
   position: absolute;
-  right: max(-56px, calc((100vw - 1320px) / 2 - 16px));
-  top: 18px;
-  width: min(53vw, 720px);
+  right: max(24px, calc((100vw - 1280px) / 2 + 8px));
+  top: 4px;
+  width: min(55vw, 760px);
 }
 
 .atlas-network-pointer-field {
@@ -144,7 +153,7 @@ summary {
 }
 
 .atlas-network-relationship {
-  opacity: 0.72;
+  opacity: 0.82;
   transition: opacity 260ms ease;
 }
 
@@ -167,37 +176,37 @@ summary {
 }
 
 .atlas-network-line {
-  animation: atlas-network-draw 720ms cubic-bezier(0.22, 1, 0.36, 1) var(--atlas-line-delay) forwards;
-  stroke: rgba(111, 131, 166, 0.3);
+  animation: atlas-network-draw 560ms cubic-bezier(0.22, 1, 0.36, 1) var(--atlas-line-delay) forwards;
+  stroke: rgba(82, 108, 142, 0.42);
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   stroke-linecap: round;
-  stroke-width: 1.25;
+  stroke-width: 1.3;
   vector-effect: non-scaling-stroke;
 }
 
 .atlas-network-line-primary {
-  stroke: rgba(79, 143, 130, 0.58);
-  stroke-width: 1.6;
+  stroke: rgba(51, 122, 113, 0.72);
+  stroke-width: 1.7;
 }
 
 .atlas-network-line-secondary {
-  stroke: rgba(111, 131, 166, 0.32);
+  stroke: rgba(82, 108, 142, 0.46);
 }
 
 .atlas-network-line-background {
-  stroke: rgba(169, 187, 200, 0.42);
+  stroke: rgba(126, 151, 174, 0.35);
   stroke-width: 0.9;
 }
 
 .atlas-network-line-cloud {
-  stroke: rgba(169, 187, 200, 0.48);
-  stroke-width: 1;
+  stroke: rgba(126, 151, 174, 0.56);
+  stroke-width: 1.05;
 }
 
 .atlas-network-line-orbit {
-  stroke: rgba(111, 131, 166, 0.2);
-  stroke-width: 0.85;
+  stroke: url("#atlas-network-orbit-line");
+  stroke-width: 0.9;
 }
 
 .atlas-network-line-continuation {
@@ -206,25 +215,39 @@ summary {
 }
 
 .atlas-network-cloud {
-  animation: atlas-network-cloud-in 440ms cubic-bezier(0.22, 1, 0.36, 1) 80ms forwards;
+  animation: atlas-network-cloud-in 250ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   opacity: 0;
 }
 
 .atlas-network-cloud-haze {
-  fill: rgba(239, 244, 246, 0.5);
-  stroke: rgba(216, 225, 231, 0.18);
-  stroke-width: 0.6;
+  opacity: 0.88;
 }
 
 .atlas-network-cloud-arc {
-  stroke: rgba(169, 187, 200, 0.58);
+  stroke: rgba(126, 151, 174, 0.62);
   stroke-linecap: round;
   stroke-width: 0.9;
   vector-effect: non-scaling-stroke;
 }
 
 .atlas-network-cloud-arc-faint {
-  opacity: 0.46;
+  opacity: 0.4;
+}
+
+.atlas-network-cloud-latent {
+  animation: atlas-network-node-in 260ms ease-out var(--atlas-cloud-delay) forwards;
+  fill: rgba(216, 225, 231, 0.96);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.atlas-network-cloud-latent-one {
+  --atlas-cloud-delay: 300ms;
+}
+
+.atlas-network-cloud-latent-two {
+  --atlas-cloud-delay: 420ms;
 }
 
 .atlas-network-cloud-companion {
@@ -236,16 +259,16 @@ summary {
 }
 
 .atlas-network-cloud-companion-one {
-  --atlas-cloud-delay: 150ms;
-  fill: rgba(111, 131, 166, 0.58);
+  --atlas-cloud-delay: 250ms;
+  fill: rgba(82, 108, 142, 0.68);
 }
 
 .atlas-network-cloud-companion-two {
-  --atlas-cloud-delay: 220ms;
+  --atlas-cloud-delay: 330ms;
 }
 
 .atlas-network-cloud-companion-three {
-  --atlas-cloud-delay: 280ms;
+  --atlas-cloud-delay: 410ms;
   fill: rgba(216, 225, 231, 0.92);
 }
 
@@ -260,7 +283,15 @@ summary {
 .atlas-network-latent-shimmer {
   animation:
     atlas-network-latent-in 540ms ease-out var(--atlas-latent-delay) forwards,
-    atlas-network-latent-shimmer var(--atlas-latent-duration) ease-in-out calc(var(--atlas-latent-delay) + var(--atlas-latent-shimmer-delay)) infinite alternate;
+    atlas-network-latent-shimmer var(--atlas-latent-duration) ease-in-out calc(var(--atlas-latent-delay) + var(--atlas-latent-shimmer-delay)) infinite;
+}
+
+.atlas-network-latent-middle {
+  fill: rgba(142, 164, 182, 0.92);
+}
+
+.atlas-network-latent-near {
+  fill: rgba(102, 129, 158, 0.96);
 }
 
 .atlas-network-node-motion {
@@ -276,14 +307,14 @@ summary {
 }
 
 .atlas-network-node-ring {
-  fill: rgba(250, 249, 245, 0.52);
-  stroke: rgba(111, 131, 166, 0.72);
-  stroke-width: 1.25;
+  fill: rgba(250, 249, 245, 0.3);
+  stroke: rgba(82, 108, 142, 0.82);
+  stroke-width: 1.05;
   vector-effect: non-scaling-stroke;
 }
 
 .atlas-network-node-core {
-  fill: #637b9e;
+  fill: #435f79;
 }
 
 .atlas-network-node-dot {
@@ -291,9 +322,16 @@ summary {
 }
 
 .atlas-network-node-halo {
-  fill: rgba(169, 187, 200, 0.16);
-  stroke: rgba(169, 187, 200, 0.3);
-  stroke-width: 0.75;
+  stroke: none;
+}
+
+.atlas-network-node-source-core {
+  fill: #496f83;
+}
+
+.atlas-network-node-question-halo,
+.atlas-network-node-source-halo {
+  pointer-events: none;
 }
 
 .atlas-network-node-secondary {
@@ -318,8 +356,8 @@ summary {
 }
 
 .atlas-network-label {
-  animation: atlas-network-label-in 300ms ease-out 1040ms forwards;
-  fill: rgba(24, 50, 74, 0.52);
+  animation: atlas-network-label-in 300ms ease-out 1420ms forwards;
+  fill: rgba(24, 50, 74, 0.68);
   font-family: var(--font-geist-mono), monospace;
   font-size: 7.5px;
   font-weight: 700;
@@ -329,7 +367,7 @@ summary {
 }
 
 .atlas-network-label-quiet {
-  fill: rgba(86, 112, 131, 0.46);
+  fill: rgba(67, 95, 121, 0.55);
 }
 
 .atlas-network-node-active .atlas-network-label {
@@ -620,14 +658,21 @@ summary {
 }
 
 @keyframes atlas-network-latent-shimmer {
-  0% {
-    opacity: 0.15;
+  0%,
+  16% {
+    opacity: 0.18;
     transform: scale(1);
   }
 
-  100% {
-    opacity: 0.35;
+  42% {
+    opacity: 0.48;
     transform: scale(1.08);
+  }
+
+  64%,
+  100% {
+    opacity: 0.22;
+    transform: scale(1);
   }
 }
 
@@ -636,7 +681,7 @@ summary {
   34%,
   62%,
   100% {
-    opacity: 0.72;
+    opacity: 0.82;
   }
 
   43%,
@@ -1071,6 +1116,7 @@ summary {
   .atlas-network-line,
   .atlas-network-node,
   .atlas-network-cloud,
+  .atlas-network-cloud-latent,
   .atlas-network-cloud-companion,
   .atlas-network-label,
   .atlas-network-latent {
@@ -1085,6 +1131,7 @@ summary {
   .atlas-network-relationship,
   .atlas-network-node,
   .atlas-network-cloud,
+  .atlas-network-cloud-latent,
   .atlas-network-cloud-companion,
   .atlas-network-label {
     opacity: 1;
@@ -1136,8 +1183,8 @@ summary {
 @media (max-width: 639px) {
   .atlas-home-hero {
     background:
-      radial-gradient(ellipse 92% 38% at 72% 91%, rgba(169, 187, 200, 0.2), transparent 76%),
-      radial-gradient(ellipse 56% 28% at 96% 78%, rgba(111, 131, 166, 0.12), transparent 80%),
+      radial-gradient(ellipse 92% 38% at 72% 91%, rgba(169, 187, 200, 0.22), transparent 76%),
+      radial-gradient(ellipse 56% 28% at 96% 78%, rgba(111, 131, 166, 0.14), transparent 80%),
       var(--atlas-paper);
   }
 
@@ -1152,15 +1199,15 @@ summary {
 
   .atlas-hero-network-shell {
     mask-image: linear-gradient(to bottom, transparent 48%, black 66%, black 94%, transparent);
-    opacity: 0.78;
+    opacity: 0.74;
   }
 
   .atlas-hero-network {
     bottom: 10px;
     pointer-events: none;
-    right: -16px;
+    right: -8px;
     top: auto;
-    width: 410px;
+    width: 394px;
   }
 
   .atlas-network-pointer-field {
