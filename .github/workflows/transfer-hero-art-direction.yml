@@ -1,0 +1,56 @@
+name: Transfer Hero Art Direction
+
+on:
+  push:
+    branches:
+      - transfer/hero-art-direction-final-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout transfer branch
+        uses: actions/checkout@v4
+        with:
+          ref: transfer/hero-art-direction-final-20260903
+          fetch-depth: 0
+
+      - name: Reconstruct and verify archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .hero-transfer/hero-art-direction.part00 \
+              .hero-transfer/hero-art-direction.part01 \
+              .hero-transfer/hero-art-direction.part02 \
+              .hero-transfer/hero-art-direction.part03 > /tmp/hero-art-direction.b64
+          base64 --decode /tmp/hero-art-direction.b64 > /tmp/hero-art-direction.zip
+          echo "aa6a2d3e09c141f0d79cef6955b3a82810b0d62301fcdb98bb4cf51fba4fa1c3  /tmp/hero-art-direction.zip" | sha256sum --check --strict
+          mkdir -p /tmp/hero-art-direction
+          unzip -q /tmp/hero-art-direction.zip -d /tmp/hero-art-direction
+          test -f /tmp/hero-art-direction/src/app/globals.css
+          test -f /tmp/hero-art-direction/src/app/home/HeroRegulatoryNetwork.tsx
+          test -f /tmp/hero-art-direction/src/app/page.tsx
+
+      - name: Apply validated Hero art direction to preview branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin codex/homepage-ia-v2
+          git checkout -B codex/homepage-ia-v2 origin/codex/homepage-ia-v2
+          cp /tmp/hero-art-direction/src/app/globals.css src/app/globals.css
+          cp /tmp/hero-art-direction/src/app/home/HeroRegulatoryNetwork.tsx src/app/home/HeroRegulatoryNetwork.tsx
+          cp /tmp/hero-art-direction/src/app/page.tsx src/app/page.tsx
+
+          changed="$(git diff --name-only)"
+          expected=$'src/app/globals.css\nsrc/app/home/HeroRegulatoryNetwork.tsx\nsrc/app/page.tsx'
+          test "$changed" = "$expected"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/app/globals.css src/app/home/HeroRegulatoryNetwork.tsx src/app/page.tsx
+          git diff --cached --check
+          git commit -m "rebuild Atlas hero art direction"
+          git push origin HEAD:codex/homepage-ia-v2
