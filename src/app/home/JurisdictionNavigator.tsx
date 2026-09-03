@@ -131,11 +131,11 @@ export function JurisdictionNavigator({
   }
 
   return (
-    <div>
+    <div className="atlas-dossier">
       <div className="relative">
         <div
           aria-label={copy.tabsLabel}
-          className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-3 pr-8 md:grid md:grid-cols-5 md:overflow-visible md:pb-0 md:pr-0"
+          className="atlas-dossier-tabs flex snap-x snap-mandatory overflow-x-auto border-y border-[#10264a]/18 pr-8 md:grid md:grid-cols-5 md:overflow-visible md:pr-0"
           role="tablist"
         >
           {jurisdictions.map((jurisdiction, index) => {
@@ -145,10 +145,10 @@ export function JurisdictionNavigator({
               <button
                 aria-controls="jurisdiction-panel"
                 aria-selected={active}
-                className={`min-w-max snap-start rounded-xl border px-4 py-3 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 md:min-w-0 ${
+                className={`atlas-dossier-tab min-w-max snap-start border-r border-[#10264a]/12 px-4 py-3 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-inset md:min-w-0 ${
                   active
-                    ? "border-[#10264a] bg-[#10264a] text-white shadow-sm"
-                    : "border-[#10264a]/12 bg-[#fbf7ef]/75 text-[#10264a]/62 hover:border-[#147c73]/45 hover:bg-white hover:text-[#10264a]"
+                    ? "is-active bg-[#10264a] text-white"
+                    : "bg-[#fbf7ef]/35 text-[#10264a]/62 hover:bg-white/70 hover:text-[#10264a]"
                 }`}
                 id={`jurisdiction-tab-${jurisdiction.slug}`}
                 key={jurisdiction.slug}
@@ -177,19 +177,19 @@ export function JurisdictionNavigator({
         </div>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-3 right-0 top-0 w-8 bg-gradient-to-l from-[#edf0e7] to-transparent md:hidden"
+          className="pointer-events-none absolute bottom-px right-0 top-px w-8 bg-gradient-to-l from-[#f1f2eb] to-transparent md:hidden"
         />
       </div>
 
       <div
         aria-labelledby={`jurisdiction-tab-${selected.slug}`}
-        className="mt-5 rounded-[28px] border border-[#10264a]/12 bg-[#fbf7ef] p-6 shadow-[0_18px_55px_rgba(16,38,74,0.06)] sm:p-8"
+        className="atlas-dossier-panel mt-4 border-y border-[#10264a]/18 bg-[#fbf7ef]/55"
         id="jurisdiction-panel"
         ref={panelRef}
         role="tabpanel"
       >
-        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-12">
-          <div data-navigator-detail>
+        <div className="grid lg:grid-cols-[0.72fr_1.28fr] lg:divide-x lg:divide-[#10264a]/12">
+          <div className="px-1 py-7 sm:px-6 lg:pl-0 lg:pr-10" data-navigator-detail>
             <div className="flex items-baseline gap-3">
               <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#147c73]">
                 {selected.code}
@@ -207,7 +207,7 @@ export function JurisdictionNavigator({
             </p>
           </div>
 
-          <div data-navigator-detail>
+          <div className="border-t border-[#10264a]/12 px-1 py-7 sm:px-6 lg:border-t-0 lg:pl-10 lg:pr-0" data-navigator-detail>
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/42">
               {copy.overviewLabel}
             </p>
@@ -218,15 +218,15 @@ export function JurisdictionNavigator({
         </div>
 
         <div
-          className="mt-8 border-t border-[#10264a]/12 pt-6"
+          className="border-t border-[#10264a]/12 px-1 py-7 sm:px-6 lg:px-0"
           data-navigator-detail
         >
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/42">
             {copy.snapshotLabel}
           </p>
-          <dl className="mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+          <dl className="mt-4 grid border-b border-[#10264a]/10 sm:grid-cols-2 sm:divide-x sm:divide-[#10264a]/10">
             {selected.snapshot.map((item) => (
-              <div className="border-t border-[#10264a]/10 pt-4" key={item.label}>
+              <div className="border-t border-[#10264a]/10 px-0 py-4 sm:px-6 sm:first:pl-0" key={item.label}>
                 <dt className="text-xs font-semibold text-[#10264a]/52">
                   {item.label}
                 </dt>
@@ -243,7 +243,7 @@ export function JurisdictionNavigator({
           </dl>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[#10264a]/12 pt-5 text-sm font-semibold">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[#10264a]/12 px-1 py-5 text-sm font-semibold sm:px-6 lg:px-0">
           <Link
             className="rounded-sm text-[#147c73] outline-none transition hover:text-[#10264a] focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-4"
             href={`/${selected.slug}`}

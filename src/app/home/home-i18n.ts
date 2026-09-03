@@ -81,6 +81,13 @@ type HomeCopy = {
     body: string;
     steps: [string, string, string, string];
   };
+  easterEgg: {
+    ariaLabel: string;
+    dog: string;
+    fox: string;
+    cat: string;
+    origin: string;
+  };
   ui: {
     language: string;
     primaryNavigation: string;
@@ -210,6 +217,13 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         "Operational impact",
         "Exact source",
       ],
+    },
+    easterEgg: {
+      ariaLabel: "Hidden notes",
+      dog: "For the one who finds a way through the hard problems.",
+      fox: "For the one who makes the difficult road feel lighter.",
+      cat: "For the one who turns complexity into structure.",
+      origin: "For the one who made the path possible.",
     },
     ui: {
       language: "Language",
@@ -359,6 +373,13 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         "Offizielle Quelle",
       ],
     },
+    easterEgg: {
+      ariaLabel: "Verborgene Notizen",
+      dog: "Für den Menschen, der einen Weg durch die schwierigsten Probleme findet.",
+      fox: "Für den Menschen, der schwierige Wege leichter macht.",
+      cat: "Für den Menschen, der aus Komplexität Struktur entstehen lässt.",
+      origin: "Für den Menschen, der diesen Weg möglich gemacht hat.",
+    },
     ui: {
       language: "Sprache",
       primaryNavigation: "Hauptnavigation",
@@ -507,6 +528,13 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         "Officiële bron",
       ],
     },
+    easterEgg: {
+      ariaLabel: "Verborgen notities",
+      dog: "Voor degene die een weg vindt door de moeilijkste problemen.",
+      fox: "Voor degene die een moeilijke weg lichter maakt.",
+      cat: "Voor degene die complexiteit omzet in structuur.",
+      origin: "Voor degene die het pad mogelijk heeft gemaakt.",
+    },
     ui: {
       language: "Taal",
       primaryNavigation: "Hoofdnavigatie",
@@ -654,6 +682,13 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         "Практическое значение",
         "Официальный источник",
       ],
+    },
+    easterEgg: {
+      ariaLabel: "Скрытые заметки",
+      dog: "Для того, кто находит путь сквозь самые трудные задачи.",
+      fox: "Для того, кто делает трудный путь легче.",
+      cat: "Для того, кто превращает сложность в структуру.",
+      origin: "Для того, кто сделал этот путь возможным.",
     },
     ui: {
       language: "Язык",

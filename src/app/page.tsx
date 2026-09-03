@@ -2,6 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { JURISDICTION_PROFILES } from "@/app/explore/regulatory-data";
+import {
+  DeployDecisionMotif,
+  ExplorePathMotif,
+  LearnStructureMotif,
+} from "@/app/home/AtlasSystemMotifs";
+import { FooterEasterEgg } from "@/app/home/FooterEasterEgg";
 import { HeroRegulatoryNetwork } from "@/app/home/HeroRegulatoryNetwork";
 import { homeCopy } from "@/app/home/home-i18n";
 import { HomepageReveal } from "@/app/home/HomepageReveal";
@@ -77,7 +83,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <HomepageReveal className="border-b border-[#10264a]/10 bg-[#f3ecdf]">
+      <HomepageReveal className="atlas-entry-section border-b border-[#10264a]/10 bg-[#f3ecdf]">
         <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
           <div className="mb-6">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#147c73]">
@@ -116,7 +122,7 @@ export default async function Home() {
       </HomepageReveal>
 
       <HomepageReveal
-        className="scroll-mt-20 border-b border-[#10264a]/15 bg-[#edf0e7]"
+        className="scroll-mt-20 border-b border-[#10264a]/15 bg-[#f1f2eb]"
         id="map"
       >
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
@@ -142,7 +148,7 @@ export default async function Home() {
       </HomepageReveal>
 
       <HomepageReveal
-        className="scroll-mt-20 border-b border-[#10264a]/10 bg-[#fbf7ef]"
+        className="atlas-question-section scroll-mt-20 border-b border-[#10264a]/10 bg-[#edf2f5]"
         id="questions"
       >
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
@@ -182,26 +188,18 @@ export default async function Home() {
               </p>
             </div>
 
-            <ol className="grid border-y border-[#10264a]/15 sm:grid-cols-2 xl:grid-cols-4">
+            <ol className="atlas-method-sequence grid border-y border-[#10264a]/15 sm:grid-cols-2 xl:grid-cols-4">
               {t.method.steps.map((step, index) => (
                 <li
-                  className="relative min-h-36 border-b border-[#10264a]/15 p-5 last:border-b-0 sm:border-r sm:[&:nth-child(2)]:border-r-0 sm:[&:nth-child(3)]:border-b-0 xl:border-b-0 xl:[&:nth-child(2)]:border-r xl:last:border-r-0"
+                  className="atlas-method-step relative min-h-32 border-b border-[#10264a]/15 px-5 py-6 last:border-b-0 sm:border-r sm:[&:nth-child(2)]:border-r-0 sm:[&:nth-child(3)]:border-b-0 xl:border-b-0 xl:[&:nth-child(2)]:border-r xl:last:border-r-0"
                   key={step}
                 >
-                  <span className="font-mono text-[10px] text-[#b97512]">
+                  <span className="atlas-method-node font-mono text-[10px] text-[#b97512]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <p className="mt-10 font-serif text-lg font-semibold leading-6">
+                  <p className="mt-8 font-serif text-lg font-semibold leading-6">
                     {step}
                   </p>
-                  {index < t.method.steps.length - 1 ? (
-                    <span
-                      aria-hidden="true"
-                      className="absolute right-4 top-5 text-[#10264a]/30"
-                    >
-                      →
-                    </span>
-                  ) : null}
                 </li>
               ))}
             </ol>
@@ -218,6 +216,7 @@ export default async function Home() {
             <p className="mt-2 max-w-xl text-xs leading-5 text-[#fbf7ef]/55">
               {t.ui.footerTagline}
             </p>
+            <FooterEasterEgg copy={t.easterEgg} />
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#fbf7ef]/65">
             <Link href="/deploy">{t.nav.deploy}</Link>
@@ -262,10 +261,15 @@ function PrimaryGuideLink({
 
   return (
     <Link
-      className={`atlas-primary-entry group grid min-h-[190px] grid-cols-[1fr_112px] items-center gap-4 rounded-[24px] border p-5 outline-none focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 sm:min-h-[220px] sm:grid-cols-[1fr_156px] sm:p-7 ${color.bg} ${color.border}`}
+      className={`atlas-primary-entry atlas-${tone === "green" ? "explore" : "learn"}-entry group relative grid min-h-[190px] grid-cols-[1fr_112px] items-center gap-4 overflow-hidden rounded-[18px] border p-5 outline-none focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 sm:min-h-[220px] sm:grid-cols-[1fr_156px] sm:p-7 ${color.bg} ${color.border}`}
       href={href}
     >
-      <div className="flex min-w-0 self-stretch flex-col justify-center">
+      <div className="atlas-entry-coordinate" aria-hidden="true">
+        {tone === "green" ? "X.01 / PATH" : "L.01 / STRUCTURE"}
+      </div>
+      {tone === "green" ? <ExplorePathMotif /> : <LearnStructureMotif />}
+
+      <div className="relative z-10 flex min-w-0 self-stretch flex-col justify-center">
         <h3 className={`font-serif text-3xl font-semibold sm:text-4xl ${color.text}`}>
           {name}
         </h3>
@@ -280,7 +284,7 @@ function PrimaryGuideLink({
         </p>
       </div>
 
-      <div className="flex h-[142px] items-end justify-center overflow-visible sm:h-[174px]">
+      <div className="atlas-entry-character relative z-10 flex h-[142px] items-end justify-center overflow-visible sm:h-[174px]">
         <Image
           alt=""
           className="atlas-entry-mascot max-h-[138px] w-full object-contain object-bottom sm:max-h-[168px]"
@@ -305,10 +309,11 @@ function DeployGuideLink({
 }) {
   return (
     <Link
-      className="atlas-deploy-entry group relative mx-auto mt-5 grid max-w-3xl grid-cols-[82px_1fr] items-center gap-4 rounded-[20px] border border-[#295ca8]/12 bg-[#e9f0fa] px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 sm:grid-cols-[104px_1fr_auto] sm:gap-5 sm:px-5"
+      className="atlas-deploy-entry group relative mx-auto mt-5 grid max-w-3xl grid-cols-[82px_1fr] items-center gap-4 overflow-hidden rounded-[14px] border border-[#295ca8]/16 bg-[#e9f0fa] px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-[#b97512] focus-visible:ring-offset-2 sm:grid-cols-[104px_1fr_auto] sm:gap-5 sm:px-5"
       href="/deploy"
     >
-      <div className="relative top-2 flex h-[82px] items-end justify-center sm:h-[88px]">
+      <DeployDecisionMotif />
+      <div className="relative z-10 top-2 flex h-[82px] items-end justify-center sm:h-[88px]">
         <Image
           alt=""
           className="atlas-entry-mascot max-h-[82px] w-full object-contain object-bottom sm:max-h-[88px]"
@@ -319,7 +324,7 @@ function DeployGuideLink({
         />
       </div>
 
-      <div className="min-w-0 py-1">
+      <div className="relative z-10 min-w-0 py-1">
         <h3 className="font-serif text-lg font-semibold text-[#295ca8] sm:text-xl">
           {title}
         </h3>
@@ -328,7 +333,7 @@ function DeployGuideLink({
         </p>
       </div>
 
-      <p className="col-start-2 pb-1 text-xs font-semibold text-[#295ca8] sm:col-start-auto sm:pb-0 sm:text-sm">
+      <p className="relative z-10 col-start-2 pb-1 text-xs font-semibold text-[#295ca8] sm:col-start-auto sm:pb-0 sm:text-sm">
         {action}{" "}
         <span className="atlas-entry-action-arrow inline-block" aria-hidden="true">
           →
