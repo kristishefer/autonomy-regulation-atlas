@@ -11,20 +11,17 @@ type NetworkNodeId =
   | "scope"
   | "rule"
   | "status"
-  | "source"
-  | "secondary";
+  | "source";
 type FixedAnchorId =
   | "cloudAnchor"
-  | "edgeUpper"
-  | "edgeLower"
-  | "ambientUpper"
-  | "ambientUpperFar"
-  | "ambientCore"
-  | "ambientRight"
-  | "ambientLower"
-  | "ambientLowerFar";
+  | "upperHorizon"
+  | "rightHorizon"
+  | "lowerHorizon"
+  | "northField"
+  | "eastField"
+  | "southField";
 type AnchorId = NetworkNodeId | FixedAnchorId;
-type NodeKind = "question" | "core" | "context" | "evidence" | "secondary";
+type NodeKind = "question" | "jurisdiction" | "rule" | "evidence" | "context";
 type LabelTier = "primary" | "secondary" | "tertiary";
 type RelationshipWeight =
   | "cloud"
@@ -63,16 +60,17 @@ type Relationship = {
 type LatentPoint = Point & {
   r: number;
   depth: "far" | "middle" | "near";
-  shimmer: boolean;
+  shimmer?: boolean;
   luminous?: boolean;
   nearNode?: "question" | "source";
   delay: number;
   duration: number;
 };
 
-type CurveOffset = {
-  c1: Point;
-  c2: Point;
+type FaintCluster = {
+  path: string;
+  points: readonly (Point & { r: number })[];
+  delay: number;
 };
 
 type CloudComposition = {
@@ -89,163 +87,156 @@ type NetworkComposition = {
   fixedAnchors: Record<FixedAnchorId, Point>;
   relationships: readonly Relationship[];
   latentPoints: readonly LatentPoint[];
+  clusters: readonly FaintCluster[];
   cloud: CloudComposition;
 };
 
+type CurveOffset = { c1: Point; c2: Point };
+
 const desktopComposition: NetworkComposition = {
   name: "desktop",
-  viewBox: { width: 860, height: 520 },
+  viewBox: { width: 960, height: 600 },
   nodes: [
-    { id: "question", x: 165, y: 248, label: "QUESTION", labelX: -33, labelY: -29, labelTier: "primary", kind: "question", delay: 720 },
-    { id: "jurisdiction", x: 340, y: 118, label: "JURISDICTION", labelX: -44, labelY: -25, labelTier: "secondary", kind: "context", delay: 980, ringRadius: 11 },
-    { id: "system", x: 305, y: 385, label: "SYSTEM", labelX: -23, labelY: 31, labelTier: "tertiary", kind: "context", delay: 1080, ringRadius: 8 },
-    { id: "scope", x: 522, y: 408, label: "SCOPE", labelX: -17, labelY: 30, labelTier: "tertiary", kind: "context", delay: 1290, ringRadius: 8.5 },
-    { id: "rule", x: 445, y: 226, label: "RULE", labelX: -14, labelY: -24, labelTier: "secondary", kind: "core", delay: 1120 },
-    { id: "status", x: 680, y: 126, label: "STATUS", labelX: -20, labelY: -23, labelTier: "tertiary", kind: "context", delay: 1360, ringRadius: 7.5 },
-    { id: "source", x: 654, y: 334, label: "SOURCE", labelX: -22, labelY: 38, labelTier: "secondary", kind: "evidence", delay: 1240 },
-    { id: "secondary", x: 748, y: 444, label: "", labelX: 0, labelY: 0, labelTier: "tertiary", kind: "secondary", delay: 1430 },
+    { id: "question", x: 210, y: 300, label: "QUESTION", labelX: -38, labelY: -38, labelTier: "primary", kind: "question", delay: 610 },
+    { id: "jurisdiction", x: 382, y: 132, label: "JURISDICTION", labelX: -48, labelY: -30, labelTier: "secondary", kind: "jurisdiction", delay: 850, ringRadius: 12 },
+    { id: "system", x: 338, y: 454, label: "SYSTEM", labelX: -24, labelY: 34, labelTier: "tertiary", kind: "context", delay: 980, ringRadius: 8 },
+    { id: "rule", x: 520, y: 270, label: "RULE", labelX: -15, labelY: -30, labelTier: "secondary", kind: "rule", delay: 1010, ringRadius: 10 },
+    { id: "scope", x: 588, y: 470, label: "SCOPE", labelX: -18, labelY: 35, labelTier: "tertiary", kind: "context", delay: 1160, ringRadius: 8.5 },
+    { id: "status", x: 770, y: 148, label: "STATUS", labelX: -21, labelY: -27, labelTier: "tertiary", kind: "context", delay: 1230, ringRadius: 7.5 },
+    { id: "source", x: 750, y: 356, label: "SOURCE", labelX: -24, labelY: 43, labelTier: "secondary", kind: "evidence", delay: 1110, ringRadius: 12 },
   ],
   fixedAnchors: {
-    cloudAnchor: { x: 70, y: 250 },
-    edgeUpper: { x: 875, y: 150 },
-    edgeLower: { x: 875, y: 405 },
-    ambientUpper: { x: 278, y: 42 },
-    ambientUpperFar: { x: 610, y: 45 },
-    ambientCore: { x: 540, y: 255 },
-    ambientRight: { x: 815, y: 180 },
-    ambientLower: { x: 370, y: 455 },
-    ambientLowerFar: { x: 790, y: 365 },
+    cloudAnchor: { x: 54, y: 316 },
+    upperHorizon: { x: 970, y: 94 },
+    rightHorizon: { x: 976, y: 326 },
+    lowerHorizon: { x: 968, y: 534 },
+    northField: { x: 570, y: 50 },
+    eastField: { x: 886, y: 242 },
+    southField: { x: 445, y: 552 },
   },
   relationships: [
-    { id: "cloud-question", from: "cloudAnchor", to: "question", nodes: ["question"], c1: { x: 100, y: 236 }, c2: { x: 132, y: 240 }, weight: "cloud", delay: 470 },
-    { id: "question-jurisdiction", from: "question", to: "jurisdiction", nodes: ["question", "jurisdiction"], c1: { x: 214, y: 208 }, c2: { x: 274, y: 132 }, weight: "secondary", delay: 910, moment: "a" },
-    { id: "question-system", from: "question", to: "system", nodes: ["question", "system"], c1: { x: 194, y: 318 }, c2: { x: 252, y: 374 }, weight: "background", delay: 990, moment: "b" },
-    { id: "question-rule", from: "question", to: "rule", nodes: ["question", "rule"], c1: { x: 270, y: 305 }, c2: { x: 356, y: 166 }, weight: "primary", delay: 1020, moment: "a" },
-    { id: "jurisdiction-rule", from: "jurisdiction", to: "rule", nodes: ["jurisdiction", "rule"], c1: { x: 388, y: 118 }, c2: { x: 425, y: 180 }, weight: "background", delay: 1090, moment: "a" },
-    { id: "jurisdiction-scope", from: "jurisdiction", to: "scope", nodes: ["jurisdiction", "scope"], c1: { x: 365, y: 246 }, c2: { x: 458, y: 374 }, weight: "secondary", delay: 1160 },
-    { id: "system-scope", from: "system", to: "scope", nodes: ["system", "scope"], c1: { x: 382, y: 338 }, c2: { x: 462, y: 438 }, weight: "secondary", delay: 1210, moment: "b" },
-    { id: "rule-status", from: "rule", to: "status", nodes: ["rule", "status"], c1: { x: 530, y: 190 }, c2: { x: 608, y: 126 }, weight: "secondary", delay: 1240 },
-    { id: "rule-source", from: "rule", to: "source", nodes: ["rule", "source"], c1: { x: 522, y: 248 }, c2: { x: 582, y: 322 }, weight: "primary", delay: 1280, moment: "a" },
-    { id: "scope-source", from: "scope", to: "source", nodes: ["scope", "source"], c1: { x: 574, y: 428 }, c2: { x: 612, y: 366 }, weight: "background", delay: 1320 },
-    { id: "source-question-lower", from: "source", to: "question", nodes: ["source", "question"], c1: { x: 564, y: 522 }, c2: { x: 278, y: 510 }, weight: "orbit", delay: 1390 },
-    { id: "question-status-upper", from: "question", to: "status", nodes: ["question", "status"], c1: { x: 260, y: -14 }, c2: { x: 574, y: -2 }, weight: "orbit", delay: 1450 },
-    { id: "jurisdiction-edge-upper", from: "jurisdiction", to: "edgeUpper", nodes: ["jurisdiction", "status"], c1: { x: 526, y: 26 }, c2: { x: 756, y: 42 }, weight: "orbit", delay: 1510 },
-    { id: "status-edge", from: "status", to: "edgeUpper", nodes: ["status"], c1: { x: 748, y: 114 }, c2: { x: 820, y: 120 }, weight: "continuation", delay: 1540 },
-    { id: "source-edge", from: "source", to: "edgeLower", nodes: ["source"], c1: { x: 724, y: 316 }, c2: { x: 808, y: 376 }, weight: "continuation", delay: 1580 },
-    { id: "ambient-upper-jurisdiction", from: "ambientUpper", to: "jurisdiction", nodes: ["jurisdiction"], c1: { x: 302, y: 56 }, c2: { x: 320, y: 88 }, weight: "ambient", delay: 1410 },
-    { id: "ambient-upper-rule", from: "ambientUpperFar", to: "rule", nodes: ["rule"], c1: { x: 550, y: 76 }, c2: { x: 492, y: 160 }, weight: "ambient", delay: 1480 },
-    { id: "ambient-core-source", from: "ambientCore", to: "source", nodes: ["source"], c1: { x: 574, y: 260 }, c2: { x: 608, y: 302 }, weight: "ambient", delay: 1510 },
-    { id: "ambient-system-lower", from: "system", to: "ambientLower", nodes: ["system"], c1: { x: 322, y: 420 }, c2: { x: 344, y: 448 }, weight: "ambient", delay: 1550 },
-    { id: "ambient-status-right", from: "status", to: "ambientRight", nodes: ["status"], c1: { x: 728, y: 138 }, c2: { x: 772, y: 166 }, weight: "ambient", delay: 1600 },
-    { id: "ambient-source-lower", from: "source", to: "ambientLowerFar", nodes: ["source"], c1: { x: 704, y: 356 }, c2: { x: 752, y: 370 }, weight: "ambient", delay: 1640 },
+    { id: "cloud-question", from: "cloudAnchor", to: "question", nodes: ["question"], c1: { x: 104, y: 286 }, c2: { x: 154, y: 287 }, weight: "cloud", delay: 390 },
+    { id: "question-jurisdiction", from: "question", to: "jurisdiction", nodes: ["question", "jurisdiction"], c1: { x: 252, y: 242 }, c2: { x: 314, y: 145 }, weight: "secondary", delay: 780, moment: "a" },
+    { id: "question-system", from: "question", to: "system", nodes: ["question", "system"], c1: { x: 238, y: 382 }, c2: { x: 288, y: 446 }, weight: "background", delay: 870, moment: "b" },
+    { id: "question-rule", from: "question", to: "rule", nodes: ["question", "rule"], c1: { x: 320, y: 360 }, c2: { x: 414, y: 216 }, weight: "primary", delay: 910, moment: "a" },
+    { id: "jurisdiction-rule", from: "jurisdiction", to: "rule", nodes: ["jurisdiction", "rule"], c1: { x: 438, y: 137 }, c2: { x: 488, y: 214 }, weight: "secondary", delay: 980, moment: "a" },
+    { id: "jurisdiction-scope", from: "jurisdiction", to: "scope", nodes: ["jurisdiction", "scope"], c1: { x: 414, y: 292 }, c2: { x: 506, y: 426 }, weight: "background", delay: 1050 },
+    { id: "system-scope", from: "system", to: "scope", nodes: ["system", "scope"], c1: { x: 430, y: 398 }, c2: { x: 514, y: 505 }, weight: "secondary", delay: 1100, moment: "b" },
+    { id: "rule-status", from: "rule", to: "status", nodes: ["rule", "status"], c1: { x: 606, y: 226 }, c2: { x: 687, y: 152 }, weight: "secondary", delay: 1130 },
+    { id: "rule-source", from: "rule", to: "source", nodes: ["rule", "source"], c1: { x: 612, y: 283 }, c2: { x: 669, y: 352 }, weight: "primary", delay: 1170, moment: "a" },
+    { id: "scope-source", from: "scope", to: "source", nodes: ["scope", "source"], c1: { x: 650, y: 488 }, c2: { x: 694, y: 398 }, weight: "background", delay: 1210, moment: "b" },
+    { id: "source-question-lower", from: "source", to: "question", nodes: ["source", "question"], c1: { x: 644, y: 640 }, c2: { x: 340, y: 626 }, weight: "orbit", delay: 1370 },
+    { id: "question-status-upper", from: "question", to: "status", nodes: ["question", "status"], c1: { x: 306, y: -54 }, c2: { x: 650, y: -30 }, weight: "orbit", delay: 1440 },
+    { id: "jurisdiction-upper-horizon", from: "jurisdiction", to: "upperHorizon", nodes: ["jurisdiction", "status"], c1: { x: 608, y: 24 }, c2: { x: 836, y: 42 }, weight: "orbit", delay: 1510 },
+    { id: "status-horizon", from: "status", to: "upperHorizon", nodes: ["status"], c1: { x: 844, y: 130 }, c2: { x: 918, y: 104 }, weight: "continuation", delay: 1540 },
+    { id: "source-horizon", from: "source", to: "rightHorizon", nodes: ["source"], c1: { x: 832, y: 334 }, c2: { x: 914, y: 320 }, weight: "continuation", delay: 1570 },
+    { id: "scope-lower-horizon", from: "scope", to: "lowerHorizon", nodes: ["scope"], c1: { x: 734, y: 530 }, c2: { x: 862, y: 554 }, weight: "ambient", delay: 1590 },
+    { id: "north-jurisdiction", from: "northField", to: "jurisdiction", nodes: ["jurisdiction"], c1: { x: 514, y: 52 }, c2: { x: 434, y: 88 }, weight: "ambient", delay: 1460 },
+    { id: "east-source", from: "eastField", to: "source", nodes: ["source"], c1: { x: 844, y: 266 }, c2: { x: 798, y: 322 }, weight: "ambient", delay: 1500 },
+    { id: "south-system", from: "southField", to: "system", nodes: ["system"], c1: { x: 414, y: 534 }, c2: { x: 370, y: 486 }, weight: "ambient", delay: 1560 },
   ],
   latentPoints: [
-    { x: 230, y: 58, r: 0.85, depth: "far", shimmer: false, delay: 1440, duration: 11.2 },
-    { x: 278, y: 42, r: 1.45, depth: "middle", shimmer: false, delay: 1470, duration: 12.8 },
-    { x: 360, y: 72, r: 2, depth: "near", shimmer: true, luminous: true, delay: 1500, duration: 10.6 },
-    { x: 470, y: 35, r: 0.75, depth: "far", shimmer: false, delay: 1530, duration: 13.4 },
-    { x: 535, y: 64, r: 1.25, depth: "middle", shimmer: false, delay: 1480, duration: 9.8 },
-    { x: 610, y: 45, r: 0.9, depth: "far", shimmer: false, delay: 1570, duration: 12.2 },
-    { x: 205, y: 180, r: 0.8, depth: "far", shimmer: false, nearNode: "question", delay: 1460, duration: 11.6 },
-    { x: 280, y: 270, r: 1.25, depth: "middle", shimmer: false, delay: 1510, duration: 10.4 },
-    { x: 375, y: 285, r: 0.75, depth: "far", shimmer: false, delay: 1590, duration: 12.6 },
-    { x: 490, y: 145, r: 1.35, depth: "middle", shimmer: false, delay: 1540, duration: 9.6 },
-    { x: 540, y: 255, r: 1.85, depth: "near", shimmer: true, luminous: true, delay: 1490, duration: 11.7 },
-    { x: 580, y: 380, r: 0.85, depth: "far", shimmer: false, nearNode: "source", delay: 1620, duration: 11.8 },
-    { x: 730, y: 60, r: 1.25, depth: "middle", shimmer: false, delay: 1550, duration: 10.2 },
-    { x: 780, y: 95, r: 0.8, depth: "far", shimmer: false, delay: 1600, duration: 12.4 },
-    { x: 815, y: 180, r: 1.7, depth: "near", shimmer: true, delay: 1520, duration: 7.4 },
-    { x: 760, y: 245, r: 1.15, depth: "middle", shimmer: false, delay: 1580, duration: 11.4 },
-    { x: 825, y: 285, r: 0.85, depth: "far", shimmer: false, delay: 1640, duration: 13.6 },
-    { x: 790, y: 365, r: 1.75, depth: "near", shimmer: true, delay: 1560, duration: 9.8 },
-    { x: 845, y: 420, r: 0.75, depth: "far", shimmer: false, delay: 1660, duration: 10.8 },
-    { x: 160, y: 430, r: 1.2, depth: "middle", shimmer: false, delay: 1530, duration: 11.9 },
-    { x: 250, y: 475, r: 0.8, depth: "far", shimmer: false, delay: 1610, duration: 10.5 },
-    { x: 370, y: 455, r: 1.6, depth: "near", shimmer: false, delay: 1550, duration: 13.1 },
-    { x: 520, y: 480, r: 0.75, depth: "far", shimmer: false, delay: 1670, duration: 12.7 },
-    { x: 620, y: 460, r: 1.3, depth: "middle", shimmer: false, delay: 1590, duration: 9.9 },
-    { x: 700, y: 490, r: 0.9, depth: "far", shimmer: false, delay: 1680, duration: 11.1 },
-    { x: 835, y: 485, r: 1.15, depth: "middle", shimmer: false, delay: 1630, duration: 12.3 },
+    { x: 214, y: 72, r: 0.8, depth: "far", delay: 1370, duration: 9.8 },
+    { x: 292, y: 38, r: 1.3, depth: "middle", delay: 1400, duration: 11.4 },
+    { x: 354, y: 76, r: 1.8, depth: "near", shimmer: true, luminous: true, delay: 1430, duration: 8.7 },
+    { x: 465, y: 34, r: 0.7, depth: "far", delay: 1460, duration: 12.1 },
+    { x: 570, y: 50, r: 1.2, depth: "middle", delay: 1410, duration: 10.8 },
+    { x: 652, y: 30, r: 0.7, depth: "far", delay: 1490, duration: 11.8 },
+    { x: 835, y: 52, r: 1.1, depth: "middle", delay: 1450, duration: 9.4 },
+    { x: 910, y: 87, r: 0.65, depth: "far", delay: 1520, duration: 12.4 },
+    { x: 254, y: 190, r: 0.75, depth: "far", nearNode: "question", delay: 1390, duration: 10.6 },
+    { x: 316, y: 292, r: 1.2, depth: "middle", delay: 1440, duration: 9.9 },
+    { x: 424, y: 222, r: 0.7, depth: "far", delay: 1510, duration: 11.6 },
+    { x: 576, y: 164, r: 1.25, depth: "middle", shimmer: true, delay: 1460, duration: 7.6 },
+    { x: 654, y: 258, r: 0.75, depth: "far", delay: 1540, duration: 10.2 },
+    { x: 830, y: 236, r: 1.65, depth: "near", shimmer: true, luminous: true, delay: 1480, duration: 10.7 },
+    { x: 910, y: 214, r: 0.8, depth: "far", delay: 1580, duration: 11.3 },
+    { x: 894, y: 312, r: 1.1, depth: "middle", delay: 1520, duration: 9.5 },
+    { x: 282, y: 390, r: 0.7, depth: "far", delay: 1450, duration: 12.3 },
+    { x: 420, y: 354, r: 1.25, depth: "middle", delay: 1500, duration: 10.1 },
+    { x: 602, y: 334, r: 0.8, depth: "far", delay: 1570, duration: 11.7 },
+    { x: 678, y: 410, r: 0.8, depth: "far", nearNode: "source", delay: 1600, duration: 9.8 },
+    { x: 824, y: 444, r: 1.7, depth: "near", shimmer: true, delay: 1540, duration: 8.9 },
+    { x: 918, y: 420, r: 0.7, depth: "far", delay: 1620, duration: 12.5 },
+    { x: 222, y: 520, r: 1.1, depth: "middle", delay: 1510, duration: 10.4 },
+    { x: 352, y: 560, r: 0.75, depth: "far", delay: 1580, duration: 11.9 },
+    { x: 445, y: 552, r: 1.55, depth: "near", shimmer: true, delay: 1530, duration: 11.2 },
+    { x: 612, y: 556, r: 0.75, depth: "far", delay: 1630, duration: 9.7 },
+    { x: 748, y: 540, r: 1.2, depth: "middle", delay: 1570, duration: 10.9 },
+    { x: 892, y: 560, r: 0.85, depth: "far", delay: 1660, duration: 12.6 },
+  ],
+  clusters: [
+    { path: "M812 82C842 60 882 64 908 94", points: [{ x: 816, y: 80, r: 1.1 }, { x: 858, y: 63, r: 0.65 }, { x: 906, y: 94, r: 1.35 }], delay: 1490 },
+    { path: "M724 512C770 492 824 500 858 534", points: [{ x: 724, y: 512, r: 0.7 }, { x: 792, y: 496, r: 1.1 }, { x: 858, y: 534, r: 0.8 }], delay: 1580 },
   ],
   cloud: {
-    haze: { x: 70, y: 250, rx: 92, ry: 66 },
-    arcs: ["M12 272C42 214 106 196 160 226", "M34 294C78 258 122 252 180 280"],
-    latent: [
-      { x: 29, y: 232, r: 0.8 },
-      { x: 57, y: 280, r: 0.7 },
-    ],
-    companions: [
-      { x: 45, y: 241, r: 2.2 },
-      { x: 76, y: 272, r: 1.45 },
-      { x: 112, y: 229, r: 1.15 },
-    ],
+    haze: { x: 54, y: 316, rx: 104, ry: 78 },
+    arcs: ["M-18 344C24 268 98 250 170 286", "M10 372C64 324 122 324 188 354"],
+    latent: [{ x: 20, y: 286, r: 0.75 }, { x: 91, y: 356, r: 0.65 }],
+    companions: [{ x: 30, y: 300, r: 2.25 }, { x: 62, y: 342, r: 1.5 }, { x: 108, y: 286, r: 1.15 }],
   },
 };
 
 const mobileComposition: NetworkComposition = {
   name: "mobile",
-  viewBox: { width: 390, height: 270 },
+  viewBox: { width: 420, height: 330 },
   nodes: [
-    { id: "question", x: 100, y: 144, label: "QUESTION", labelX: -29, labelY: -23, labelTier: "primary", kind: "question", delay: 720 },
-    { id: "jurisdiction", x: 188, y: 65, label: "JURISDICTION", labelX: -40, labelY: -20, labelTier: "secondary", kind: "context", delay: 980, ringRadius: 9 },
-    { id: "system", x: 164, y: 222, label: "SYSTEM", labelX: -21, labelY: 26, labelTier: "tertiary", kind: "context", delay: 1080, ringRadius: 6.5 },
-    { id: "scope", x: 260, y: 230, label: "SCOPE", labelX: -16, labelY: 25, labelTier: "tertiary", kind: "context", delay: 1270, ringRadius: 6.5 },
-    { id: "rule", x: 226, y: 138, label: "RULE", labelX: -13, labelY: -19, labelTier: "secondary", kind: "core", delay: 1110 },
-    { id: "status", x: 330, y: 62, label: "STATUS", labelX: -18, labelY: -18, labelTier: "tertiary", kind: "context", delay: 1350, ringRadius: 6 },
-    { id: "source", x: 315, y: 185, label: "SOURCE", labelX: -20, labelY: 29, labelTier: "secondary", kind: "evidence", delay: 1230 },
-    { id: "secondary", x: 366, y: 244, label: "", labelX: 0, labelY: 0, labelTier: "tertiary", kind: "secondary", delay: 1410 },
+    { id: "question", x: 108, y: 168, label: "QUESTION", labelX: -34, labelY: -28, labelTier: "primary", kind: "question", delay: 610 },
+    { id: "jurisdiction", x: 205, y: 62, label: "JURISDICTION", labelX: -43, labelY: -22, labelTier: "secondary", kind: "jurisdiction", delay: 850, ringRadius: 9.5 },
+    { id: "system", x: 175, y: 274, label: "SYSTEM", labelX: -21, labelY: 27, labelTier: "tertiary", kind: "context", delay: 970, ringRadius: 6.5 },
+    { id: "rule", x: 240, y: 160, label: "RULE", labelX: -14, labelY: -22, labelTier: "secondary", kind: "rule", delay: 1010, ringRadius: 8 },
+    { id: "scope", x: 282, y: 282, label: "SCOPE", labelX: -17, labelY: 27, labelTier: "tertiary", kind: "context", delay: 1140, ringRadius: 6.5 },
+    { id: "status", x: 349, y: 65, label: "STATUS", labelX: -19, labelY: -20, labelTier: "tertiary", kind: "context", delay: 1220, ringRadius: 6 },
+    { id: "source", x: 340, y: 218, label: "SOURCE", labelX: -21, labelY: 31, labelTier: "secondary", kind: "evidence", delay: 1100, ringRadius: 9.5 },
   ],
   fixedAnchors: {
-    cloudAnchor: { x: 35, y: 154 },
-    edgeUpper: { x: 400, y: 94 },
-    edgeLower: { x: 400, y: 225 },
-    ambientUpper: { x: 140, y: 28 },
-    ambientUpperFar: { x: 280, y: 22 },
-    ambientCore: { x: 268, y: 116 },
-    ambientRight: { x: 376, y: 130 },
-    ambientLower: { x: 130, y: 258 },
-    ambientLowerFar: { x: 350, y: 254 },
+    cloudAnchor: { x: 26, y: 180 },
+    upperHorizon: { x: 428, y: 48 },
+    rightHorizon: { x: 430, y: 188 },
+    lowerHorizon: { x: 430, y: 310 },
+    northField: { x: 277, y: 20 },
+    eastField: { x: 398, y: 136 },
+    southField: { x: 220, y: 322 },
   },
   relationships: [
-    { id: "cloud-question", from: "cloudAnchor", to: "question", nodes: ["question"], c1: { x: 56, y: 144 }, c2: { x: 78, y: 142 }, weight: "cloud", delay: 470 },
-    { id: "question-jurisdiction", from: "question", to: "jurisdiction", nodes: ["question", "jurisdiction"], c1: { x: 124, y: 118 }, c2: { x: 151, y: 72 }, weight: "secondary", delay: 900, moment: "a" },
-    { id: "question-system", from: "question", to: "system", nodes: ["question", "system"], c1: { x: 112, y: 184 }, c2: { x: 138, y: 215 }, weight: "background", delay: 980 },
-    { id: "question-rule", from: "question", to: "rule", nodes: ["question", "rule"], c1: { x: 145, y: 170 }, c2: { x: 190, y: 116 }, weight: "primary", delay: 1020, moment: "a" },
-    { id: "jurisdiction-rule", from: "jurisdiction", to: "rule", nodes: ["jurisdiction", "rule"], c1: { x: 207, y: 76 }, c2: { x: 220, y: 112 }, weight: "background", delay: 1080 },
-    { id: "system-scope", from: "system", to: "scope", nodes: ["system", "scope"], c1: { x: 198, y: 202 }, c2: { x: 232, y: 242 }, weight: "secondary", delay: 1190 },
-    { id: "rule-status", from: "rule", to: "status", nodes: ["rule", "status"], c1: { x: 264, y: 120 }, c2: { x: 300, y: 74 }, weight: "secondary", delay: 1240 },
-    { id: "rule-source", from: "rule", to: "source", nodes: ["rule", "source"], c1: { x: 263, y: 146 }, c2: { x: 284, y: 179 }, weight: "primary", delay: 1280, moment: "a" },
-    { id: "scope-source", from: "scope", to: "source", nodes: ["scope", "source"], c1: { x: 282, y: 232 }, c2: { x: 300, y: 204 }, weight: "background", delay: 1320 },
-    { id: "question-source-orbit", from: "question", to: "source", nodes: ["question", "source"], c1: { x: 158, y: 282 }, c2: { x: 280, y: 276 }, weight: "orbit", delay: 1430 },
-    { id: "status-edge", from: "status", to: "edgeUpper", nodes: ["status"], c1: { x: 354, y: 63 }, c2: { x: 378, y: 78 }, weight: "continuation", delay: 1490 },
-    { id: "source-edge", from: "source", to: "edgeLower", nodes: ["source"], c1: { x: 344, y: 181 }, c2: { x: 374, y: 210 }, weight: "continuation", delay: 1530 },
-    { id: "ambient-upper-jurisdiction", from: "ambientUpper", to: "jurisdiction", nodes: ["jurisdiction"], c1: { x: 158, y: 32 }, c2: { x: 174, y: 48 }, weight: "ambient", delay: 1440 },
-    { id: "ambient-source-right", from: "source", to: "ambientRight", nodes: ["source"], c1: { x: 338, y: 170 }, c2: { x: 360, y: 143 }, weight: "ambient", delay: 1520 },
+    { id: "cloud-question", from: "cloudAnchor", to: "question", nodes: ["question"], c1: { x: 54, y: 163 }, c2: { x: 78, y: 161 }, weight: "cloud", delay: 390 },
+    { id: "question-jurisdiction", from: "question", to: "jurisdiction", nodes: ["question", "jurisdiction"], c1: { x: 132, y: 130 }, c2: { x: 166, y: 68 }, weight: "secondary", delay: 780, moment: "a" },
+    { id: "question-system", from: "question", to: "system", nodes: ["question", "system"], c1: { x: 121, y: 225 }, c2: { x: 150, y: 268 }, weight: "background", delay: 870, moment: "b" },
+    { id: "question-rule", from: "question", to: "rule", nodes: ["question", "rule"], c1: { x: 157, y: 203 }, c2: { x: 202, y: 132 }, weight: "primary", delay: 910, moment: "a" },
+    { id: "jurisdiction-rule", from: "jurisdiction", to: "rule", nodes: ["jurisdiction", "rule"], c1: { x: 225, y: 76 }, c2: { x: 237, y: 124 }, weight: "secondary", delay: 970, moment: "a" },
+    { id: "system-scope", from: "system", to: "scope", nodes: ["system", "scope"], c1: { x: 214, y: 248 }, c2: { x: 250, y: 301 }, weight: "secondary", delay: 1080, moment: "b" },
+    { id: "rule-status", from: "rule", to: "status", nodes: ["rule", "status"], c1: { x: 279, y: 137 }, c2: { x: 320, y: 78 }, weight: "secondary", delay: 1120 },
+    { id: "rule-source", from: "rule", to: "source", nodes: ["rule", "source"], c1: { x: 282, y: 166 }, c2: { x: 305, y: 211 }, weight: "primary", delay: 1160, moment: "a" },
+    { id: "scope-source", from: "scope", to: "source", nodes: ["scope", "source"], c1: { x: 305, y: 285 }, c2: { x: 324, y: 244 }, weight: "background", delay: 1200, moment: "b" },
+    { id: "source-question-lower", from: "source", to: "question", nodes: ["source", "question"], c1: { x: 292, y: 356 }, c2: { x: 168, y: 350 }, weight: "orbit", delay: 1370 },
+    { id: "question-status-upper", from: "question", to: "status", nodes: ["question", "status"], c1: { x: 156, y: -34 }, c2: { x: 296, y: -18 }, weight: "orbit", delay: 1440 },
+    { id: "status-horizon", from: "status", to: "upperHorizon", nodes: ["status"], c1: { x: 379, y: 60 }, c2: { x: 408, y: 49 }, weight: "continuation", delay: 1500 },
+    { id: "source-horizon", from: "source", to: "rightHorizon", nodes: ["source"], c1: { x: 374, y: 206 }, c2: { x: 407, y: 190 }, weight: "continuation", delay: 1530 },
   ],
   latentPoints: [
-    { x: 140, y: 28, r: 0.8, depth: "far", shimmer: false, delay: 1440, duration: 10.5 },
-    { x: 242, y: 30, r: 1.15, depth: "middle", shimmer: false, delay: 1490, duration: 12.4 },
-    { x: 300, y: 20, r: 0.7, depth: "far", shimmer: false, delay: 1520, duration: 11.2 },
-    { x: 268, y: 116, r: 1.5, depth: "near", shimmer: false, luminous: true, delay: 1470, duration: 13.1 },
-    { x: 354, y: 120, r: 0.8, depth: "far", shimmer: false, delay: 1550, duration: 10.7 },
-    { x: 376, y: 130, r: 1.2, depth: "middle", shimmer: false, delay: 1580, duration: 12.6 },
-    { x: 130, y: 258, r: 0.75, depth: "far", shimmer: false, delay: 1510, duration: 11.8 },
-    { x: 210, y: 260, r: 1.2, depth: "middle", shimmer: false, delay: 1560, duration: 10.9 },
-    { x: 304, y: 252, r: 0.8, depth: "far", shimmer: false, delay: 1600, duration: 12.3 },
-    { x: 350, y: 254, r: 1.35, depth: "near", shimmer: false, delay: 1620, duration: 11.4 },
+    { x: 145, y: 24, r: 0.75, depth: "far", delay: 1370, duration: 10.5 },
+    { x: 277, y: 20, r: 1.1, depth: "middle", delay: 1420, duration: 11.7 },
+    { x: 322, y: 28, r: 0.65, depth: "far", delay: 1450, duration: 9.8 },
+    { x: 268, y: 112, r: 1.4, depth: "near", luminous: true, delay: 1400, duration: 12.2 },
+    { x: 390, y: 118, r: 0.75, depth: "far", delay: 1490, duration: 10.4 },
+    { x: 398, y: 136, r: 1.1, depth: "middle", delay: 1510, duration: 11.9 },
+    { x: 148, y: 232, r: 0.7, depth: "far", delay: 1440, duration: 10.8 },
+    { x: 214, y: 230, r: 1.1, depth: "middle", delay: 1490, duration: 9.6 },
+    { x: 302, y: 202, r: 0.65, depth: "far", delay: 1530, duration: 11.4 },
+    { x: 392, y: 256, r: 1.2, depth: "near", delay: 1550, duration: 10.2 },
+    { x: 124, y: 312, r: 0.7, depth: "far", delay: 1480, duration: 11.6 },
+    { x: 220, y: 322, r: 1.3, depth: "near", delay: 1520, duration: 10.9 },
+    { x: 332, y: 314, r: 0.75, depth: "far", delay: 1580, duration: 12.1 },
+    { x: 402, y: 302, r: 1.05, depth: "middle", delay: 1600, duration: 9.7 },
+  ],
+  clusters: [
+    { path: "M328 104C350 90 376 94 396 114", points: [{ x: 329, y: 104, r: 0.7 }, { x: 362, y: 92, r: 0.55 }, { x: 396, y: 114, r: 0.8 }], delay: 1460 },
   ],
   cloud: {
-    haze: { x: 35, y: 154, rx: 53, ry: 42 },
-    arcs: ["M-4 169C18 130 60 121 92 140", "M8 184C38 160 66 158 101 176"],
-    latent: [
-      { x: 12, y: 143, r: 0.65 },
-      { x: 53, y: 180, r: 0.55 },
-    ],
-    companions: [
-      { x: 22, y: 148, r: 1.65 },
-      { x: 41, y: 173, r: 1.15 },
-      { x: 65, y: 141, r: 0.9 },
-    ],
+    haze: { x: 26, y: 180, rx: 60, ry: 48 },
+    arcs: ["M-12 196C10 150 55 140 96 160", "M0 214C32 185 67 184 105 205"],
+    latent: [{ x: 7, y: 158, r: 0.6 }, { x: 55, y: 207, r: 0.55 }],
+    companions: [{ x: 14, y: 165, r: 1.7 }, { x: 35, y: 198, r: 1.15 }, { x: 65, y: 158, r: 0.9 }],
   },
 };
 
@@ -257,14 +248,12 @@ const drift = {
   rule: { period: 14.5, phase: 2.8, x: 8.2, y: 4.8 },
   status: { period: 21, phase: 1.9, x: 4.2, y: 5 },
   source: { period: 18.5, phase: 3.6, x: 6.8, y: 5.8 },
-  secondary: { period: 23.5, phase: 2.4, x: 3.2, y: 2.4 },
 } satisfies Record<NetworkNodeId, { period: number; phase: number; x: number; y: number }>;
 
 const arcBreathing: Record<string, { period: number; phase: number; c1: Point; c2: Point }> = {
-  "source-question-lower": { period: 22, phase: 0.4, c1: { x: 5, y: -12 }, c2: { x: -7, y: 9 } },
-  "question-status-upper": { period: 18, phase: 1.6, c1: { x: -8, y: 10 }, c2: { x: 8, y: -9 } },
-  "jurisdiction-edge-upper": { period: 26, phase: 2.8, c1: { x: 7, y: -8 }, c2: { x: -6, y: 7 } },
-  "question-source-orbit": { period: 24, phase: 1.1, c1: { x: 3, y: -4 }, c2: { x: -3, y: 3 } },
+  "source-question-lower": { period: 22, phase: 0.4, c1: { x: 6, y: -14 }, c2: { x: -8, y: 10 } },
+  "question-status-upper": { period: 18, phase: 1.6, c1: { x: -9, y: 12 }, c2: { x: 9, y: -10 } },
+  "jurisdiction-upper-horizon": { period: 26, phase: 2.8, c1: { x: 8, y: -9 }, c2: { x: -7, y: 8 } },
 };
 
 function subscribeToMobile(callback: () => void) {
@@ -282,10 +271,7 @@ function getServerIsMobile() {
 }
 
 function basePoint(composition: NetworkComposition, id: AnchorId): Point {
-  if (id in composition.fixedAnchors) {
-    return composition.fixedAnchors[id as FixedAnchorId];
-  }
-
+  if (id in composition.fixedAnchors) return composition.fixedAnchors[id as FixedAnchorId];
   const node = composition.nodes.find((candidate) => candidate.id === id);
   if (!node) throw new Error(`Unknown network anchor: ${id}`);
   return node;
@@ -307,66 +293,42 @@ function pathFor(
   const toOffset = offsets[relationship.to as NetworkNodeId] ?? { x: 0, y: 0 };
   const from = { x: fromBase.x + fromOffset.x, y: fromBase.y + fromOffset.y };
   const to = { x: toBase.x + toOffset.x, y: toBase.y + toOffset.y };
-  const c1 = {
-    x: relationship.c1.x + fromOffset.x + (curveOffset?.c1.x ?? 0),
-    y: relationship.c1.y + fromOffset.y + (curveOffset?.c1.y ?? 0),
-  };
-  const c2 = {
-    x: relationship.c2.x + toOffset.x + (curveOffset?.c2.x ?? 0),
-    y: relationship.c2.y + toOffset.y + (curveOffset?.c2.y ?? 0),
-  };
-
+  const c1 = { x: relationship.c1.x + fromOffset.x + (curveOffset?.c1.x ?? 0), y: relationship.c1.y + fromOffset.y + (curveOffset?.c1.y ?? 0) };
+  const c2 = { x: relationship.c2.x + toOffset.x + (curveOffset?.c2.x ?? 0), y: relationship.c2.y + toOffset.y + (curveOffset?.c2.y ?? 0) };
   return `M${formatPoint(from)}C${formatPoint(c1)} ${formatPoint(c2)} ${formatPoint(to)}`;
 }
 
-function curveOffsetFor(relationshipId: string, time: number, scale: number): CurveOffset | undefined {
-  const settings = arcBreathing[relationshipId];
+function curveOffsetFor(id: string, time: number, scale: number): CurveOffset | undefined {
+  const settings = arcBreathing[id];
   if (!settings) return undefined;
-
   const radians = (time / (settings.period * 1000)) * Math.PI * 2 + settings.phase;
-  const secondaryRadians = radians * 0.71 + settings.phase * 0.5;
-
+  const secondary = radians * 0.71 + settings.phase * 0.5;
   return {
-    c1: {
-      x: Math.sin(radians) * settings.c1.x * scale,
-      y: Math.cos(secondaryRadians) * settings.c1.y * scale,
-    },
-    c2: {
-      x: Math.cos(radians * 0.87) * settings.c2.x * scale,
-      y: Math.sin(secondaryRadians * 1.09) * settings.c2.y * scale,
-    },
+    c1: { x: Math.sin(radians) * settings.c1.x * scale, y: Math.cos(secondary) * settings.c1.y * scale },
+    c2: { x: Math.cos(radians * 0.87) * settings.c2.x * scale, y: Math.sin(secondary * 1.09) * settings.c2.y * scale },
   };
 }
 
-function semanticMomentFor(nodeId: NetworkNodeId): "a" | "b" | "both" | "none" {
-  if (nodeId === "question") return "both";
-  if (nodeId === "jurisdiction" || nodeId === "rule" || nodeId === "source") return "a";
-  if (nodeId === "system" || nodeId === "scope") return "b";
-  return "none";
-}
-
-function motionOffset(nodeId: NetworkNodeId, time: number, scale: number): Point {
-  const settings = drift[nodeId];
+function motionOffset(id: NetworkNodeId, time: number, scale: number): Point {
+  const settings = drift[id];
   const radians = (time / (settings.period * 1000)) * Math.PI * 2;
-
   return {
     x: Math.sin(radians + settings.phase) * settings.x * scale,
     y: Math.cos(radians * 0.83 + settings.phase * 1.3) * settings.y * scale,
   };
 }
 
-function NetworkNodeMarker({
-  node,
-  gradientPrefix,
-  activeNode,
-}: {
-  node: NetworkNode;
-  gradientPrefix: string;
-  activeNode: NetworkNodeId | null;
-}) {
+function semanticMomentFor(id: NetworkNodeId): "a" | "b" | "both" | "none" {
+  if (id === "question" || id === "source") return "both";
+  if (id === "jurisdiction" || id === "rule") return "a";
+  if (id === "system" || id === "scope") return "b";
+  return "none";
+}
+
+function NetworkNodeMarker({ node, gradientPrefix, activeNode }: { node: NetworkNode; gradientPrefix: string; activeNode: NetworkNodeId | null }) {
   const isActive = node.id === activeNode;
   const isMuted = Boolean(activeNode && !isActive);
-  const semanticMoment = semanticMomentFor(node.id);
+  const moment = semanticMomentFor(node.id);
 
   return (
     <g
@@ -374,49 +336,40 @@ function NetworkNodeMarker({
       data-node-id={node.id}
       style={{ "--atlas-node-delay": `${node.delay}ms` } as CSSProperties}
     >
-      {semanticMoment !== "none" ? (
-        <circle
-          className={`atlas-network-moment-halo atlas-network-node-moment-${semanticMoment}`}
-          r={node.kind === "question" ? 23 : node.kind === "evidence" ? 19 : 16}
-        />
-      ) : null}
+      {moment !== "none" ? <circle className={`atlas-network-moment-halo atlas-network-node-moment-${moment}`} r={node.kind === "question" ? 28 : node.kind === "evidence" ? 23 : 18} /> : null}
       {node.kind === "question" ? (
         <>
-          <circle className="atlas-network-node-halo atlas-network-node-question-halo" fill={`url(#${gradientPrefix}-question-light)`} r="49" />
-          <circle className="atlas-network-node-lumen" fill={`url(#${gradientPrefix}-question-lumen)`} r="13" />
-          <circle className="atlas-network-node-core atlas-network-node-question-core" r="5.8" />
+          <circle className="atlas-network-node-halo atlas-network-node-question-halo" fill={`url(#${gradientPrefix}-question-light)`} r="62" />
+          <circle className="atlas-network-node-question-orbit" r="17" />
+          <circle className="atlas-network-node-core atlas-network-node-question-core" r="6.4" />
+          <circle className="atlas-network-node-inner-mark" cx="2.4" cy="-2.1" r="1.25" />
         </>
       ) : node.kind === "evidence" ? (
         <>
-          <circle className="atlas-network-node-halo atlas-network-node-source-halo" fill={`url(#${gradientPrefix}-source-light)`} r="39" />
-          <circle className="atlas-network-node-core atlas-network-node-source-core" r="4.5" />
+          <circle className="atlas-network-node-halo atlas-network-node-source-halo" fill={`url(#${gradientPrefix}-source-light)`} r="52" />
+          <circle className="atlas-network-node-source-orbit" r={node.ringRadius ?? 12} />
+          <circle className="atlas-network-node-core atlas-network-node-source-core" r="4.8" />
         </>
-      ) : node.kind === "context" ? (
+      ) : node.kind === "rule" ? (
         <>
-          {node.id === "jurisdiction" ? (
-            <circle className="atlas-network-node-halo atlas-network-node-jurisdiction-halo" fill={`url(#${gradientPrefix}-context-light)`} r="25" />
-          ) : null}
-          <circle className="atlas-network-node-ring" r={node.ringRadius ?? 8} />
-          <circle className="atlas-network-node-dot" r="1.55" />
+          <circle className="atlas-network-node-halo atlas-network-node-rule-halo" fill={`url(#${gradientPrefix}-rule-light)`} r="34" />
+          <circle className="atlas-network-node-rule-orbit" r={node.ringRadius ?? 10} />
+          <circle className="atlas-network-node-core atlas-network-node-rule-core" r="4.2" />
         </>
-      ) : node.kind === "secondary" ? (
-        <circle className="atlas-network-node-secondary" r="2.15" />
+      ) : node.kind === "jurisdiction" ? (
+        <>
+          <circle className="atlas-network-node-halo atlas-network-node-jurisdiction-halo" fill={`url(#${gradientPrefix}-jurisdiction-light)`} r="38" />
+          <circle className="atlas-network-node-ring atlas-network-node-jurisdiction-ring" r={node.ringRadius ?? 12} />
+          <circle className="atlas-network-node-dot atlas-network-node-jurisdiction-dot" r="1.9" />
+        </>
       ) : (
         <>
-          <circle className="atlas-network-node-rule-halo" r="14" />
-          <circle className="atlas-network-node-core atlas-network-node-rule-core" r="4.3" />
+          <circle className="atlas-network-node-ring" r={node.ringRadius ?? 8} />
+          <circle className="atlas-network-node-dot" r="1.45" />
         </>
       )}
-      {node.label ? (
-        <text
-          className={`atlas-network-label atlas-network-label-${node.labelTier}`}
-          x={node.labelX}
-          y={node.labelY}
-        >
-          {node.label}
-        </text>
-      ) : null}
-      <circle className="atlas-network-hit" r="43" />
+      <text className={`atlas-network-label atlas-network-label-${node.labelTier}`} x={node.labelX} y={node.labelY}>{node.label}</text>
+      <circle className="atlas-network-hit" r="46" />
     </g>
   );
 }
@@ -437,37 +390,21 @@ export function HeroRegulatoryNetwork() {
     function render(time: number) {
       const offsets: Partial<Record<NetworkNodeId, Point>> = {};
       const scale = isMobile ? 0.25 : 1;
-
       for (const node of composition.nodes) {
         const offset = motionOffset(node.id, time, scale);
         offsets[node.id] = offset;
-        nodeMotionRefs.current[node.id]?.setAttribute(
-          "transform",
-          `translate(${offset.x.toFixed(2)} ${offset.y.toFixed(2)})`,
-        );
+        nodeMotionRefs.current[node.id]?.setAttribute("transform", `translate(${offset.x.toFixed(2)} ${offset.y.toFixed(2)})`);
       }
-
       for (const relationship of composition.relationships) {
-        const curveOffset = curveOffsetFor(relationship.id, time, isMobile ? 0.42 : 1);
-        relationshipRefs.current[relationship.id]?.setAttribute(
-          "d",
-          pathFor(composition, relationship, offsets, curveOffset),
-        );
+        const curveOffset = curveOffsetFor(relationship.id, time, isMobile ? 0.4 : 1);
+        relationshipRefs.current[relationship.id]?.setAttribute("d", pathFor(composition, relationship, offsets, curveOffset));
       }
-
       frame = window.requestAnimationFrame(render);
     }
 
     function resetGeometry() {
-      for (const node of composition.nodes) {
-        nodeMotionRefs.current[node.id]?.removeAttribute("transform");
-      }
-      for (const relationship of composition.relationships) {
-        relationshipRefs.current[relationship.id]?.setAttribute(
-          "d",
-          pathFor(composition, relationship),
-        );
-      }
+      for (const node of composition.nodes) nodeMotionRefs.current[node.id]?.removeAttribute("transform");
+      for (const relationship of composition.relationships) relationshipRefs.current[relationship.id]?.setAttribute("d", pathFor(composition, relationship));
     }
 
     function updateMotion() {
@@ -478,7 +415,6 @@ export function HeroRegulatoryNetwork() {
 
     updateMotion();
     reducedMotion.addEventListener("change", updateMotion);
-
     return () => {
       window.cancelAnimationFrame(frame);
       reducedMotion.removeEventListener("change", updateMotion);
@@ -486,18 +422,12 @@ export function HeroRegulatoryNetwork() {
   }, [composition, isMobile]);
 
   function handlePointerMove(event: PointerEvent<SVGSVGElement>) {
-    if (
-      isMobile ||
-      !window.matchMedia("(hover: hover) and (pointer: fine)").matches ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) return;
-
+    if (isMobile || !window.matchMedia("(hover: hover) and (pointer: fine)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     const pointerX = ((event.clientX - bounds.left) / bounds.width) * composition.viewBox.width;
     const pointerY = ((event.clientY - bounds.top) / bounds.height) * composition.viewBox.height;
     let nearestNode: NetworkNodeId | null = null;
-    let nearestDistance = 58;
-
+    let nearestDistance = 66;
     for (const node of composition.nodes) {
       const distance = Math.hypot(pointerX - node.x, pointerY - node.y);
       if (distance < nearestDistance) {
@@ -505,7 +435,6 @@ export function HeroRegulatoryNetwork() {
         nearestNode = node.id;
       }
     }
-
     if (activeNode !== nearestNode) setActiveNode(nearestNode);
   }
 
@@ -516,151 +445,71 @@ export function HeroRegulatoryNetwork() {
         data-active-node={visibleActiveNode ?? undefined}
         data-variant={composition.name}
         fill="none"
-        onPointerLeave={() => {
-          if (activeNode) setActiveNode(null);
-        }}
+        onPointerLeave={() => activeNode && setActiveNode(null)}
         onPointerMove={handlePointerMove}
         viewBox={`0 0 ${composition.viewBox.width} ${composition.viewBox.height}`}
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <radialGradient id={`${gradientPrefix}-question-light`}>
-            <stop offset="0" stopColor="#f7f7f3" stopOpacity="0.74" />
-            <stop offset="0.22" stopColor="#dce5eb" stopOpacity="0.42" />
-            <stop offset="0.56" stopColor="#a9bbc8" stopOpacity="0.16" />
-            <stop offset="1" stopColor="#a9bbc8" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id={`${gradientPrefix}-question-lumen`}>
-            <stop offset="0" stopColor="#faf9f5" stopOpacity="0.96" />
-            <stop offset="0.38" stopColor="#cdd9e1" stopOpacity="0.52" />
-            <stop offset="1" stopColor="#a9bbc8" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id={`${gradientPrefix}-source-light`}>
-            <stop offset="0" stopColor="#f7f7f3" stopOpacity="0.6" />
-            <stop offset="0.34" stopColor="#d8e1e7" stopOpacity="0.34" />
-            <stop offset="1" stopColor="#a9bbc8" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id={`${gradientPrefix}-context-light`}>
-            <stop offset="0" stopColor="#eff4f6" stopOpacity="0.4" />
-            <stop offset="1" stopColor="#a9bbc8" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id={`${gradientPrefix}-cloud-light`}>
-            <stop offset="0" stopColor="#faf9f5" stopOpacity="0.74" />
-            <stop offset="0.4" stopColor="#eef3f5" stopOpacity="0.44" />
-            <stop offset="1" stopColor="#d8e1e7" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient
-            id={`${gradientPrefix}-orbit-line`}
-            gradientUnits="userSpaceOnUse"
-            x1="120"
-            x2={composition.viewBox.width - 25}
-            y1="150"
-            y2={composition.viewBox.height - 120}
-          >
-            <stop offset="0" stopColor="#6f83a6" stopOpacity="0" />
-            <stop offset="0.18" stopColor="#6f83a6" stopOpacity="0.48" />
-            <stop offset="0.7" stopColor="#a9bbc8" stopOpacity="0.44" />
-            <stop offset="1" stopColor="#a9bbc8" stopOpacity="0" />
-          </linearGradient>
+          <radialGradient id={`${gradientPrefix}-field-light`}><stop offset="0" stopColor="#f8fbfc" stopOpacity="0.9" /><stop offset="0.42" stopColor="#dfeaf0" stopOpacity="0.42" /><stop offset="1" stopColor="#93a9bc" stopOpacity="0" /></radialGradient>
+          <radialGradient id={`${gradientPrefix}-question-light`}><stop offset="0" stopColor="#fffaf0" stopOpacity="0.96" /><stop offset="0.24" stopColor="#e6c98f" stopOpacity="0.58" /><stop offset="0.62" stopColor="#c9954f" stopOpacity="0.18" /><stop offset="1" stopColor="#c9954f" stopOpacity="0" /></radialGradient>
+          <radialGradient id={`${gradientPrefix}-source-light`}><stop offset="0" stopColor="#f6f3fb" stopOpacity="0.82" /><stop offset="0.32" stopColor="#b9b4d1" stopOpacity="0.46" /><stop offset="1" stopColor="#7779a2" stopOpacity="0" /></radialGradient>
+          <radialGradient id={`${gradientPrefix}-rule-light`}><stop offset="0" stopColor="#edf9f7" stopOpacity="0.74" /><stop offset="0.38" stopColor="#86bbb3" stopOpacity="0.4" /><stop offset="1" stopColor="#4f8f82" stopOpacity="0" /></radialGradient>
+          <radialGradient id={`${gradientPrefix}-jurisdiction-light`}><stop offset="0" stopColor="#f2f7fa" stopOpacity="0.7" /><stop offset="0.38" stopColor="#9cb6ca" stopOpacity="0.38" /><stop offset="1" stopColor="#6484a3" stopOpacity="0" /></radialGradient>
+          <radialGradient id={`${gradientPrefix}-cloud-light`}><stop offset="0" stopColor="#fffdf8" stopOpacity="0.8" /><stop offset="0.4" stopColor="#eef4f6" stopOpacity="0.48" /><stop offset="1" stopColor="#b8cad5" stopOpacity="0" /></radialGradient>
+          <linearGradient id={`${gradientPrefix}-orbit-line`} gradientUnits="userSpaceOnUse" x1="130" x2={composition.viewBox.width - 20} y1="150" y2={composition.viewBox.height - 90}><stop offset="0" stopColor="#7892aa" stopOpacity="0" /><stop offset="0.18" stopColor="#7892aa" stopOpacity="0.5" /><stop offset="0.72" stopColor="#a9bbc8" stopOpacity="0.46" /><stop offset="1" stopColor="#a9bbc8" stopOpacity="0" /></linearGradient>
         </defs>
 
         <rect className="atlas-network-pointer-field" height={composition.viewBox.height} width={composition.viewBox.width} />
         <g className="atlas-network-system">
+          <g className="atlas-network-field-lights">
+            <ellipse className="atlas-network-field-light atlas-network-field-light-one" cx={composition.viewBox.width * 0.7} cy={composition.viewBox.height * 0.44} fill={`url(#${gradientPrefix}-field-light)`} rx={composition.viewBox.width * 0.25} ry={composition.viewBox.height * 0.32} />
+            <ellipse className="atlas-network-field-light atlas-network-field-light-two" cx={composition.viewBox.width * 0.91} cy={composition.viewBox.height * 0.7} fill={`url(#${gradientPrefix}-field-light)`} rx={composition.viewBox.width * 0.18} ry={composition.viewBox.height * 0.24} />
+          </g>
+
           <g className="atlas-network-cloud">
-            <ellipse
-              className="atlas-network-cloud-haze"
-              cx={composition.cloud.haze.x}
-              cy={composition.cloud.haze.y}
-              fill={`url(#${gradientPrefix}-cloud-light)`}
-              rx={composition.cloud.haze.rx}
-              ry={composition.cloud.haze.ry}
-            />
-            {composition.cloud.arcs.map((path, index) => (
-              <path
-                className={`atlas-network-cloud-arc ${index === 1 ? "atlas-network-cloud-arc-faint" : ""}`}
-                d={path}
-                key={path}
-              />
-            ))}
-            {composition.cloud.latent.map((point, index) => (
-              <circle
-                className={`atlas-network-cloud-latent atlas-network-cloud-latent-${index + 1}`}
-                cx={point.x}
-                cy={point.y}
-                key={`${point.x}-${point.y}`}
-                r={point.r}
-              />
-            ))}
-            {composition.cloud.companions.map((point, index) => (
-              <circle
-                className={`atlas-network-cloud-companion atlas-network-cloud-companion-${index + 1}`}
-                cx={point.x}
-                cy={point.y}
-                key={`${point.x}-${point.y}`}
-                r={point.r}
-              />
-            ))}
+            <ellipse className="atlas-network-cloud-haze" cx={composition.cloud.haze.x} cy={composition.cloud.haze.y} fill={`url(#${gradientPrefix}-cloud-light)`} rx={composition.cloud.haze.rx} ry={composition.cloud.haze.ry} />
+            {composition.cloud.arcs.map((path, index) => <path className={`atlas-network-cloud-arc ${index === 1 ? "atlas-network-cloud-arc-faint" : ""}`} d={path} key={path} />)}
+            {composition.cloud.latent.map((point, index) => <circle className={`atlas-network-cloud-latent atlas-network-cloud-latent-${index + 1}`} cx={point.x} cy={point.y} key={`${point.x}-${point.y}`} r={point.r} />)}
+            {composition.cloud.companions.map((point, index) => <circle className={`atlas-network-cloud-companion atlas-network-cloud-companion-${index + 1}`} cx={point.x} cy={point.y} key={`${point.x}-${point.y}`} r={point.r} />)}
           </g>
 
           <g className="atlas-network-relationships">
             {composition.relationships.map((relationship) => {
-              const isRelated = visibleActiveNode
-                ? relationship.nodes.includes(visibleActiveNode)
-                : false;
-              const moment = relationship.moment ?? "none";
-
+              const isRelated = visibleActiveNode ? relationship.nodes.includes(visibleActiveNode) : false;
               return (
-                <g
-                  className={`atlas-network-relationship atlas-network-moment-${moment} atlas-network-relationship-${isRelated ? "related" : visibleActiveNode ? "muted" : "rest"}`}
-                  data-connects={relationship.nodes.join(" ")}
-                  key={relationship.id}
-                >
+                <g className={`atlas-network-relationship atlas-network-moment-${relationship.moment ?? "none"} atlas-network-relationship-${isRelated ? "related" : visibleActiveNode ? "muted" : "rest"}`} data-connects={relationship.nodes.join(" ")} key={relationship.id}>
                   <path
                     className={`atlas-network-line atlas-network-line-${relationship.weight}`}
                     d={pathFor(composition, relationship)}
                     pathLength="1"
-                    ref={(element) => {
-                      relationshipRefs.current[relationship.id] = element;
-                    }}
-                    style={
-                      {
-                        "--atlas-line-delay": `${relationship.delay}ms`,
-                        ...(relationship.weight === "orbit"
-                          ? { stroke: `url(#${gradientPrefix}-orbit-line)` }
-                          : {}),
-                      } as CSSProperties
-                    }
+                    ref={(element) => { relationshipRefs.current[relationship.id] = element; }}
+                    style={{ "--atlas-line-delay": `${relationship.delay}ms`, ...(relationship.weight === "orbit" ? { stroke: `url(#${gradientPrefix}-orbit-line)` } : {}) } as CSSProperties}
                   />
                 </g>
               );
             })}
           </g>
 
+          <g className="atlas-network-secondary-clusters">
+            {composition.clusters.map((cluster, index) => (
+              <g className="atlas-network-secondary-cluster" key={cluster.path} style={{ "--atlas-cluster-delay": `${cluster.delay}ms` } as CSSProperties}>
+                <path d={cluster.path} />
+                {cluster.points.map((point) => <circle cx={point.x} cy={point.y} key={`${index}-${point.x}`} r={point.r} />)}
+              </g>
+            ))}
+          </g>
+
           <g className="atlas-network-latent-field">
             {composition.latentPoints.map((point, index) => (
               <g key={`${point.x}-${point.y}`}>
-                {point.luminous ? (
-                  <circle
-                    className="atlas-network-latent-light"
-                    cx={point.x}
-                    cy={point.y}
-                    r={point.r * 5.5}
-                    style={{ "--atlas-latent-delay": `${point.delay}ms` } as CSSProperties}
-                  />
-                ) : null}
+                {point.luminous ? <circle className="atlas-network-latent-light" cx={point.x} cy={point.y} r={point.r * 6} style={{ "--atlas-latent-delay": `${point.delay}ms` } as CSSProperties} /> : null}
                 <circle
                   className={`atlas-network-latent atlas-network-latent-${point.depth} ${point.shimmer ? "atlas-network-latent-shimmer" : ""} ${point.nearNode ? `atlas-network-latent-near-${point.nearNode}` : ""}`}
                   cx={point.x}
                   cy={point.y}
                   r={point.r}
-                  style={
-                    {
-                      "--atlas-latent-delay": `${point.delay}ms`,
-                      "--atlas-latent-duration": `${point.duration}s`,
-                      "--atlas-latent-shimmer-delay": `${2.4 + ((index * 1.9) % 7.2)}s`,
-                      "--atlas-latent-opacity": point.depth === "near" ? 0.54 : point.depth === "middle" ? 0.34 : 0.18,
-                    } as CSSProperties
-                  }
+                  style={{ "--atlas-latent-delay": `${point.delay}ms`, "--atlas-latent-duration": `${point.duration}s`, "--atlas-latent-shimmer-delay": `${2.1 + ((index * 1.7) % 6.8)}s`, "--atlas-latent-opacity": point.depth === "near" ? 0.58 : point.depth === "middle" ? 0.36 : 0.18 } as CSSProperties}
                 />
               </g>
             ))}
@@ -668,17 +517,8 @@ export function HeroRegulatoryNetwork() {
 
           {composition.nodes.map((node) => (
             <g key={node.id} transform={`translate(${node.x} ${node.y})`}>
-              <g
-                className="atlas-network-node-motion"
-                ref={(element) => {
-                  nodeMotionRefs.current[node.id] = element;
-                }}
-              >
-                <NetworkNodeMarker
-                  activeNode={visibleActiveNode}
-                  gradientPrefix={gradientPrefix}
-                  node={node}
-                />
+              <g className="atlas-network-node-motion" ref={(element) => { nodeMotionRefs.current[node.id] = element; }}>
+                <NetworkNodeMarker activeNode={visibleActiveNode} gradientPrefix={gradientPrefix} node={node} />
               </g>
             </g>
           ))}

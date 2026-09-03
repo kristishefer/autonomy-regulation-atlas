@@ -32,6 +32,10 @@ body {
   --atlas-space: #6f83a6;
   --atlas-starlight: #a9bbc8;
   --atlas-space-faint: #d8e1e7;
+  --atlas-question: #b77b32;
+  --atlas-jurisdiction: #6484a3;
+  --atlas-rule-node: #39877f;
+  --atlas-source: #74749d;
   --atlas-field-blue: #eff4f6;
   --atlas-field-sage: #f0f4ef;
   --atlas-field-warm: #f7f2ea;
@@ -70,26 +74,27 @@ summary {
 
 .atlas-home-hero {
   background:
-    radial-gradient(ellipse 19% 48% at 76% 44%, rgba(247, 247, 243, 0.82), transparent 78%),
-    radial-gradient(ellipse 31% 92% at 103% 24%, rgba(113, 134, 159, 0.54), transparent 70%),
-    radial-gradient(ellipse 38% 72% at 87% 68%, rgba(128, 148, 170, 0.48), transparent 74%),
-    radial-gradient(ellipse 27% 61% at 69% 35%, rgba(184, 198, 209, 0.56), transparent 78%),
-    radial-gradient(ellipse 53% 105% at 101% 52%, rgba(226, 232, 236, 0.76), transparent 82%),
+    radial-gradient(ellipse 16% 42% at 69% 39%, rgba(252, 252, 248, 0.92), transparent 76%),
+    radial-gradient(ellipse 30% 72% at 91% 20%, rgba(119, 143, 168, 0.55), transparent 72%),
+    radial-gradient(ellipse 36% 78% at 102% 67%, rgba(103, 130, 158, 0.5), transparent 73%),
+    radial-gradient(ellipse 24% 55% at 72% 74%, rgba(220, 231, 237, 0.84), transparent 76%),
+    radial-gradient(ellipse 31% 74% at 81% 48%, rgba(170, 190, 204, 0.62), transparent 76%),
+    radial-gradient(ellipse 56% 112% at 104% 50%, rgba(226, 235, 240, 0.86), transparent 82%),
     var(--atlas-paper);
   isolation: isolate;
-  min-height: 560px;
+  min-height: 620px;
 }
 
 .atlas-home-hero::before {
   background:
-    radial-gradient(ellipse 17% 42% at 73% 49%, rgba(250, 249, 245, 0.72), transparent 78%),
-    radial-gradient(ellipse 28% 64% at 91% 63%, rgba(80, 105, 136, 0.22), transparent 70%),
-    radial-gradient(ellipse 23% 54% at 98% 16%, rgba(67, 95, 121, 0.2), transparent 74%),
-    radial-gradient(ellipse 21% 50% at 62% 30%, rgba(239, 244, 246, 0.62), transparent 78%);
+    radial-gradient(ellipse 16% 42% at 66% 52%, rgba(255, 253, 247, 0.84), transparent 78%),
+    radial-gradient(ellipse 27% 62% at 92% 69%, rgba(71, 102, 137, 0.25), transparent 72%),
+    radial-gradient(ellipse 23% 50% at 101% 13%, rgba(67, 95, 121, 0.23), transparent 74%),
+    radial-gradient(ellipse 20% 46% at 77% 35%, rgba(241, 247, 249, 0.75), transparent 76%);
   content: "";
-  filter: blur(30px);
+  filter: blur(34px);
   inset: 0;
-  mask-image: linear-gradient(to right, transparent 35%, rgba(0, 0, 0, 0.7) 52%, black 70%);
+  mask-image: linear-gradient(to right, transparent 30%, rgba(0, 0, 0, 0.68) 49%, black 68%);
   pointer-events: none;
   position: absolute;
 }
@@ -103,7 +108,7 @@ summary {
   );
   bottom: 0;
   content: "";
-  height: 118px;
+  height: 154px;
   inset-inline: 0;
   pointer-events: none;
   position: absolute;
@@ -113,7 +118,7 @@ summary {
 .atlas-home-hero-content {
   align-items: center;
   display: flex;
-  min-height: 560px;
+  min-height: 620px;
   pointer-events: none;
   position: relative;
   z-index: 30;
@@ -122,20 +127,21 @@ summary {
 .atlas-entry-section {
   background-image: linear-gradient(
     to bottom,
-    var(--atlas-field-warm) 0%,
+    rgba(247, 242, 234, 0.96) 0%,
     var(--atlas-field-warm) 86%,
     rgba(239, 244, 246, 0.76) 100%
   );
+  position: relative;
 }
 
 .atlas-hero-network-shell {
   inset: 0;
   mask-image: linear-gradient(
     to right,
-    transparent 35%,
-    rgba(0, 0, 0, 0.72) 43%,
-    black 54%,
-    black 96%,
+    transparent 30%,
+    rgba(0, 0, 0, 0.72) 39%,
+    black 52%,
+    black 97%,
     transparent 100%
   );
   overflow: hidden;
@@ -146,18 +152,31 @@ summary {
 
 .atlas-hero-network {
   height: auto;
-  opacity: 0.91;
+  opacity: 0.96;
   overflow: visible;
   pointer-events: auto;
   position: absolute;
-  right: max(-54px, calc((100vw - 1440px) / 2 - 42px));
-  top: 8px;
-  width: min(63vw, 900px);
+  right: max(-78px, calc((100vw - 1440px) / 2 - 64px));
+  top: -2px;
+  width: min(68vw, 1020px);
 }
 
 .atlas-network-pointer-field {
   fill: transparent;
   pointer-events: all;
+}
+
+.atlas-network-field-light {
+  animation: atlas-network-field-breathe 18s ease-in-out 2s infinite;
+  opacity: 0.74;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.atlas-network-field-light-two {
+  animation-delay: 7s;
+  animation-duration: 23s;
+  opacity: 0.48;
 }
 
 .atlas-network-relationship {
@@ -189,7 +208,7 @@ summary {
 
 .atlas-network-line {
   animation: atlas-network-draw 500ms cubic-bezier(0.22, 1, 0.36, 1) var(--atlas-line-delay) forwards;
-  stroke: rgba(73, 99, 130, 0.54);
+  stroke: rgba(72, 101, 132, 0.58);
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   stroke-linecap: round;
@@ -198,31 +217,31 @@ summary {
 }
 
 .atlas-network-line-primary {
-  stroke: rgba(45, 116, 107, 0.78);
-  stroke-width: 1.65;
+  stroke: rgba(50, 132, 124, 0.82);
+  stroke-width: 1.72;
 }
 
 .atlas-network-line-secondary {
-  stroke: rgba(73, 99, 130, 0.56);
+  stroke: rgba(83, 113, 144, 0.62);
 }
 
 .atlas-network-line-background {
-  stroke: rgba(126, 151, 174, 0.34);
+  stroke: rgba(126, 151, 174, 0.38);
   stroke-width: 0.9;
 }
 
 .atlas-network-line-ambient {
-  stroke: rgba(169, 187, 200, 0.26);
+  stroke: rgba(169, 187, 200, 0.3);
   stroke-width: 0.72;
 }
 
 .atlas-network-line-cloud {
-  stroke: rgba(112, 139, 162, 0.62);
+  stroke: rgba(123, 146, 166, 0.6);
   stroke-width: 1.05;
 }
 
 .atlas-network-line-orbit {
-  stroke-width: 0.82;
+  stroke-width: 0.9;
 }
 
 .atlas-network-line-continuation {
@@ -243,7 +262,7 @@ summary {
 }
 
 .atlas-network-cloud-arc {
-  stroke: rgba(126, 151, 174, 0.54);
+  stroke: rgba(137, 158, 177, 0.5);
   stroke-linecap: round;
   stroke-width: 0.78;
   vector-effect: non-scaling-stroke;
@@ -282,6 +301,22 @@ summary {
   fill: rgba(82, 108, 142, 0.68);
 }
 
+.atlas-network-secondary-cluster {
+  animation: atlas-network-cluster-in 460ms ease-out var(--atlas-cluster-delay) forwards;
+  opacity: 0;
+}
+
+.atlas-network-secondary-cluster path {
+  stroke: rgba(159, 177, 191, 0.26);
+  stroke-linecap: round;
+  stroke-width: 0.72;
+  vector-effect: non-scaling-stroke;
+}
+
+.atlas-network-secondary-cluster circle {
+  fill: rgba(137, 158, 177, 0.48);
+}
+
 .atlas-network-cloud-companion-2 {
   --atlas-cloud-delay: 340ms;
 }
@@ -314,11 +349,11 @@ summary {
 }
 
 .atlas-network-latent-middle {
-  fill: rgba(128, 151, 173, 0.94);
+  fill: rgba(120, 145, 169, 0.94);
 }
 
 .atlas-network-latent-near {
-  fill: rgba(84, 113, 145, 0.98);
+  fill: rgba(75, 107, 141, 0.98);
 }
 
 .atlas-network-latent-light {
@@ -340,18 +375,18 @@ summary {
 }
 
 .atlas-network-node-ring {
-  fill: rgba(250, 249, 245, 0.18);
-  stroke: rgba(67, 95, 121, 0.76);
+  fill: rgba(250, 249, 245, 0.24);
+  stroke: rgba(70, 100, 128, 0.72);
   stroke-width: 0.95;
   vector-effect: non-scaling-stroke;
 }
 
 .atlas-network-node-core {
-  fill: #3f5f79;
+  fill: var(--atlas-dusk);
 }
 
 .atlas-network-node-dot {
-  fill: #3f7f79;
+  fill: #527b89;
 }
 
 .atlas-network-node-halo {
@@ -359,7 +394,7 @@ summary {
 }
 
 .atlas-network-moment-halo {
-  fill: rgba(239, 244, 246, 0.34);
+  fill: rgba(245, 248, 248, 0.38);
   opacity: 0;
   pointer-events: none;
   transform-box: fill-box;
@@ -379,7 +414,7 @@ summary {
 }
 
 .atlas-network-node-source-core {
-  fill: #3f7181;
+  fill: var(--atlas-source);
 }
 
 .atlas-network-node-question-halo,
@@ -404,16 +439,49 @@ summary {
 }
 
 .atlas-network-node-question-core {
-  fill: #35566f;
+  fill: var(--atlas-question);
 }
 
 .atlas-network-node-rule-core {
-  fill: #476b7c;
+  fill: var(--atlas-rule-node);
 }
 
 .atlas-network-node-rule-halo {
-  fill: rgba(169, 187, 200, 0.14);
   stroke: none;
+}
+
+.atlas-network-node-question-orbit,
+.atlas-network-node-source-orbit,
+.atlas-network-node-rule-orbit {
+  fill: rgba(250, 249, 245, 0.14);
+  vector-effect: non-scaling-stroke;
+}
+
+.atlas-network-node-question-orbit {
+  stroke: rgba(183, 123, 50, 0.58);
+  stroke-width: 0.88;
+}
+
+.atlas-network-node-source-orbit {
+  stroke: rgba(116, 116, 157, 0.62);
+  stroke-width: 0.92;
+}
+
+.atlas-network-node-rule-orbit {
+  stroke: rgba(57, 135, 127, 0.62);
+  stroke-width: 0.9;
+}
+
+.atlas-network-node-inner-mark {
+  fill: rgba(255, 249, 235, 0.88);
+}
+
+.atlas-network-node-jurisdiction-ring {
+  stroke: rgba(78, 117, 153, 0.82);
+}
+
+.atlas-network-node-jurisdiction-dot {
+  fill: var(--atlas-jurisdiction);
 }
 
 .atlas-network-node-secondary {
@@ -446,7 +514,7 @@ summary {
 .atlas-network-label {
   animation: atlas-network-label-in 300ms ease-out 1420ms forwards;
   --atlas-label-opacity: 0.64;
-  fill: rgb(24, 50, 74);
+  fill: rgb(28, 52, 75);
   font-family: var(--font-geist-mono), monospace;
   font-size: 8px;
   font-weight: 700;
@@ -466,6 +534,22 @@ summary {
 
 .atlas-network-label-tertiary {
   --atlas-label-opacity: 0.5;
+}
+
+.atlas-network-marker-question .atlas-network-label {
+  fill: #7f5d31;
+}
+
+.atlas-network-marker-rule .atlas-network-label {
+  fill: #2d716b;
+}
+
+.atlas-network-marker-source .atlas-network-label {
+  fill: #5e5f85;
+}
+
+.atlas-network-marker-jurisdiction .atlas-network-label {
+  fill: #486a8a;
 }
 
 .atlas-network-node-active .atlas-network-label {
@@ -740,6 +824,31 @@ summary {
 
   to {
     opacity: 1;
+  }
+}
+
+@keyframes atlas-network-field-breathe {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: scale(0.985);
+  }
+
+  48% {
+    opacity: 0.82;
+    transform: scale(1.025);
+  }
+}
+
+@keyframes atlas-network-cluster-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 0.72;
+    transform: translateY(0);
   }
 }
 
@@ -1360,6 +1469,8 @@ summary {
   .atlas-network-cloud-latent,
   .atlas-network-cloud-companion,
   .atlas-network-cloud-haze,
+  .atlas-network-field-light,
+  .atlas-network-secondary-cluster,
   .atlas-network-label,
   .atlas-network-latent-light,
   .atlas-network-latent,
@@ -1379,8 +1490,15 @@ summary {
   .atlas-network-cloud,
   .atlas-network-cloud-latent,
   .atlas-network-cloud-companion,
+  .atlas-network-field-light,
+  .atlas-network-secondary-cluster,
   .atlas-network-latent-light {
     opacity: 1;
+  }
+
+  .atlas-network-field-light,
+  .atlas-network-secondary-cluster {
+    transform: none;
   }
 
   .atlas-network-label {
@@ -1445,17 +1563,17 @@ summary {
 @media (max-width: 639px) {
   .atlas-home-hero {
     background:
-      radial-gradient(ellipse 88% 35% at 72% 91%, rgba(184, 198, 209, 0.27), transparent 76%),
-      radial-gradient(ellipse 52% 27% at 101% 79%, rgba(128, 148, 170, 0.18), transparent 80%),
-      radial-gradient(ellipse 42% 24% at 68% 83%, rgba(247, 247, 243, 0.6), transparent 78%),
+      radial-gradient(ellipse 95% 42% at 74% 88%, rgba(161, 182, 199, 0.46), transparent 76%),
+      radial-gradient(ellipse 62% 36% at 105% 72%, rgba(92, 124, 155, 0.3), transparent 79%),
+      radial-gradient(ellipse 48% 28% at 67% 76%, rgba(248, 251, 251, 0.78), transparent 78%),
       var(--atlas-paper);
     min-height: 0;
   }
 
   .atlas-home-hero::before {
     background:
-      radial-gradient(ellipse 50% 34% at 89% 83%, rgba(111, 131, 166, 0.12), transparent 78%),
-      radial-gradient(ellipse 36% 26% at 57% 79%, rgba(239, 244, 246, 0.62), transparent 80%);
+      radial-gradient(ellipse 54% 38% at 91% 81%, rgba(84, 116, 149, 0.2), transparent 78%),
+      radial-gradient(ellipse 38% 28% at 57% 77%, rgba(244, 249, 250, 0.7), transparent 80%);
     filter: blur(13px);
     mask-image: linear-gradient(to bottom, transparent 58%, black 78%);
   }
@@ -1464,20 +1582,20 @@ summary {
     align-items: initial;
     display: block;
     min-height: 0;
-    padding-bottom: 17rem;
+    padding-bottom: 21rem;
   }
 
   .atlas-hero-network-shell {
-    mask-image: linear-gradient(to bottom, transparent 45%, black 65%, black 94%, transparent);
-    opacity: 0.84;
+    mask-image: linear-gradient(to bottom, transparent 40%, black 59%, black 95%, transparent);
+    opacity: 0.94;
   }
 
   .atlas-hero-network {
-    bottom: 2px;
+    bottom: -4px;
     pointer-events: none;
-    right: -22px;
+    right: -34px;
     top: auto;
-    width: 430px;
+    width: 455px;
   }
 
   .atlas-network-pointer-field {
@@ -1499,16 +1617,16 @@ summary {
   }
 
   .atlas-network-label-tertiary {
-    display: none;
+    --atlas-label-opacity: 0.38;
   }
 
   .atlas-network-node-question-halo {
-    transform: scale(0.74);
+    transform: scale(0.68);
     transform-origin: center;
   }
 
   .atlas-network-node-source-halo {
-    transform: scale(0.8);
+    transform: scale(0.74);
     transform-origin: center;
   }
 
