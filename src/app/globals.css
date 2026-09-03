@@ -28,9 +28,14 @@ body {
   --atlas-ink-muted: #567083;
   --atlas-teal: #4f8f82;
   --atlas-origin: #c58b52;
+  --atlas-dusk: #435f79;
   --atlas-space: #6f83a6;
   --atlas-starlight: #a9bbc8;
   --atlas-space-faint: #d8e1e7;
+  --atlas-question: #b77b32;
+  --atlas-jurisdiction: #6484a3;
+  --atlas-rule-node: #39877f;
+  --atlas-source: #74749d;
   --atlas-field-blue: #eff4f6;
   --atlas-field-sage: #f0f4ef;
   --atlas-field-warm: #f7f2ea;
@@ -69,30 +74,41 @@ summary {
 
 .atlas-home-hero {
   background:
-    radial-gradient(ellipse 42% 88% at 92% 38%, rgba(111, 131, 166, 0.2), transparent 74%),
-    radial-gradient(ellipse 32% 62% at 73% 52%, rgba(169, 187, 200, 0.18), transparent 75%),
-    radial-gradient(ellipse 18% 48% at 58% 33%, rgba(216, 225, 231, 0.35), transparent 82%),
+    radial-gradient(ellipse 16% 42% at 69% 39%, rgba(252, 252, 248, 0.92), transparent 76%),
+    radial-gradient(ellipse 30% 72% at 91% 20%, rgba(119, 143, 168, 0.55), transparent 72%),
+    radial-gradient(ellipse 36% 78% at 102% 67%, rgba(103, 130, 158, 0.5), transparent 73%),
+    radial-gradient(ellipse 24% 55% at 72% 74%, rgba(220, 231, 237, 0.84), transparent 76%),
+    radial-gradient(ellipse 31% 74% at 81% 48%, rgba(170, 190, 204, 0.62), transparent 76%),
+    radial-gradient(ellipse 56% 112% at 104% 50%, rgba(226, 235, 240, 0.86), transparent 82%),
     var(--atlas-paper);
   isolation: isolate;
+  min-height: 620px;
 }
 
 .atlas-home-hero::before {
   background:
-    radial-gradient(circle at 74% 38%, rgba(239, 244, 246, 0.7), transparent 24%),
-    radial-gradient(ellipse at 91% 58%, rgba(86, 112, 131, 0.08), transparent 52%);
+    radial-gradient(ellipse 16% 42% at 66% 52%, rgba(255, 253, 247, 0.84), transparent 78%),
+    radial-gradient(ellipse 27% 62% at 92% 69%, rgba(71, 102, 137, 0.25), transparent 72%),
+    radial-gradient(ellipse 23% 50% at 101% 13%, rgba(67, 95, 121, 0.23), transparent 74%),
+    radial-gradient(ellipse 20% 46% at 77% 35%, rgba(241, 247, 249, 0.75), transparent 76%);
   content: "";
-  filter: blur(18px);
+  filter: blur(34px);
   inset: 0;
-  mask-image: linear-gradient(to right, transparent 38%, black 68%);
+  mask-image: linear-gradient(to right, transparent 30%, rgba(0, 0, 0, 0.68) 49%, black 68%);
   pointer-events: none;
   position: absolute;
 }
 
 .atlas-home-hero::after {
-  background: linear-gradient(to bottom, transparent, var(--atlas-field-warm));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(247, 242, 234, 0.48) 48%,
+    var(--atlas-field-warm)
+  );
   bottom: 0;
   content: "";
-  height: 70px;
+  height: 154px;
   inset-inline: 0;
   pointer-events: none;
   position: absolute;
@@ -100,26 +116,33 @@ summary {
 }
 
 .atlas-home-hero-content {
+  align-items: center;
+  display: flex;
+  min-height: 620px;
+  pointer-events: none;
   position: relative;
-  z-index: 10;
+  z-index: 30;
 }
 
 .atlas-entry-section {
   background-image: linear-gradient(
     to bottom,
-    var(--atlas-field-warm) 0%,
+    rgba(247, 242, 234, 0.96) 0%,
     var(--atlas-field-warm) 86%,
     rgba(239, 244, 246, 0.76) 100%
   );
+  position: relative;
 }
 
 .atlas-hero-network-shell {
   inset: 0;
   mask-image: linear-gradient(
     to right,
-    transparent 38%,
-    rgba(0, 0, 0, 0.58) 54%,
-    black 70%
+    transparent 30%,
+    rgba(0, 0, 0, 0.72) 39%,
+    black 52%,
+    black 97%,
+    transparent 100%
   );
   overflow: hidden;
   pointer-events: none;
@@ -129,13 +152,13 @@ summary {
 
 .atlas-hero-network {
   height: auto;
-  opacity: 0.62;
+  opacity: 0.96;
   overflow: visible;
   pointer-events: auto;
   position: absolute;
-  right: max(-56px, calc((100vw - 1320px) / 2 - 16px));
-  top: 18px;
-  width: min(53vw, 720px);
+  right: max(-78px, calc((100vw - 1440px) / 2 - 64px));
+  top: -2px;
+  width: min(68vw, 1020px);
 }
 
 .atlas-network-pointer-field {
@@ -143,17 +166,34 @@ summary {
   pointer-events: all;
 }
 
+.atlas-network-field-light {
+  animation: atlas-network-field-breathe 18s ease-in-out 2s infinite;
+  opacity: 0.74;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.atlas-network-field-light-two {
+  animation-delay: 7s;
+  animation-duration: 23s;
+  opacity: 0.48;
+}
+
 .atlas-network-relationship {
-  opacity: 0.72;
-  transition: opacity 260ms ease;
+  opacity: 0.88;
+  transition: opacity 320ms ease;
 }
 
 .atlas-network-moment-a {
-  animation: atlas-network-semantic-moment 20s ease-in-out 4s infinite;
+  animation: atlas-network-semantic-moment-a 20s ease-in-out 1.8s infinite;
 }
 
 .atlas-network-moment-b {
-  animation: atlas-network-semantic-moment 20s ease-in-out 14s infinite;
+  animation: atlas-network-semantic-moment-b 20s ease-in-out 1.8s infinite;
+}
+
+.atlas-network-moment-none {
+  animation: atlas-network-semantic-moment-background 20s ease-in-out 1.8s infinite;
 }
 
 .atlas-network-relationship-related {
@@ -163,12 +203,12 @@ summary {
 
 .atlas-network-relationship-muted {
   animation: none;
-  opacity: 0.24;
+  opacity: 0.46;
 }
 
 .atlas-network-line {
-  animation: atlas-network-draw 720ms cubic-bezier(0.22, 1, 0.36, 1) var(--atlas-line-delay) forwards;
-  stroke: rgba(111, 131, 166, 0.3);
+  animation: atlas-network-draw 500ms cubic-bezier(0.22, 1, 0.36, 1) var(--atlas-line-delay) forwards;
+  stroke: rgba(72, 101, 132, 0.58);
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   stroke-linecap: round;
@@ -177,54 +217,75 @@ summary {
 }
 
 .atlas-network-line-primary {
-  stroke: rgba(79, 143, 130, 0.58);
-  stroke-width: 1.6;
+  stroke: rgba(50, 132, 124, 0.82);
+  stroke-width: 1.72;
 }
 
 .atlas-network-line-secondary {
-  stroke: rgba(111, 131, 166, 0.32);
+  stroke: rgba(83, 113, 144, 0.62);
 }
 
 .atlas-network-line-background {
-  stroke: rgba(169, 187, 200, 0.42);
+  stroke: rgba(126, 151, 174, 0.38);
   stroke-width: 0.9;
 }
 
+.atlas-network-line-ambient {
+  stroke: rgba(169, 187, 200, 0.3);
+  stroke-width: 0.72;
+}
+
 .atlas-network-line-cloud {
-  stroke: rgba(169, 187, 200, 0.48);
-  stroke-width: 1;
+  stroke: rgba(123, 146, 166, 0.6);
+  stroke-width: 1.05;
 }
 
 .atlas-network-line-orbit {
-  stroke: rgba(111, 131, 166, 0.2);
-  stroke-width: 0.85;
+  stroke-width: 0.9;
 }
 
 .atlas-network-line-continuation {
-  stroke: rgba(169, 187, 200, 0.28);
-  stroke-width: 0.8;
+  stroke: rgba(169, 187, 200, 0.3);
+  stroke-width: 0.74;
 }
 
 .atlas-network-cloud {
-  animation: atlas-network-cloud-in 440ms cubic-bezier(0.22, 1, 0.36, 1) 80ms forwards;
+  animation: atlas-network-cloud-in 250ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   opacity: 0;
 }
 
 .atlas-network-cloud-haze {
-  fill: rgba(239, 244, 246, 0.5);
-  stroke: rgba(216, 225, 231, 0.18);
-  stroke-width: 0.6;
+  animation: atlas-network-cloud-breathe 15.8s ease-in-out 2.4s infinite;
+  opacity: 0.65;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .atlas-network-cloud-arc {
-  stroke: rgba(169, 187, 200, 0.58);
+  stroke: rgba(137, 158, 177, 0.5);
   stroke-linecap: round;
-  stroke-width: 0.9;
+  stroke-width: 0.78;
   vector-effect: non-scaling-stroke;
 }
 
 .atlas-network-cloud-arc-faint {
-  opacity: 0.46;
+  opacity: 0.34;
+}
+
+.atlas-network-cloud-latent {
+  animation: atlas-network-node-in 260ms ease-out var(--atlas-cloud-delay) forwards;
+  fill: rgba(216, 225, 231, 0.96);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.atlas-network-cloud-latent-1 {
+  --atlas-cloud-delay: 300ms;
+}
+
+.atlas-network-cloud-latent-2 {
+  --atlas-cloud-delay: 420ms;
 }
 
 .atlas-network-cloud-companion {
@@ -235,32 +296,70 @@ summary {
   transform-origin: center;
 }
 
-.atlas-network-cloud-companion-one {
-  --atlas-cloud-delay: 150ms;
-  fill: rgba(111, 131, 166, 0.58);
+.atlas-network-cloud-companion-1 {
+  --atlas-cloud-delay: 250ms;
+  fill: rgba(82, 108, 142, 0.68);
 }
 
-.atlas-network-cloud-companion-two {
-  --atlas-cloud-delay: 220ms;
+.atlas-network-secondary-cluster {
+  animation: atlas-network-cluster-in 460ms ease-out var(--atlas-cluster-delay) forwards;
+  opacity: 0;
 }
 
-.atlas-network-cloud-companion-three {
-  --atlas-cloud-delay: 280ms;
+.atlas-network-secondary-cluster path {
+  stroke: rgba(159, 177, 191, 0.26);
+  stroke-linecap: round;
+  stroke-width: 0.72;
+  vector-effect: non-scaling-stroke;
+}
+
+.atlas-network-secondary-cluster circle {
+  fill: rgba(137, 158, 177, 0.48);
+}
+
+.atlas-network-cloud-companion-2 {
+  --atlas-cloud-delay: 340ms;
+}
+
+.atlas-network-cloud-companion-3 {
+  --atlas-cloud-delay: 440ms;
   fill: rgba(216, 225, 231, 0.92);
 }
 
 .atlas-network-latent {
-  animation: atlas-network-latent-in 540ms ease-out var(--atlas-latent-delay) forwards;
+  animation: atlas-network-latent-in 320ms ease-out var(--atlas-latent-delay) forwards;
   fill: var(--atlas-starlight);
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
+  transition: opacity 320ms ease, transform 320ms ease;
 }
 
 .atlas-network-latent-shimmer {
   animation:
-    atlas-network-latent-in 540ms ease-out var(--atlas-latent-delay) forwards,
-    atlas-network-latent-shimmer var(--atlas-latent-duration) ease-in-out calc(var(--atlas-latent-delay) + var(--atlas-latent-shimmer-delay)) infinite alternate;
+    atlas-network-latent-in 320ms ease-out var(--atlas-latent-delay) forwards,
+    atlas-network-latent-shimmer var(--atlas-latent-duration) ease-in-out calc(var(--atlas-latent-delay) + var(--atlas-latent-shimmer-delay)) infinite;
+}
+
+.atlas-hero-network[data-active-node="question"] .atlas-network-latent-near-question,
+.atlas-hero-network[data-active-node="source"] .atlas-network-latent-near-source {
+  animation: none;
+  opacity: 0.56;
+  transform: scale(1.12);
+}
+
+.atlas-network-latent-middle {
+  fill: rgba(120, 145, 169, 0.94);
+}
+
+.atlas-network-latent-near {
+  fill: rgba(75, 107, 141, 0.98);
+}
+
+.atlas-network-latent-light {
+  animation: atlas-network-latent-light-in 320ms ease-out var(--atlas-latent-delay) forwards;
+  fill: rgba(239, 244, 246, 0.3);
+  opacity: 0;
 }
 
 .atlas-network-node-motion {
@@ -272,28 +371,117 @@ summary {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  transition: opacity 240ms ease, transform 240ms ease;
+  transition: opacity 320ms ease, transform 320ms ease;
 }
 
 .atlas-network-node-ring {
-  fill: rgba(250, 249, 245, 0.52);
-  stroke: rgba(111, 131, 166, 0.72);
-  stroke-width: 1.25;
+  fill: rgba(250, 249, 245, 0.24);
+  stroke: rgba(70, 100, 128, 0.72);
+  stroke-width: 0.95;
   vector-effect: non-scaling-stroke;
 }
 
 .atlas-network-node-core {
-  fill: #637b9e;
+  fill: var(--atlas-dusk);
 }
 
 .atlas-network-node-dot {
-  fill: var(--atlas-teal);
+  fill: #527b89;
 }
 
 .atlas-network-node-halo {
-  fill: rgba(169, 187, 200, 0.16);
-  stroke: rgba(169, 187, 200, 0.3);
-  stroke-width: 0.75;
+  stroke: none;
+}
+
+.atlas-network-moment-halo {
+  fill: rgba(245, 248, 248, 0.38);
+  opacity: 0;
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.atlas-network-node-moment-a {
+  animation: atlas-network-node-moment-a 20s ease-in-out 1.8s infinite;
+}
+
+.atlas-network-node-moment-b {
+  animation: atlas-network-node-moment-b 20s ease-in-out 1.8s infinite;
+}
+
+.atlas-network-node-moment-both {
+  animation: atlas-network-node-moment-both 20s ease-in-out 1.8s infinite;
+}
+
+.atlas-network-node-source-core {
+  fill: var(--atlas-source);
+}
+
+.atlas-network-node-question-halo,
+.atlas-network-node-source-halo,
+.atlas-network-node-jurisdiction-halo,
+.atlas-network-node-lumen {
+  pointer-events: none;
+}
+
+.atlas-network-node-question-halo {
+  animation: atlas-network-question-light 11.4s ease-in-out 2.1s infinite;
+  opacity: 0.55;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.atlas-network-node-source-halo {
+  animation: atlas-network-source-light 13.2s ease-in-out 5.2s infinite;
+  opacity: 0.55;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.atlas-network-node-question-core {
+  fill: var(--atlas-question);
+}
+
+.atlas-network-node-rule-core {
+  fill: var(--atlas-rule-node);
+}
+
+.atlas-network-node-rule-halo {
+  stroke: none;
+}
+
+.atlas-network-node-question-orbit,
+.atlas-network-node-source-orbit,
+.atlas-network-node-rule-orbit {
+  fill: rgba(250, 249, 245, 0.14);
+  vector-effect: non-scaling-stroke;
+}
+
+.atlas-network-node-question-orbit {
+  stroke: rgba(183, 123, 50, 0.58);
+  stroke-width: 0.88;
+}
+
+.atlas-network-node-source-orbit {
+  stroke: rgba(116, 116, 157, 0.62);
+  stroke-width: 0.92;
+}
+
+.atlas-network-node-rule-orbit {
+  stroke: rgba(57, 135, 127, 0.62);
+  stroke-width: 0.9;
+}
+
+.atlas-network-node-inner-mark {
+  fill: rgba(255, 249, 235, 0.88);
+}
+
+.atlas-network-node-jurisdiction-ring {
+  stroke: rgba(78, 117, 153, 0.82);
+}
+
+.atlas-network-node-jurisdiction-dot {
+  fill: var(--atlas-jurisdiction);
 }
 
 .atlas-network-node-secondary {
@@ -303,7 +491,13 @@ summary {
 .atlas-network-node-active {
   animation: none;
   opacity: 1;
-  transform: scale(1.08);
+  transform: scale(1.07);
+}
+
+.atlas-network-node-active .atlas-network-moment-halo {
+  animation: none;
+  opacity: 0.58;
+  transform: scale(1.12);
 }
 
 .atlas-network-node-muted {
@@ -318,23 +512,49 @@ summary {
 }
 
 .atlas-network-label {
-  animation: atlas-network-label-in 300ms ease-out 1040ms forwards;
-  fill: rgba(24, 50, 74, 0.52);
+  animation: atlas-network-label-in 300ms ease-out 1420ms forwards;
+  --atlas-label-opacity: 0.64;
+  fill: rgb(28, 52, 75);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 7.5px;
+  font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.18em;
   opacity: 0;
   transition: opacity 240ms ease;
 }
 
-.atlas-network-label-quiet {
-  fill: rgba(86, 112, 131, 0.46);
+.atlas-network-label-primary {
+  --atlas-label-opacity: 0.92;
+  font-size: 8.6px;
+}
+
+.atlas-network-label-secondary {
+  --atlas-label-opacity: 0.72;
+}
+
+.atlas-network-label-tertiary {
+  --atlas-label-opacity: 0.5;
+}
+
+.atlas-network-marker-question .atlas-network-label {
+  fill: #7f5d31;
+}
+
+.atlas-network-marker-rule .atlas-network-label {
+  fill: #2d716b;
+}
+
+.atlas-network-marker-source .atlas-network-label {
+  fill: #5e5f85;
+}
+
+.atlas-network-marker-jurisdiction .atlas-network-label {
+  fill: #486a8a;
 }
 
 .atlas-network-node-active .atlas-network-label {
   animation: none;
-  opacity: 0.92;
+  opacity: 0.96;
 }
 
 .atlas-network-node-muted .atlas-network-label {
@@ -607,9 +827,34 @@ summary {
   }
 }
 
+@keyframes atlas-network-field-breathe {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: scale(0.985);
+  }
+
+  48% {
+    opacity: 0.82;
+    transform: scale(1.025);
+  }
+}
+
+@keyframes atlas-network-cluster-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 0.72;
+    transform: translateY(0);
+  }
+}
+
 @keyframes atlas-network-label-in {
   to {
-    opacity: 1;
+    opacity: var(--atlas-label-opacity);
   }
 }
 
@@ -619,29 +864,179 @@ summary {
   }
 }
 
-@keyframes atlas-network-latent-shimmer {
-  0% {
-    opacity: 0.15;
-    transform: scale(1);
-  }
-
-  100% {
-    opacity: 0.35;
-    transform: scale(1.08);
+@keyframes atlas-network-latent-light-in {
+  to {
+    opacity: 1;
   }
 }
 
-@keyframes atlas-network-semantic-moment {
+@keyframes atlas-network-latent-shimmer {
   0%,
-  34%,
-  62%,
-  100% {
-    opacity: 0.72;
+  20% {
+    opacity: 0.16;
+    transform: scale(1);
   }
 
-  43%,
-  52% {
+  38% {
+    opacity: 0.55;
+    transform: scale(1.12);
+  }
+
+  55%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+}
+
+@keyframes atlas-network-semantic-moment-a {
+  0%,
+  9%,
+  25%,
+  59%,
+  75%,
+  100% {
+    opacity: 0.88;
+  }
+
+  13%,
+  21% {
     opacity: 1;
+  }
+
+  63%,
+  71% {
+    opacity: 0.46;
+  }
+}
+
+@keyframes atlas-network-semantic-moment-b {
+  0%,
+  9%,
+  25%,
+  59%,
+  75%,
+  100% {
+    opacity: 0.88;
+  }
+
+  13%,
+  21% {
+    opacity: 0.46;
+  }
+
+  63%,
+  71% {
+    opacity: 1;
+  }
+}
+
+@keyframes atlas-network-semantic-moment-background {
+  0%,
+  9%,
+  25%,
+  59%,
+  75%,
+  100% {
+    opacity: 0.88;
+  }
+
+  13%,
+  21%,
+  63%,
+  71% {
+    opacity: 0.48;
+  }
+}
+
+@keyframes atlas-network-node-moment-a {
+  0%,
+  9%,
+  25%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+
+  13%,
+  21% {
+    opacity: 0.48;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes atlas-network-node-moment-b {
+  0%,
+  59%,
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+
+  63%,
+  71% {
+    opacity: 0.48;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes atlas-network-node-moment-both {
+  0%,
+  9%,
+  25%,
+  59%,
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+
+  13%,
+  21%,
+  63%,
+  71% {
+    opacity: 0.48;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes atlas-network-question-light {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  46% {
+    opacity: 0.82;
+    transform: scale(1.07);
+  }
+}
+
+@keyframes atlas-network-source-light {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  53% {
+    opacity: 0.82;
+    transform: scale(1.07);
+  }
+}
+
+@keyframes atlas-network-cloud-breathe {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+
+  48% {
+    opacity: 0.9;
+    transform: scale(1.03);
   }
 }
 
@@ -1071,9 +1466,17 @@ summary {
   .atlas-network-line,
   .atlas-network-node,
   .atlas-network-cloud,
+  .atlas-network-cloud-latent,
   .atlas-network-cloud-companion,
+  .atlas-network-cloud-haze,
+  .atlas-network-field-light,
+  .atlas-network-secondary-cluster,
   .atlas-network-label,
-  .atlas-network-latent {
+  .atlas-network-latent-light,
+  .atlas-network-latent,
+  .atlas-network-moment-halo,
+  .atlas-network-node-question-halo,
+  .atlas-network-node-source-halo {
     animation: none;
   }
 
@@ -1085,9 +1488,21 @@ summary {
   .atlas-network-relationship,
   .atlas-network-node,
   .atlas-network-cloud,
+  .atlas-network-cloud-latent,
   .atlas-network-cloud-companion,
-  .atlas-network-label {
+  .atlas-network-field-light,
+  .atlas-network-secondary-cluster,
+  .atlas-network-latent-light {
     opacity: 1;
+  }
+
+  .atlas-network-field-light,
+  .atlas-network-secondary-cluster {
+    transform: none;
+  }
+
+  .atlas-network-label {
+    opacity: var(--atlas-label-opacity);
   }
 
   .atlas-network-latent {
@@ -1095,8 +1510,20 @@ summary {
     transform: none;
   }
 
-  .atlas-network-label-quiet {
-    opacity: 0.5;
+  .atlas-network-cloud-haze {
+    opacity: 0.8;
+    transform: none;
+  }
+
+  .atlas-network-moment-halo {
+    opacity: 0;
+    transform: none;
+  }
+
+  .atlas-network-node-question-halo,
+  .atlas-network-node-source-halo {
+    opacity: 0.68;
+    transform: none;
   }
 
   .atlas-network-pointer-field {
@@ -1136,31 +1563,39 @@ summary {
 @media (max-width: 639px) {
   .atlas-home-hero {
     background:
-      radial-gradient(ellipse 92% 38% at 72% 91%, rgba(169, 187, 200, 0.2), transparent 76%),
-      radial-gradient(ellipse 56% 28% at 96% 78%, rgba(111, 131, 166, 0.12), transparent 80%),
+      radial-gradient(ellipse 95% 42% at 74% 88%, rgba(161, 182, 199, 0.46), transparent 76%),
+      radial-gradient(ellipse 62% 36% at 105% 72%, rgba(92, 124, 155, 0.3), transparent 79%),
+      radial-gradient(ellipse 48% 28% at 67% 76%, rgba(248, 251, 251, 0.78), transparent 78%),
       var(--atlas-paper);
+    min-height: 0;
   }
 
   .atlas-home-hero::before {
+    background:
+      radial-gradient(ellipse 54% 38% at 91% 81%, rgba(84, 116, 149, 0.2), transparent 78%),
+      radial-gradient(ellipse 38% 28% at 57% 77%, rgba(244, 249, 250, 0.7), transparent 80%);
     filter: blur(13px);
     mask-image: linear-gradient(to bottom, transparent 58%, black 78%);
   }
 
   .atlas-home-hero-content {
-    padding-bottom: 15rem;
+    align-items: initial;
+    display: block;
+    min-height: 0;
+    padding-bottom: 21rem;
   }
 
   .atlas-hero-network-shell {
-    mask-image: linear-gradient(to bottom, transparent 48%, black 66%, black 94%, transparent);
-    opacity: 0.78;
+    mask-image: linear-gradient(to bottom, transparent 40%, black 59%, black 95%, transparent);
+    opacity: 0.94;
   }
 
   .atlas-hero-network {
-    bottom: 10px;
+    bottom: -4px;
     pointer-events: none;
-    right: -16px;
+    right: -34px;
     top: auto;
-    width: 410px;
+    width: 455px;
   }
 
   .atlas-network-pointer-field {
@@ -1169,23 +1604,42 @@ summary {
 
   .atlas-network-relationship {
     animation: none;
-    opacity: 0.68;
+    opacity: 0.74;
   }
 
   .atlas-network-label {
-    font-size: 6px;
+    font-size: 6.2px;
     letter-spacing: 0.14em;
   }
 
-  .atlas-network-label-quiet,
-  .atlas-network-latent-mobile-hide {
-    display: none;
+  .atlas-network-label-primary {
+    font-size: 6.7px;
+  }
+
+  .atlas-network-label-tertiary {
+    --atlas-label-opacity: 0.38;
+  }
+
+  .atlas-network-node-question-halo {
+    transform: scale(0.68);
+    transform-origin: center;
+  }
+
+  .atlas-network-node-source-halo {
+    transform: scale(0.74);
+    transform-origin: center;
   }
 
   .atlas-network-moment-a,
   .atlas-network-moment-b,
+  .atlas-network-moment-none,
+  .atlas-network-moment-halo,
   .atlas-network-latent-shimmer {
     animation: none;
+  }
+
+  .atlas-network-moment-halo {
+    opacity: 0;
   }
 
   .atlas-network-latent-shimmer {
