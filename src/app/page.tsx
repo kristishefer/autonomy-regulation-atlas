@@ -8,8 +8,8 @@ import {
   ExplorePathMotif,
   LearnStructureMotif,
 } from "@/app/home/AtlasSystemMotifs";
+import { AtlasHeroWorld } from "@/app/home/AtlasHeroWorld";
 import { FooterEasterEgg } from "@/app/home/FooterEasterEgg";
-import { HeroRegulatoryNetwork } from "@/app/home/HeroRegulatoryNetwork";
 import { homeCopy } from "@/app/home/home-i18n";
 import { HomepageReveal } from "@/app/home/HomepageReveal";
 import { JurisdictionNavigator } from "@/app/home/JurisdictionNavigator";
@@ -74,26 +74,13 @@ export default async function Home() {
       className={`${atlasSans.variable} ${atlasDisplay.variable} atlas-home min-h-screen overflow-hidden bg-[var(--atlas-paper)] text-[var(--atlas-ink)]`}
       lang={locale}
     >
-      <section className="atlas-home-hero relative">
-        <HeroRegulatoryNetwork />
-        <div className="atlas-home-hero-content mx-auto max-w-7xl px-5 pb-16 pt-12 sm:px-8 lg:px-10 lg:pb-20 lg:pt-16">
-          <div className="flex max-w-4xl min-w-0 flex-col justify-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--atlas-teal)]">
-              {t.hero.eyebrow}
-            </p>
-
-            <h1 className="mt-5 max-w-[40rem] break-words hyphens-auto font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-[4.05rem]">
-              <span className="block">{t.hero.line1}</span>
-              <span className="block">{t.hero.line2}</span>
-              <span className="block text-[var(--atlas-dusk)]">{t.hero.line3}</span>
-            </h1>
-
-            <p className="mt-7 max-w-xl text-base leading-7 text-[var(--atlas-ink-muted)] sm:text-lg sm:leading-8">
-              {t.hero.body}
-            </p>
-          </div>
-        </div>
-      </section>
+      <AtlasHeroWorld
+        body={t.hero.body}
+        eyebrow={t.hero.eyebrow}
+        line1={t.hero.line1}
+        line2={t.hero.line2}
+        line3={t.hero.line3}
+      />
 
       <HomepageReveal className="atlas-entry-section bg-[var(--atlas-field-warm)]">
         <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
