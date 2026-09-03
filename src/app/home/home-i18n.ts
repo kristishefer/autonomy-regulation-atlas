@@ -36,6 +36,17 @@ type HomeCopy = {
     scopeNote: string;
     additionalProfiles: string;
   };
+  navigator: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    tabsLabel: string;
+    scopeLabel: string;
+    overviewLabel: string;
+    snapshotLabel: string;
+    openProfile: string;
+    compareJurisdictions: string;
+  };
   puzzle: {
     eyebrow: string;
     title: string;
@@ -110,6 +121,17 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       body: "Choose a beacon to open its jurisdiction profile. The geographic map stays deliberately coherent; profiles outside the current European frame remain available in the profile list below.",
       scopeNote: "The map is a navigation surface, not a map of permit, EPR or operating-area boundaries. Russia and the United States remain available as profiles without being represented by an artificial point inside the European frame.",
       additionalProfiles: "All jurisdiction profiles",
+    },
+    navigator: {
+      eyebrow: "Jurisdiction navigator",
+      title: "Explore jurisdictions",
+      body: "See how legal pathways differ across regulatory systems.",
+      tabsLabel: "Choose a jurisdiction",
+      scopeLabel: "Profile scope",
+      overviewLabel: "Regulatory overview",
+      snapshotLabel: "At a glance",
+      openProfile: "Open profile",
+      compareJurisdictions: "Compare jurisdictions",
     },
     puzzle: {
       eyebrow: "Learn with Cat",
@@ -196,6 +218,18 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       scopeNote:
         "Die Karte dient der Navigation und zeigt keine Genehmigungs-, EPR- oder Betriebsgebietsgrenzen. Russland und die Vereinigten Staaten bleiben als Profile verfügbar, ohne durch einen künstlichen Punkt im europäischen Kartenausschnitt dargestellt zu werden.",
       additionalProfiles: "Alle Rechtsordnungsprofile",
+    },
+    navigator: {
+      eyebrow: "Navigator für Rechtsordnungen",
+      title: "Rechtsordnungen erkunden",
+      body:
+        "Sehen Sie, wie sich rechtliche Wege zwischen Regulierungssystemen unterscheiden.",
+      tabsLabel: "Rechtsordnung auswählen",
+      scopeLabel: "Umfang des Profils",
+      overviewLabel: "Regulatorischer Überblick",
+      snapshotLabel: "Auf einen Blick",
+      openProfile: "Profil öffnen",
+      compareJurisdictions: "Rechtsordnungen vergleichen",
     },
     puzzle: {
       eyebrow: "Die Katze erklärt",
@@ -289,6 +323,18 @@ export const homeCopy: Record<Locale, HomeCopy> = {
         "De kaart is een navigatiemiddel en toont geen grenzen van vergunningen, EPR's of operationele gebieden. Rusland en de Verenigde Staten blijven als profiel beschikbaar zonder een kunstmatige locatiepunt in de Europese kaart.",
       additionalProfiles: "Alle jurisdictieprofielen",
     },
+    navigator: {
+      eyebrow: "Jurisdictienavigator",
+      title: "Verken jurisdicties",
+      body:
+        "Bekijk hoe juridische routes verschillen tussen regelgevingsstelsels.",
+      tabsLabel: "Kies een jurisdictie",
+      scopeLabel: "Reikwijdte van het profiel",
+      overviewLabel: "Regelgevend overzicht",
+      snapshotLabel: "In één oogopslag",
+      openProfile: "Profiel openen",
+      compareJurisdictions: "Jurisdicties vergelijken",
+    },
     puzzle: {
       eyebrow: "De kat legt uit",
       title:
@@ -380,6 +426,18 @@ export const homeCopy: Record<Locale, HomeCopy> = {
       scopeNote:
         "Карта нужна для навигации и не показывает границы конкретных разрешений, ЭПР или зон эксплуатации. Россия и США доступны в списке профилей и не обозначаются условной точкой внутри европейской карты.",
       additionalProfiles: "Все профили",
+    },
+    navigator: {
+      eyebrow: "Навигатор по юрисдикциям",
+      title: "Изучить юрисдикции",
+      body:
+        "Сравните, как различаются правовые пути в разных системах регулирования.",
+      tabsLabel: "Выберите юрисдикцию",
+      scopeLabel: "Охват профиля",
+      overviewLabel: "Обзор регулирования",
+      snapshotLabel: "Кратко",
+      openProfile: "Открыть профиль",
+      compareJurisdictions: "Сравнить юрисдикции",
     },
     puzzle: {
       eyebrow: "Разобраться с Cat",

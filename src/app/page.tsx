@@ -2,123 +2,50 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { JURISDICTION_PROFILES } from "@/app/explore/regulatory-data";
-import { EuropeJurisdictionMap } from "@/app/home/EuropeJurisdictionMap";
-import type { JurisdictionMapPoint } from "@/app/home/EuropeJurisdictionMap";
 import { homeCopy } from "@/app/home/home-i18n";
-import type { Locale } from "@/app/i18n/locale";
+import { JurisdictionNavigator } from "@/app/home/JurisdictionNavigator";
 import { getRequestLocale } from "@/app/i18n/request-locale";
-import { supabase } from "@/app/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-type JurisdictionRow = {
-  id: number;
-  name: string;
-  code: string;
-  slug: string;
-  map_lat: number | string | null;
-  map_lng: number | string | null;
-  map_status: string | null;
-  profile_status: string | null;
-};
-
-type JurisdictionTranslation = {
-  jurisdiction_id: number;
-  name: string | null;
-};
-
-const hiddenMapStatuses = new Set(["disabled", "hidden"]);
-
-function toMapPoint(row: JurisdictionRow): JurisdictionMapPoint | null {
-  if (row.map_lat === null || row.map_lng === null) {
-    return null;
-  }
-
-  const mapLat = Number(row.map_lat);
-  const mapLng = Number(row.map_lng);
-  const mapStatus = row.map_status?.toLowerCase() ?? null;
-
-  if (
-    !Number.isFinite(mapLat) ||
-    !Number.isFinite(mapLng) ||
-    mapLat < 33 ||
-    mapLat > 72.5 ||
-    mapLng < -26 ||
-    mapLng > 46 ||
-    (mapStatus && hiddenMapStatuses.has(mapStatus))
-  ) {
-    return null;
-  }
-
-  return {
-    id: row.id,
-    name: row.name,
-    code: row.code,
-    slug: row.slug,
-    mapLat,
-    mapLng,
-    mapStatus: row.map_status,
-    profileStatus: row.profile_status,
-  };
-}
-
-async function translateJurisdictions(
-  jurisdictions: JurisdictionMapPoint[],
-  locale: Locale,
-) {
-  if (locale === "en" || jurisdictions.length === 0) {
-    return jurisdictions;
-  }
-
-  const { data, error } = await supabase
-    .from("jurisdiction_translations")
-    .select("jurisdiction_id, name")
-    .eq("locale", locale)
-    .eq("published", true)
-    .in(
-      "jurisdiction_id",
-      jurisdictions.map((jurisdiction) => jurisdiction.id),
-    );
-
-  if (error) {
-    console.warn("Failed to load jurisdiction translations:", error.message);
-    return jurisdictions;
-  }
-
-  const translationMap = new Map(
-    ((data ?? []) as JurisdictionTranslation[]).map((translation) => [
-      translation.jurisdiction_id,
-      translation.name,
-    ]),
-  );
-
-  return jurisdictions.map((jurisdiction) => ({
-    ...jurisdiction,
-    name: translationMap.get(jurisdiction.id) ?? jurisdiction.name,
-  }));
-}
+const navigatorOrder = [
+  "netherlands",
+  "germany",
+  "united-kingdom",
+  "united-states",
+  "russia",
+] as const;
 
 export default async function Home() {
   const locale = await getRequestLocale();
   const t = homeCopy[locale];
-  const { data, error } = await supabase
-    .from("jurisdictions")
-    .select(
-      "id, name, code, slug, map_lat, map_lng, map_status, profile_status",
-    )
-    .order("name");
+  const fallbackProfileNames: Partial<
+    Record<(typeof navigatorOrder)[number], string>
+  > = {
+    netherlands: t.ui.map.fallbackNames.netherlands,
+    germany: t.ui.map.fallbackNames.germany,
+    "united-kingdom": t.ui.map.fallbackNames["united-kingdom"],
+    russia: t.ui.map.fallbackNames.russia,
+  };
+  const jurisdictions = navigatorOrder.map((slug) => {
+    const profile = JURISDICTION_PROFILES.find((item) => item.slug === slug);
 
-  if (error) {
-    console.warn("Failed to load jurisdiction map data:", error.message);
-  }
+    if (!profile) {
+      throw new Error(`Missing jurisdiction profile for homepage navigator: ${slug}`);
+    }
 
-  const baseJurisdictions = ((data ?? []) as JurisdictionRow[])
-    .map(toMapPoint)
-    .filter((item): item is JurisdictionMapPoint => item !== null);
-  const jurisdictions = await translateJurisdictions(
-    baseJurisdictions,
-    locale,
-  );
+    return {
+      slug: profile.slug,
+      name:
+        profile.localizedNames?.[locale] ??
+        fallbackProfileNames[slug] ??
+        profile.name,
+      code: profile.code,
+      scope: profile.scopeNote ?? profile.researchCoverage.geographicScope,
+      primaryMessage: profile.primaryMessage,
+      snapshot: profile.snapshot.slice(0, 2),
+    };
+  });
 
   return (
     <main
@@ -197,51 +124,24 @@ export default async function Home() {
         id="map"
       >
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
-          <div className="mb-9 grid gap-5 lg:grid-cols-[0.9fr_0.7fr] lg:items-end">
+          <div className="mb-8 grid gap-5 lg:grid-cols-[0.9fr_0.7fr] lg:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#147c73]">
-                {t.map.eyebrow}
+                {t.navigator.eyebrow}
               </p>
               <h2 className="mt-3 max-w-3xl font-serif text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
-                {t.map.title}
+                {t.navigator.title}
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-6 text-[#10264a]/65 lg:justify-self-end">
-              {t.map.body}
+              {t.navigator.body}
             </p>
           </div>
 
-          <EuropeJurisdictionMap
-            copy={t.ui.map}
+          <JurisdictionNavigator
+            copy={t.navigator}
             jurisdictions={jurisdictions}
           />
-
-          <p className="mt-4 text-[10px] leading-4 text-[#10264a]/45">
-            {t.ui.map.disclaimer}
-          </p>
-          <p className="mt-3 max-w-3xl text-xs leading-5 text-[#10264a]/55">
-            {t.map.scopeNote}
-          </p>
-
-          <nav
-            aria-label={t.map.additionalProfiles}
-            className="mt-7 border-t border-[#10264a]/12 pt-5"
-          >
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#10264a]/45">
-              {t.map.additionalProfiles}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-[#147c73]">
-              {JURISDICTION_PROFILES.map((profile) => (
-                <Link
-                  className="rounded-sm underline decoration-[#147c73]/25 underline-offset-4 outline-none hover:decoration-[#147c73] focus-visible:ring-2 focus-visible:ring-[#147c73] focus-visible:ring-offset-2"
-                  href={`/${profile.slug}`}
-                  key={profile.slug}
-                >
-                  {profile.localizedNames?.[locale] ?? profile.name} · {profile.code}
-                </Link>
-              ))}
-            </div>
-          </nav>
         </div>
       </section>
 
