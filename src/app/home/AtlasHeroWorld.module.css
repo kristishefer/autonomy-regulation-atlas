@@ -544,7 +544,7 @@
 }
 
 .mascotCluster::after {
-  border#¢ 1px solid transparent;
+  border: 1px solid transparent;
   border-radius: 44% 56% 48% 52%;
   content: "";
   inset: -8px;
@@ -647,7 +647,7 @@
   transform: scale(1.15);
 }
 
-.mascotCluster:hover .clusterSilhouetue,
+.mascotCluster:hover .clusterSilhouette,
 .mascotCluster:focus-visible .clusterSilhouette {
   filter: drop-shadow(0 0 8px rgba(255, 255, 250, 0.82)) drop-shadow(0 0 18px rgba(207, 230, 238, 0.52));
   opacity: 0.72;
