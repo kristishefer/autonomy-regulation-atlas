@@ -28,6 +28,9 @@ body {
   --atlas-ink-muted: #567083;
   --atlas-teal: #4f8f82;
   --atlas-origin: #c58b52;
+  --atlas-space: #6f83a6;
+  --atlas-starlight: #a9bbc8;
+  --atlas-space-faint: #d8e1e7;
   --atlas-field-blue: #eff4f6;
   --atlas-field-sage: #f0f4ef;
   --atlas-field-warm: #f7f2ea;
@@ -70,126 +73,206 @@ summary {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
+  z-index: 20;
 }
 
 .atlas-hero-network {
   height: auto;
-  opacity: 0.36;
+  opacity: 0.44;
+  pointer-events: auto;
   position: absolute;
   right: max(-80px, calc((100vw - 1280px) / 2 - 24px));
-  top: 48px;
+  top: 34px;
   width: min(48vw, 620px);
 }
 
+.atlas-network-pointer-field {
+  fill: transparent;
+  pointer-events: all;
+}
+
 .atlas-network-system {
-  animation: atlas-network-drift 20s ease-in-out 900ms infinite alternate;
+  animation: atlas-network-drift 22s ease-in-out 1200ms infinite alternate;
   transform-box: fill-box;
   transform-origin: center;
 }
 
+.atlas-network-relationship {
+  opacity: 0.78;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 260ms ease;
+}
+
+.atlas-network-moment-a {
+  animation: atlas-network-semantic-moment 20s ease-in-out 4s infinite;
+}
+
+.atlas-network-moment-b {
+  animation: atlas-network-semantic-moment 20s ease-in-out 14s infinite;
+}
+
+.atlas-network-relationship-related {
+  animation: none;
+  opacity: 1;
+}
+
+.atlas-network-relationship-muted {
+  animation: none;
+  opacity: 0.24;
+}
+
 .atlas-network-line {
-  animation: atlas-network-draw 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  stroke: rgba(79, 143, 130, 0.26);
+  animation:
+    atlas-network-draw 620ms cubic-bezier(0.22, 1, 0.36, 1) var(--atlas-line-delay) forwards,
+    var(--atlas-curve-animation) var(--atlas-curve-duration) ease-in-out 1400ms infinite alternate;
+  stroke: rgba(111, 131, 166, 0.3);
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   stroke-linecap: round;
   stroke-width: 1.25;
+  transform-box: fill-box;
+  transform-origin: center;
+  vector-effect: non-scaling-stroke;
+}
+
+.atlas-network-line-drift-a {
+  --atlas-curve-animation: atlas-network-orbit-a;
+  --atlas-curve-duration: 19s;
+}
+
+.atlas-network-line-drift-b {
+  --atlas-curve-animation: atlas-network-orbit-b;
+  --atlas-curve-duration: 23s;
+}
+
+.atlas-network-line-drift-c {
+  --atlas-curve-animation: atlas-network-orbit-c;
+  --atlas-curve-duration: 17s;
 }
 
 .atlas-network-line-primary {
-  stroke: rgba(79, 143, 130, 0.52);
+  stroke: rgba(79, 143, 130, 0.58);
   stroke-width: 1.6;
 }
 
 .atlas-network-line-secondary {
-  stroke: rgba(24, 50, 74, 0.24);
+  stroke: rgba(111, 131, 166, 0.32);
 }
 
 .atlas-network-line-background {
-  stroke: rgba(24, 50, 74, 0.11);
+  stroke: rgba(169, 187, 200, 0.42);
   stroke-width: 0.9;
 }
 
-.atlas-network-line-2 {
-  animation-delay: 210ms;
-}
-
-.atlas-network-line-3 {
-  animation-delay: 280ms;
-}
-
-.atlas-network-line-4 {
-  animation-delay: 330ms;
-}
-
-.atlas-network-line-5 {
-  animation-delay: 250ms;
-  stroke: rgba(197, 139, 82, 0.28);
-}
-
-.atlas-network-line-1 {
-  animation-delay: 140ms;
-}
-
 .atlas-network-origin {
-  animation: atlas-network-origin-in 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: atlas-network-origin-in 340ms cubic-bezier(0.22, 1, 0.36, 1) 80ms forwards;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
 }
 
-.atlas-network-origin-field {
-  fill: rgba(197, 139, 82, 0.05);
-  stroke: rgba(197, 139, 82, 0.24);
-  stroke-width: 1;
-}
-
-.atlas-network-origin-ring {
-  fill: rgba(250, 249, 245, 0.58);
-  stroke: rgba(79, 143, 130, 0.58);
+.atlas-network-origin-orbit {
+  stroke: rgba(111, 131, 166, 0.72);
+  stroke-linecap: round;
   stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
 }
 
 .atlas-network-origin-core {
   fill: var(--atlas-origin);
 }
 
-.atlas-network-node {
-  animation: atlas-network-node-in 320ms ease-out forwards;
-  fill: rgba(24, 50, 74, 0.48);
-  opacity: 0;
+.atlas-network-drift {
   transform-box: fill-box;
   transform-origin: center;
 }
 
+.atlas-network-drift-a {
+  animation: atlas-network-orbit-a 19s ease-in-out 1400ms infinite alternate;
+}
+
+.atlas-network-drift-b {
+  animation: atlas-network-orbit-b 23s ease-in-out 1800ms infinite alternate;
+}
+
+.atlas-network-drift-c {
+  animation: atlas-network-orbit-c 17s ease-in-out 1100ms infinite alternate;
+}
+
+.atlas-network-node {
+  animation: atlas-network-node-in 340ms ease-out var(--atlas-node-delay) forwards;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
 .atlas-network-node-ring {
-  fill: rgba(250, 249, 245, 0.46);
-  stroke: rgba(197, 139, 82, 0.42);
+  fill: rgba(250, 249, 245, 0.52);
+  stroke: rgba(111, 131, 166, 0.72);
   stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
 }
 
-.atlas-network-node-3 {
-  animation-delay: 300ms;
+.atlas-network-node-core {
+  fill: var(--atlas-space);
 }
 
-.atlas-network-node-2,
-.atlas-network-node-5 {
-  animation-delay: 260ms;
+.atlas-network-node-dot {
+  fill: var(--atlas-teal);
 }
 
-.atlas-network-node-4,
-.atlas-network-node-6 {
-  animation-delay: 360ms;
+.atlas-network-node-halo {
+  fill: rgba(169, 187, 200, 0.13);
+  stroke: rgba(169, 187, 200, 0.25);
+  stroke-width: 0.75;
+}
+
+.atlas-network-node-secondary {
+  fill: var(--atlas-starlight);
+}
+
+.atlas-network-node-active {
+  animation: none;
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+.atlas-network-node-muted {
+  animation: none;
+  opacity: 0.42;
+  transform: scale(0.97);
+}
+
+.atlas-network-hit {
+  fill: transparent;
+  pointer-events: none;
 }
 
 .atlas-network-label {
-  animation: atlas-network-label-in 260ms ease-out 520ms forwards;
-  fill: rgba(24, 50, 74, 0.4);
+  animation: atlas-network-label-in 300ms ease-out 1040ms forwards;
+  fill: rgba(24, 50, 74, 0.52);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 8px;
+  font-size: 7.5px;
   font-weight: 700;
   letter-spacing: 0.18em;
   opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.atlas-network-label-quiet {
+  fill: rgba(86, 112, 131, 0.46);
+}
+
+.atlas-network-node-active .atlas-network-label {
+  animation: none;
+  opacity: 0.92;
+}
+
+.atlas-network-node-muted .atlas-network-label {
+  animation: none;
+  opacity: 0.2;
 }
 
 .atlas-primary-entry,
@@ -212,7 +295,7 @@ summary {
 
 .atlas-primary-entry:focus-visible,
 .atlas-deploy-entry:focus-visible {
-  outline: 2px solid var(--atlas-origin);
+  outline: 2px solid var(--atlas-teal);
   outline-offset: 3px;
 }
 
@@ -244,7 +327,7 @@ summary {
 
 .atlas-explore-path {
   height: auto;
-  opacity: 0.32;
+  opacity: 0.38;
   position: absolute;
   right: -18px;
   top: 18px;
@@ -253,7 +336,7 @@ summary {
 }
 
 .atlas-motif-line {
-  stroke: rgba(24, 50, 74, 0.18);
+  stroke: rgba(111, 131, 166, 0.28);
   stroke-linecap: round;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
@@ -261,15 +344,42 @@ summary {
 
 .atlas-motif-node {
   fill: var(--atlas-paper);
-  stroke: rgba(24, 50, 74, 0.34);
+  stroke: rgba(111, 131, 166, 0.62);
   stroke-width: 1;
-  transition: fill 220ms ease, stroke 220ms ease;
+  transition: fill 220ms ease, opacity 220ms ease, stroke 220ms ease;
   vector-effect: non-scaling-stroke;
 }
 
-.atlas-motif-node-active {
-  fill: var(--atlas-origin);
+.atlas-motif-node-filled {
+  fill: var(--atlas-space);
   stroke: var(--atlas-paper);
+}
+
+.atlas-motif-node-open {
+  fill: rgba(250, 249, 245, 0.56);
+}
+
+.atlas-motif-node-faint {
+  fill: var(--atlas-starlight);
+  opacity: 0.72;
+  stroke: transparent;
+}
+
+.atlas-motif-node-active {
+  fill: var(--atlas-teal);
+  stroke: var(--atlas-paper);
+}
+
+.atlas-motif-node-dot {
+  fill: var(--atlas-teal);
+}
+
+.atlas-motif-halo {
+  fill: rgba(169, 187, 200, 0.12);
+  stroke: rgba(169, 187, 200, 0.3);
+  stroke-width: 0.8;
+  transition: fill 220ms ease, opacity 220ms ease;
+  vector-effect: non-scaling-stroke;
 }
 
 .atlas-explore-route {
@@ -288,43 +398,89 @@ summary {
 }
 
 .atlas-learn-structure {
-  display: grid;
-  gap: 8px;
-  opacity: 0.42;
+  height: auto;
+  opacity: 0.4;
   position: absolute;
-  right: 12px;
-  top: 20px;
-  width: 44%;
+  right: -8px;
+  top: 10px;
+  width: 48%;
   z-index: 1;
 }
 
-.atlas-learn-layer {
-  align-items: center;
-  background: rgba(250, 249, 245, 0.5);
-  border-radius: 999px;
-  color: rgba(24, 50, 74, 0.62);
-  display: grid;
+.atlas-cat-relationships {
+  opacity: 0.62;
+  transition: opacity 320ms ease;
+}
+
+.atlas-cat-line {
+  transition: stroke 320ms ease, stroke-width 320ms ease;
+}
+
+.atlas-cat-line-selected {
+  opacity: 0.56;
+  stroke: rgba(79, 143, 130, 0.38);
+}
+
+.atlas-cat-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: translate 340ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.atlas-cat-node-concept {
+  translate: -3px 8px;
+}
+
+.atlas-cat-node-rule {
+  translate: -9px -4px;
+}
+
+.atlas-cat-node-application {
+  translate: 8px 9px;
+}
+
+.atlas-cat-node-context {
+  translate: -7px -3px;
+}
+
+.atlas-cat-node-source {
+  translate: 7px 6px;
+}
+
+.atlas-cat-label {
+  fill: rgba(86, 112, 131, 0.42);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 7px;
+  font-size: 6.5px;
   font-weight: 700;
-  grid-template-columns: 26px 1fr;
-  letter-spacing: 0.12em;
-  min-height: 26px;
-  padding: 5px 10px;
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  letter-spacing: 0.13em;
+  opacity: 0.42;
+  transition: fill 260ms ease, opacity 260ms ease;
 }
 
-.atlas-learn-layer:nth-child(2) {
-  transform: translateX(18px);
+.atlas-cat-label-primary {
+  opacity: 0.68;
 }
 
-.atlas-learn-layer:nth-child(3) {
-  transform: translateX(7px);
+.atlas-learn-entry:hover .atlas-cat-node,
+.atlas-learn-entry:focus-visible .atlas-cat-node {
+  translate: 0 0;
 }
 
-.atlas-learn-entry:hover .atlas-learn-layer,
-.atlas-learn-entry:focus-visible .atlas-learn-layer {
-  transform: translateX(9px);
+.atlas-learn-entry:hover .atlas-cat-relationships,
+.atlas-learn-entry:focus-visible .atlas-cat-relationships {
+  opacity: 0.94;
+}
+
+.atlas-learn-entry:hover .atlas-cat-line-selected,
+.atlas-learn-entry:focus-visible .atlas-cat-line-selected {
+  stroke: rgba(79, 143, 130, 0.78);
+  stroke-width: 1.4;
+}
+
+.atlas-learn-entry:hover .atlas-cat-label,
+.atlas-learn-entry:focus-visible .atlas-cat-label {
+  fill: rgba(24, 50, 74, 0.72);
+  opacity: 0.82;
 }
 
 .atlas-deploy-decision {
@@ -337,7 +493,7 @@ summary {
 }
 
 .atlas-deploy-route {
-  stroke: rgba(197, 139, 82, 0.7);
+  stroke: rgba(79, 143, 130, 0.7);
   stroke-dasharray: 1;
   stroke-dashoffset: 0.24;
   stroke-linecap: round;
@@ -353,7 +509,7 @@ summary {
 
 .atlas-deploy-entry:hover .atlas-deploy-decision .atlas-motif-node-active,
 .atlas-deploy-entry:focus-visible .atlas-deploy-decision .atlas-motif-node-active {
-  fill: var(--atlas-teal);
+  fill: var(--atlas-space);
 }
 
 @keyframes atlas-network-draw {
@@ -398,7 +554,63 @@ summary {
   }
 
   to {
-    transform: translate3d(6px, -5px, 0);
+    transform: translate3d(3px, -2px, 0);
+  }
+}
+
+@keyframes atlas-network-orbit-a {
+  0% {
+    transform: translate3d(-1px, 1px, 0);
+  }
+
+  46% {
+    transform: translate3d(3px, -2px, 0);
+  }
+
+  100% {
+    transform: translate3d(1px, 2px, 0);
+  }
+}
+
+@keyframes atlas-network-orbit-b {
+  0% {
+    transform: translate3d(1px, -1px, 0);
+  }
+
+  55% {
+    transform: translate3d(-3px, 2px, 0);
+  }
+
+  100% {
+    transform: translate3d(2px, 1px, 0);
+  }
+}
+
+@keyframes atlas-network-orbit-c {
+  0% {
+    transform: translate3d(-1px, -2px, 0);
+  }
+
+  42% {
+    transform: translate3d(2px, 2px, 0);
+  }
+
+  100% {
+    transform: translate3d(3px, -1px, 0);
+  }
+}
+
+@keyframes atlas-network-semantic-moment {
+  0%,
+  34%,
+  62%,
+  100% {
+    opacity: 0.72;
+  }
+
+  43%,
+  52% {
+    opacity: 1;
   }
 }
 
@@ -411,7 +623,7 @@ summary {
 
 .atlas-dossier-tab::after,
 .atlas-question-tab::after {
-  background: var(--atlas-origin);
+  background: var(--atlas-space);
   bottom: -1px;
   content: "";
   height: 2px;
@@ -495,7 +707,7 @@ summary {
 }
 
 .atlas-lens-button.is-active::before {
-  background: var(--atlas-origin);
+  background: var(--atlas-space);
   content: "";
   height: 5px;
   left: 8px;
@@ -551,7 +763,7 @@ summary {
 }
 
 .atlas-lens-connector.is-active::after {
-  background: var(--atlas-origin);
+  background: var(--atlas-space);
   transform: translate(-50%, -50%) scale(1.18);
 }
 
@@ -672,16 +884,29 @@ summary {
   width: 15px;
 }
 
+.atlas-footer-mark-button .atlas-signature-origin-core {
+  fill: var(--atlas-origin);
+  stroke: none;
+}
+
+.atlas-footer-mark-button .atlas-signature-origin-line {
+  stroke: var(--atlas-starlight);
+}
+
+.atlas-footer-mark-button .atlas-signature-origin-orbit {
+  stroke: currentColor;
+}
+
 .atlas-footer-mark-button:hover,
 .atlas-footer-mark-button:focus {
   border-color: rgba(250, 249, 245, 0.46);
   color: var(--atlas-paper);
-  outline: 2px solid var(--atlas-origin);
+  outline: 2px solid var(--atlas-teal);
   outline-offset: 2px;
 }
 
 .atlas-footer-mark-origin {
-  color: rgba(197, 139, 82, 0.78);
+  color: rgba(169, 187, 200, 0.82);
 }
 
 .atlas-footer-mark-line {
@@ -812,6 +1037,8 @@ summary {
   }
 
   .atlas-network-system,
+  .atlas-network-drift,
+  .atlas-network-relationship,
   .atlas-network-line,
   .atlas-network-node,
   .atlas-network-origin,
@@ -821,12 +1048,31 @@ summary {
 
   .atlas-network-line {
     stroke-dashoffset: 0;
+    transform: none;
   }
 
+  .atlas-network-relationship,
   .atlas-network-node,
   .atlas-network-origin,
   .atlas-network-label {
     opacity: 1;
+  }
+
+  .atlas-network-label-quiet {
+    opacity: 0.5;
+  }
+
+  .atlas-network-pointer-field {
+    pointer-events: none;
+  }
+
+  .atlas-cat-node {
+    translate: 0 0;
+  }
+
+  .atlas-cat-relationships,
+  .atlas-cat-label {
+    opacity: 0.82;
   }
 
   .atlas-primary-entry:hover,
@@ -853,13 +1099,23 @@ summary {
 @media (max-width: 639px) {
   .atlas-hero-network-shell {
     mask-image: linear-gradient(to left, black, transparent 92%);
-    opacity: 0.55;
+    opacity: 0.72;
   }
 
   .atlas-hero-network {
-    right: -245px;
-    top: 104px;
+    pointer-events: none;
+    right: -390px;
+    top: -44px;
     width: 510px;
+  }
+
+  .atlas-network-pointer-field {
+    pointer-events: none;
+  }
+
+  .atlas-network-relationship {
+    animation: none;
+    opacity: 0.76;
   }
 
   .atlas-network-label {
@@ -874,16 +1130,10 @@ summary {
   }
 
   .atlas-learn-structure {
-    opacity: 0.25;
-    right: -6px;
-    top: 42px;
-    width: 150px;
-  }
-
-  .atlas-learn-layer {
-    font-size: 6px;
-    min-height: 23px;
-    padding: 3px 5px;
+    opacity: 0.28;
+    right: -22px;
+    top: 34px;
+    width: 172px;
   }
 
   .atlas-deploy-decision {

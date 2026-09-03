@@ -85,7 +85,7 @@ export default async function Home() {
             <h1 className="mt-5 max-w-3xl break-words hyphens-auto font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
               <span className="block">{t.hero.line1}</span>
               <span className="block">{t.hero.line2}</span>
-              <span className="block text-[var(--atlas-origin)]">{t.hero.line3}</span>
+              <span className="block text-[var(--atlas-space)]">{t.hero.line3}</span>
             </h1>
 
             <p className="mt-7 max-w-xl text-base leading-7 text-[var(--atlas-ink-muted)] sm:text-lg sm:leading-8">
@@ -206,7 +206,7 @@ export default async function Home() {
                   className="atlas-method-step relative min-h-28 px-3 py-5 sm:px-5"
                   key={step}
                 >
-                  <span className="atlas-method-node font-mono text-[10px] text-[var(--atlas-origin)]">
+                  <span className="atlas-method-node font-mono text-[10px] text-[var(--atlas-space)]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <p className="mt-7 text-base font-semibold leading-6">
@@ -264,16 +264,16 @@ function PrimaryGuideLink({
       text: "text-[var(--atlas-teal)]",
     },
     gold: {
-      bg: "bg-[var(--atlas-field-warm)]",
-      border: "border-[rgba(197,139,82,0.16)]",
-      text: "text-[var(--atlas-origin)]",
+      bg: "bg-[var(--atlas-field-blue)]",
+      border: "border-[rgba(111,131,166,0.18)]",
+      text: "text-[var(--atlas-space)]",
     },
   } as const;
   const color = tones[tone];
 
   return (
     <Link
-      className={`atlas-primary-entry atlas-${tone === "green" ? "explore" : "learn"}-entry group relative grid min-h-[190px] grid-cols-[1fr_112px] items-center gap-4 rounded-2xl border p-5 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-offset-2 sm:min-h-[220px] sm:grid-cols-[1fr_156px] sm:p-7 ${color.bg} ${color.border}`}
+      className={`atlas-primary-entry atlas-${tone === "green" ? "explore" : "learn"}-entry group relative grid min-h-[190px] grid-cols-[1fr_112px] items-center gap-4 rounded-2xl border p-5 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-2 sm:min-h-[220px] sm:grid-cols-[1fr_156px] sm:p-7 ${color.bg} ${color.border}`}
       href={href}
     >
       {tone === "green" ? <ExplorePathMotif /> : <LearnStructureMotif />}
@@ -318,7 +318,7 @@ function DeployGuideLink({
 }) {
   return (
     <Link
-      className="atlas-deploy-entry group relative mx-auto mt-5 grid max-w-3xl grid-cols-[82px_1fr] items-center gap-4 rounded-xl border border-[rgba(86,112,131,0.14)] bg-[var(--atlas-field-blue)] px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-offset-2 sm:grid-cols-[104px_1fr_auto] sm:gap-5 sm:px-5"
+      className="atlas-deploy-entry group relative mx-auto mt-5 grid max-w-3xl grid-cols-[82px_1fr] items-center gap-4 rounded-xl border border-[rgba(86,112,131,0.14)] bg-[var(--atlas-field-blue)] px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-2 sm:grid-cols-[104px_1fr_auto] sm:gap-5 sm:px-5"
       href="/deploy"
     >
       <DeployDecisionMotif />

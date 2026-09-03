@@ -49,7 +49,11 @@ function MarkGraphic({ mark }: { mark: MarkId }) {
   if (mark === "cat") {
     return (
       <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-        <path d="M5 7H19M7 12H17M9 17H15" />
+        <path d="M4 15C7 8 10 9 12 7M12 7C15 8 17 11 20 9M12 7C13 12 15 15 18 18" />
+        <circle cx="4" cy="15" r="1.4" />
+        <circle cx="12" cy="7" r="2" />
+        <circle cx="20" cy="9" r="1.4" />
+        <circle cx="18" cy="18" r="1.4" />
       </svg>
     );
   }
@@ -57,8 +61,9 @@ function MarkGraphic({ mark }: { mark: MarkId }) {
   if (mark === "origin") {
     return (
       <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="3" />
-        <circle cx="12" cy="12" r="7" />
+        <path className="atlas-signature-origin-orbit" d="M6 9A7 7 0 1 1 13 19" />
+        <path className="atlas-signature-origin-line" d="M11 12L19 6M11 12L21 15" />
+        <circle className="atlas-signature-origin-core" cx="11" cy="12" r="2.2" />
       </svg>
     );
   }
@@ -66,10 +71,10 @@ function MarkGraphic({ mark }: { mark: MarkId }) {
   if (mark === "fox") {
     return (
       <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-        <path d="M3 17L8 8L14 13L21 5" />
+        <path d="M3 17C7 6 11 10 14 13S18 8 21 5" />
         <circle cx="3" cy="17" r="1.5" />
-        <circle cx="8" cy="8" r="1.5" />
-        <circle cx="14" cy="13" r="1.5" />
+        <circle cx="8" cy="8" r="2" />
+        <circle cx="14" cy="13" r="1.2" />
         <circle cx="21" cy="5" r="1.5" />
       </svg>
     );
@@ -77,11 +82,11 @@ function MarkGraphic({ mark }: { mark: MarkId }) {
 
   return (
     <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-      <path d="M4 12H11M11 12L18 6M11 12L18 18" />
+      <path d="M4 12C7 12 9 12 11 12M11 12C14 11 16 8 19 6M11 12C14 13 16 17 19 18" />
       <circle cx="4" cy="12" r="1.5" />
-      <circle cx="11" cy="12" r="1.5" />
-      <circle cx="18" cy="6" r="1.5" />
-      <circle cx="18" cy="18" r="1.5" />
+      <circle cx="11" cy="12" r="2" />
+      <circle cx="19" cy="6" r="1.5" />
+      <circle cx="19" cy="18" r="1.2" />
     </svg>
   );
 }

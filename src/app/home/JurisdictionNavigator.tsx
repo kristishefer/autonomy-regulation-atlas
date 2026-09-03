@@ -145,7 +145,7 @@ export function JurisdictionNavigator({
               <button
                 aria-controls="jurisdiction-panel"
                 aria-selected={active}
-                className={`atlas-dossier-tab min-w-max snap-start border-r border-[rgba(24,50,74,0.08)] px-4 py-3 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-inset md:min-w-0 ${
+                className={`atlas-dossier-tab min-w-max snap-start border-r border-[rgba(24,50,74,0.08)] px-4 py-3 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-inset md:min-w-0 ${
                   active
                     ? "is-active bg-white/85 text-[var(--atlas-ink)]"
                     : "bg-transparent text-[var(--atlas-ink-muted)] hover:bg-white/50 hover:text-[var(--atlas-ink)]"
@@ -163,7 +163,7 @@ export function JurisdictionNavigator({
               >
                 <span
                   className={`block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] ${
-                    active ? "text-[var(--atlas-origin)]" : "text-[var(--atlas-teal)]"
+                    active ? "text-[var(--atlas-space)]" : "text-[var(--atlas-teal)]"
                   }`}
                 >
                   {jurisdiction.code}
@@ -245,13 +245,13 @@ export function JurisdictionNavigator({
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[rgba(24,50,74,0.08)] px-1 py-5 text-sm font-semibold sm:px-6 lg:px-0">
           <Link
-            className="rounded-sm text-[var(--atlas-teal)] outline-none transition hover:text-[var(--atlas-ink)] focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-offset-4"
+            className="rounded-sm text-[var(--atlas-teal)] outline-none transition hover:text-[var(--atlas-ink)] focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-4"
             href={`/${selected.slug}`}
           >
             {copy.openProfile} →
           </Link>
           <Link
-            className="rounded-sm text-[var(--atlas-ink-muted)] outline-none transition hover:text-[var(--atlas-ink)] focus-visible:ring-2 focus-visible:ring-[var(--atlas-origin)] focus-visible:ring-offset-4"
+            className="rounded-sm text-[var(--atlas-ink-muted)] outline-none transition hover:text-[var(--atlas-ink)] focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-4"
             href="/explore/compare"
           >
             {copy.compareJurisdictions} →
