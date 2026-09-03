@@ -22,10 +22,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .hero-transfer/hero-art-direction.part00 \
-              .hero-transfer/hero-art-direction.part01 \
-              .hero-transfer/hero-art-direction.part02 \
-              .hero-transfer/hero-art-direction.part03 > /tmp/hero-art-direction.b64
+          cat .hero-transfer-small/art.part* > /tmp/hero-art-direction.b64
           base64 --decode /tmp/hero-art-direction.b64 > /tmp/hero-art-direction.zip
           echo "aa6a2d3e09c141f0d79cef6955b3a82810b0d62301fcdb98bb4cf51fba4fa1c3  /tmp/hero-art-direction.zip" | sha256sum --check --strict
           mkdir -p /tmp/hero-art-direction
@@ -44,9 +41,10 @@ jobs:
           cp /tmp/hero-art-direction/src/app/home/HeroRegulatoryNetwork.tsx src/app/home/HeroRegulatoryNetwork.tsx
           cp /tmp/hero-art-direction/src/app/page.tsx src/app/page.tsx
 
-          changed="$(git diff --name-only)"
-          expected=$'src/app/globals.css\nsrc/app/home/HeroRegulatoryNetwork.tsx\nsrc/app/page.tsx'
-          test "$changed" = "$expected"
+          changed_count="$(git diff --name-only | wc -l | tr -d ' ')"
+          test "$changed_count" = "3"
+          unexpected="$(git diff --name-only | grep -Ev '^(src/app/globals\.css|src/app/home/HeroRegulatoryNetwork\.tsx|src/app/page\.tsx)$' || true)"
+          test -z "$unexpected"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
