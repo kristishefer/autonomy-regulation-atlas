@@ -1,0 +1,44 @@
+name: Transfer Hero Motion
+
+on:
+  push:
+    branches:
+      - transfer/hero-motion-patch-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout transfer branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preserve and verify patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(sha256sum .hero-motion/hero-motion.patch | awk '{print $1}')" = "9d76186a18125f877c3407b7e6f7ca68ef8f44a09e048579504bc9e990b9db60"
+          cp .hero-motion/hero-motion.patch /tmp/hero-motion.patch
+
+      - name: Apply validated motion pass to preview branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin codex/homepage-ia-v2
+          git checkout -B codex/homepage-ia-v2 origin/codex/homepage-ia-v2
+          test "$(git rev-parse HEAD)" = "2c8378bc3f9250da46546ec93fe293aaf71cc3b0"
+          git apply --check /tmp/hero-motion.patch
+          git apply /tmp/hero-motion.patch
+          test "$(git hash-object src/app/globals.css)" = "f6d51483eb345a61e6fbd44dfc5a74b90a4f6fd4"
+          test "$(git hash-object src/app/home/HeroRegulatoryNetwork.tsx)" = "bffeda676e15e618deea11984cce0b6153c9083c"
+          git diff --check
+          git add src/app/globals.css src/app/home/HeroRegulatoryNetwork.tsx
+          test "$(git diff --cached --name-only | sort | paste -sd ',' -)" = "src/app/globals.css,src/app/home/HeroRegulatoryNetwork.tsx"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "animate Atlas living constellation"
+          git push origin HEAD:codex/homepage-ia-v2
