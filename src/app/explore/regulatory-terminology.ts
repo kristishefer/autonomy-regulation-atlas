@@ -4,6 +4,7 @@ import {
   type JurisdictionSlug,
   type SourceId,
 } from "@/app/explore/regulatory-data";
+import { assertNativeTermNotFlattened } from "@/app/explore/regulatory-model";
 
 export type RegulatoryQuestionId =
   | "road-access"
@@ -925,6 +926,20 @@ export const JURISDICTION_TERMS: Record<
   ...BASE_JURISDICTION_TERMS,
   ...EXPANSION_JURISDICTION_TERMS,
 };
+
+for (const termId of [
+  "de-technische-aufsicht",
+  "de-betriebsbereich",
+  "nl-operationeel-domein",
+  "nl-ontheffing",
+] as const) {
+  const term = JURISDICTION_TERMS[termId];
+  assertNativeTermNotFlattened({
+    officialTerm: term.officialTerm,
+    analyticalLabel: UNIVERSAL_ATLAS_CONCEPTS[term.conceptId].analyticalLabel,
+    relationshipTypes: term.relationships.map((relationship) => relationship.type),
+  });
+}
 
 export function getUniversalAtlasConcept(conceptId: UniversalAtlasConceptId) {
   return UNIVERSAL_ATLAS_CONCEPTS[conceptId];

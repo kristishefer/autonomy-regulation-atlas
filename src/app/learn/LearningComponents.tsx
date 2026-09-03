@@ -361,7 +361,7 @@ function StandardCard({
       </div>
       <p className="mt-4 text-sm leading-6 text-[#10264a]/68"><strong className="text-[#10264a]">ADS relevance:</strong> {standard.avRelevance}</p>
       <a className="mt-4 inline-flex rounded-sm text-xs font-semibold text-[#147c73] underline decoration-[#147c73]/30 underline-offset-4 focus-visible:ring-2 focus-visible:ring-[#b97512]" href={source.url} rel="noreferrer" target="_blank">
-        {source.shortTitle} · {source.status} ↗
+        {source.shortTitle} · {source.status} · {sourceAccessLabel(source.sourceAccess)} ↗
       </a>
       {standard.watchIds.map((id) => {
         const watch = getStandardsWatchItem(id);
@@ -374,6 +374,7 @@ function StandardCard({
             <div className="mt-3 bg-[#fff8e8] p-4 text-xs leading-5 text-[#10264a]/65">
               <p>{watch.status}</p>
               <p className="mt-2"><strong>Display rule:</strong> {watch.displayRule}</p>
+              <p className="mt-2"><strong>Next review:</strong> {watch.nextReviewAt}</p>
               <SourceLinks ids={watch.sourceIds} compact />
             </div>
           </details>
@@ -553,11 +554,20 @@ export function SourceLinks({ compact = false, dark = false, ids }: { compact?: 
       {uniqueIds.map((id) => {
         const source = resolveLearningSource(id);
         return (
-          <a className={`rounded-sm text-xs font-semibold underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-[#b97512] ${dark ? "text-[#9ce0d6] decoration-[#9ce0d6]/30" : "text-[#147c73] decoration-[#147c73]/30"}`} href={source.url} key={id} rel="noreferrer" target="_blank" title={`${source.category} · ${source.status}`}>
-            {source.shortTitle} · {source.category} · {source.status} ↗
+          <a className={`rounded-sm text-xs font-semibold underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-[#b97512] ${dark ? "text-[#9ce0d6] decoration-[#9ce0d6]/30" : "text-[#147c73] decoration-[#147c73]/30"}`} href={source.url} key={id} rel="noreferrer" target="_blank" title={`${source.category} · ${source.status} · ${sourceAccessLabel(source.sourceAccess)}`}>
+            {source.shortTitle} · {source.category} · {source.status} · {sourceAccessLabel(source.sourceAccess)} ↗
           </a>
         );
       })}
     </div>
   );
+}
+
+function sourceAccessLabel(access: string) {
+  const labels: Record<string, string> = {
+    public_abstract: "Public abstract",
+    licensed_full_text: "Licensed full text",
+    official_legal_reference: "Official legal reference",
+  };
+  return labels[access] ?? access;
 }

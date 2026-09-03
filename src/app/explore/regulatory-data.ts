@@ -1,5 +1,28 @@
 import type { LearningConceptId } from "@/app/explore/learning-concepts";
 import expansionSeed from "@/app/explore/jurisdiction-expansion-seed-v1.json";
+import {
+  assertQuarantinedSourcesNotExposed,
+  validateConclusionRecord,
+  validateProfileScope,
+  validateStagedSource,
+  type RegimeComponentStatus,
+  type ResearchCoverage,
+  type ReviewMetadata,
+  type SelectedScenario,
+} from "@/app/explore/regulatory-model";
+
+export type {
+  OperatingEnvironment,
+  RegimeComponentStatus,
+  RegulatoryUseCase,
+  ResearchCoverage,
+  ReviewMetadata,
+  ReviewMethod,
+  ReviewStatus,
+  SelectedScenario,
+  SystemClass,
+  VehicleCategory,
+} from "@/app/explore/regulatory-model";
 
 export type JurisdictionSlug =
   | "netherlands"
@@ -17,7 +40,8 @@ export type LegalStatus =
   | "draft"
   | "guidance"
   | "legislative_history"
-  | "case_law";
+  | "case_law"
+  | "mixed";
 
 export type SourceType =
   | "official_legislation"
@@ -42,6 +66,10 @@ export type RegulatoryScope = {
 export type SourceReference = {
   sourceId: SourceId;
   provision?: string;
+  legalStatus?: Exclude<LegalStatus, "mixed">;
+  effectiveFrom?: string;
+  effectiveTo?: string;
+  regimeComponent?: string;
 };
 
 export type RegulatoryConclusion = {
@@ -56,6 +84,8 @@ export type RegulatoryConclusion = {
   legalBasis: SourceReference[];
   legalStatus: LegalStatus;
   lastVerified: string;
+  review: ReviewMetadata;
+  regimeComponents?: RegimeComponentStatus[];
   atlasAnalysis?: string;
   uncertaintyReason?: string;
   searchScope?: string;
@@ -72,6 +102,9 @@ export type RegulatorySource = {
   statusLabel: string;
   lastChecked: string;
   jurisdiction: string;
+  review?: ReviewMetadata;
+  stagedCommencement?: boolean;
+  regimeComponents?: RegimeComponentStatus[];
 };
 
 export type JurisdictionSection = {
@@ -118,6 +151,8 @@ export type JurisdictionProfile = {
   localizedNames?: Partial<Record<"en" | "de" | "nl" | "ru", string>>;
   scenario: string;
   scenarioScope: ScenarioScopeItem[];
+  selectedScenario: SelectedScenario;
+  researchCoverage: ResearchCoverage;
   verifiedLabel: string;
   primaryMessage: string;
   deploymentAnswers: DeploymentAnswerItem[];
@@ -505,11 +540,11 @@ type ExpansionSourceInput = Omit<RegulatorySource, "id"> & {
 
 const validatedConditionalSourceIds = new Set<SourceId>([
   "ru-1955",
-  "uk-commencement3-2026",
 ]);
 
 const withheldSourceIds = new Set<SourceId>([
   "ru-347",
+  "uk-commencement3-2026",
   "uk-marketing-regs-2026",
 ]);
 
@@ -517,15 +552,46 @@ const expansionSourceCorrections: Partial<
   Record<SourceId, Partial<RegulatorySource>>
 > = {
   "us-ca-dmv-av-regulations": {
-    statusLabel: "Adopted 28 Apr 2026 · phased effective dates",
+    statusLabel:
+      "In force · effective 28 Apr 2026; specified reporting duties operative 26 Aug 2026",
+    regimeComponents: [
+      {
+        component: "Articles 3.7 and 3.8 generally",
+        legalStatus: "in_force",
+        effectiveFrom: "2026-04-28",
+        provision: "13 CCR Articles 3.7 and 3.8",
+      },
+      {
+        component: "Specified testing-data reporting duties",
+        legalStatus: "in_force",
+        effectiveFrom: "2026-08-26",
+        provision: "13 CCR §§ 227.56–227.60 and 227.66",
+        note: "The adopted text made these duties operative 120 days after 28 April 2026.",
+      },
+    ],
+  },
+  "uk-av-act-2024": {
+    legalStatus: "mixed",
+    statusLabel:
+      "Enacted framework · limited provisions commenced; full authorisation regime not yet operational",
+    stagedCommencement: true,
+    regimeComponents: [
+      {
+        component: "Automated passenger-services pilot provisions",
+        legalStatus: "in_force",
+        effectiveFrom: "2026-05-15",
+        sourceId: "uk-commencement2-2026",
+      },
+      {
+        component: "Full vehicle-authorisation and in-use regulatory framework",
+        legalStatus: "adopted_not_yet_effective",
+        note: "Commencement remains provision-specific; do not treat the complete Act as operational.",
+      },
+    ],
   },
   "uk-aps-regs-2026": {
     title: "The Automated Vehicles (Permits for Automated Passenger Services) Regulations 2026",
     shortTitle: "APS permit regulations 2026",
-  },
-  "uk-commencement3-2026": {
-    legalStatus: "adopted_not_yet_effective",
-    statusLabel: "Made · relevant commencement takes effect 7 Jan 2027",
   },
 };
 
@@ -556,18 +622,38 @@ export const REGULATORY_SOURCES: Partial<
   ...EXPANSION_REGULATORY_SOURCES,
 };
 
-type ConclusionInput = Omit<RegulatoryConclusion, "lastVerified">;
+Object.values(REGULATORY_SOURCES).forEach((source) => {
+  if (source) validateStagedSource(source);
+});
+
+const DEFAULT_NEXT_REVIEW = "2026-10-01";
+
+function claimReview(
+  reviewedAt: string,
+  reviewMethod: ReviewMetadata["reviewMethod"] = "official_public_text",
+  stale = false,
+): ReviewMetadata {
+  return {
+    reviewedAt,
+    nextReviewAt: DEFAULT_NEXT_REVIEW,
+    reviewer: "Atlas regulatory audit",
+    reviewMethod,
+    stale,
+  };
+}
+
+type ConclusionInput = Omit<RegulatoryConclusion, "lastVerified" | "review"> & {
+  review?: ReviewMetadata;
+};
 
 function conclusion(input: ConclusionInput): RegulatoryConclusion {
-  if (input.confidenceStatus === "unclear" && !input.uncertaintyReason) {
-    throw new Error(`Unclear conclusion requires uncertaintyReason: ${input.key}`);
-  }
-
-  if (input.confidenceStatus === "not_identified" && !input.searchScope) {
-    throw new Error(`Not identified conclusion requires searchScope: ${input.key}`);
-  }
-
-  return { ...input, lastVerified: "2026-08-31" };
+  const record: RegulatoryConclusion = {
+    ...input,
+    lastVerified: "2026-09-03",
+    review: input.review ?? claimReview("2026-09-03"),
+  };
+  validateConclusionRecord(record);
+  return record;
 }
 
 const passengerRoadScope: RegulatoryScope = {
@@ -587,6 +673,9 @@ type EstablishedInput = {
   scope?: RegulatoryScope;
   scopeLabel?: string;
   atlasAnalysis?: string;
+  legalStatus?: LegalStatus;
+  review?: ReviewMetadata;
+  regimeComponents?: RegimeComponentStatus[];
 };
 
 function established(input: EstablishedInput) {
@@ -597,7 +686,7 @@ function established(input: EstablishedInput) {
     scope: input.scope ?? passengerRoadScope,
     scopeLabel:
       input.scopeLabel ?? "Driverless passenger vehicles · public roads",
-    legalStatus: "in_force",
+    legalStatus: input.legalStatus ?? "in_force",
   });
 }
 
@@ -611,7 +700,7 @@ function notIdentified(
     scope: input.scope ?? passengerRoadScope,
     scopeLabel:
       input.scopeLabel ?? "Driverless passenger vehicles · public roads",
-    legalStatus: "in_force",
+    legalStatus: input.legalStatus ?? "in_force",
   });
 }
 
@@ -625,7 +714,7 @@ function unclear(
     scope: input.scope ?? passengerRoadScope,
     scopeLabel:
       input.scopeLabel ?? "Driverless passenger vehicles · public roads",
-    legalStatus: "in_force",
+    legalStatus: input.legalStatus ?? "in_force",
   });
 }
 
@@ -695,26 +784,32 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
       humanRole: "bestuurder buiten het motorrijtuig",
     },
   }),
-  human_performs_driving_task: established({
+  human_performs_driving_task: unclear({
     key: "human_performs_driving_task",
     label: "Human performs driving task",
-    status: "Yes",
+    status: "Role-specific / unclear",
     summary:
-      "The experiment framework does not remove the legal driver; legislative history contemplates a person who retains control and can intervene.",
+      "The experiment framework retains a legally relevant bestuurder outside the vehicle and permit-specific control/intervention arrangements. The reviewed sources do not establish that this person continuously performs the entire dynamic driving task.",
     legalBasis: [
       { sourceId: "nl-history-34838-3", provision: "Driver discussion" },
       { sourceId: "nl-history-34838-4", provision: "Section 1 — De bestuurder" },
     ],
-    scopeLabel: "Relevant Dutch experimental model",
+    uncertaintyReason:
+      "The sources describe the legal driver role and intervention capability, but do not map that role cleanly onto every element of the technical dynamic driving task.",
+    scopeLabel: "Article 149aa out-of-vehicle-driver experiment",
+    legalStatus: "legislative_history",
   }),
-  continuous_human_monitoring: established({
+  continuous_human_monitoring: unclear({
     key: "continuous_human_monitoring",
     label: "Continuous human monitoring",
-    status: "Required in the relevant model",
+    status: "Experiment / permit specific",
     summary:
-      "Official explanatory material describes an out-of-vehicle driver who continuously monitors and can intervene immediately.",
+      "Legislative history describes an out-of-vehicle driver who continuously monitors and can intervene immediately, but the precise operational arrangement remains experiment- and permit-specific.",
     legalBasis: [{ sourceId: "nl-history-34838-4", provision: "Section 1 — De bestuurder" }],
-    scopeLabel: "Article 149aa experimental model · legislative-history interpretation",
+    uncertaintyReason:
+      "The proposition comes from legislative history and must not be generalized into one uniform in-force monitoring rule for every Dutch automated-driving operation.",
+    scopeLabel: "Article 149aa model · legislative-history and permit context",
+    legalStatus: "legislative_history",
   }),
   remote_driving_framework: established({
     key: "remote_driving_framework",
@@ -775,17 +870,19 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     legalBasis: [{ sourceId: "nl-wvw", provision: "Article 149aa(3)" }],
     scopeLabel: "Only requirements within the statutory exemption power",
   }),
-  ads_rule_compliance: established({
+  ads_rule_compliance: notIdentified({
     key: "ads_rule_compliance",
     label: "ADS responsibility for compliance",
-    status: "Driver remains legally relevant",
+    status: "General transfer to ADS not identified",
     summary:
-      "The experimental regime does not generally transfer the conventional driver's legal role to the ADS.",
+      "The experimental regime retains a legally relevant bestuurder. A general Dutch rule transferring conventional driver duties to the ADS for this scenario has not been identified.",
     legalBasis: [
       { sourceId: "nl-history-34838-3", provision: "Driver discussion" },
       { sourceId: "nl-history-34838-4", provision: "Section 1 — De bestuurder" },
     ],
-    scopeLabel: "Article 149aa experimental model",
+    searchScope:
+      "WVW 1994, RVV 1990, the Article 149aa experiment framework and the reviewed legislative history were checked for a general transfer of driver duties to the ADS.",
+    scopeLabel: "General ADS responsibility beyond permit-specific conditions",
   }),
   approval_routes: established({
     key: "approval_routes",
@@ -865,13 +962,15 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
       "Detailed maintenance and inspection obligations depend on the vehicle, ordinary vehicle law and the conditions imposed for the individual experiment.",
     scopeLabel: "Across all Dutch autonomous-vehicle operations",
   }),
-  qualified_personnel: established({
+  qualified_personnel: notIdentified({
     key: "qualified_personnel",
     label: "Qualified personnel",
-    status: "Assessed through permit materials",
+    status: "Universal qualification not identified",
     summary:
-      "The application addresses driver location, control arrangements, system operation and the people responsible for the experiment.",
+      "Personnel arrangements and competence evidence can be addressed for a particular experiment, but a universal Dutch statutory qualification for all comparable operations has not been identified.",
     legalBasis: [{ sourceId: "nl-experiment-regulation", provision: "Article 4" }],
+    searchScope:
+      "The Article 149aa framework and ministerial application requirements were reviewed for a generally applicable formal personnel qualification.",
     scopeLabel: "Experiment-specific personnel arrangements",
   }),
   operational_data_recording: notIdentified({
@@ -888,28 +987,32 @@ const NL_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
       "The Dutch experimental framework and current EU ADS type-approval layer were reviewed for a cross-cutting national duty applicable to every autonomous vehicle.",
     scopeLabel: "All autonomous vehicles and operating models",
   }),
-  incident_event_reporting: established({
+  incident_event_reporting: notIdentified({
     key: "incident_event_reporting",
     label: "Incident / event reporting",
-    status: "Layer-specific",
+    status: "Universal duty not identified",
     summary:
-      "Reporting, knowledge-sharing, monitoring and evaluation can arise through permit conditions, while EU approval has its own in-use mechanisms.",
+      "Monitoring, evaluation and knowledge-sharing can arise through permit conditions, while EU approval has separate in-use mechanisms. Those propositions do not establish one universal Dutch incident-reporting duty for every operation.",
     legalBasis: [
       { sourceId: "nl-experiment-regulation", provision: "Article 4(1)(f) and (i)" },
       { sourceId: "eu-2022-1426", provision: "In-use reporting and monitoring requirements" },
     ],
+    searchScope:
+      "The Dutch experiment regulation and current EU ADS type-approval materials were reviewed for a single Dutch incident-reporting obligation applying across the selected scenario.",
     scopeLabel: "Applicable permit or type-approval layer",
   }),
-  regulator_data_access: established({
+  regulator_data_access: notIdentified({
     key: "regulator_data_access",
     label: "Regulator data access",
-    status: "Permit / approval specific",
+    status: "Universal access right not identified",
     summary:
-      "The authorization package addresses data recording and monitoring, with access and reporting shaped by the permit and applicable EU approval requirements.",
+      "Data recording, monitoring and information flows are shaped by the specific permit and applicable EU approval requirements. A universal regulator-access right across all Dutch ADS operations has not been identified.",
     legalBasis: [
       { sourceId: "nl-experiment-regulation", provision: "Article 4" },
       { sourceId: "eu-2022-1426" },
     ],
+    searchScope:
+      "The Dutch experiment regulation and current EU ADS approval materials were reviewed for a generally applicable Dutch regulator right to obtain operational data across the selected scenario.",
     scopeLabel: "Experiment or approved ADS, as applicable",
   }),
   av_liability_model: notIdentified({
@@ -1028,7 +1131,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     ],
     scopeLabel: "Approved defined operating area",
   }),
-  commercial_use: established({
+  commercial_use: unclear({
     key: "commercial_use",
     label: "Commercial use",
     status: "Conditional",
@@ -1041,6 +1144,8 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     scopeLabel: "Operational approval plus any use-case-specific transport law",
     atlasAnalysis:
       "The existence of the autonomous-operation route should not be read as a blanket commercial-transport authorization.",
+    uncertaintyReason:
+      "Commercial permissibility depends on the transport service, operator and additional sector-specific law not resolved by the StVG/AFGBV autonomous-operation route alone.",
   }),
   primary_human_role: established({
     key: "primary_human_role",
@@ -1135,17 +1240,21 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     ],
     scopeLabel: "Traffic rules directed at vehicle control",
   }),
-  traffic_rule_exemptions: established({
+  traffic_rule_exemptions: unclear({
     key: "traffic_rule_exemptions",
     label: "Availability of exemptions",
-    status: "Not the ordinary operating model",
+    status: "Regime-specific / unclear",
     summary:
-      "Ordinary autonomous operation is designed around ADS compliance; testing follows a separate route that can address necessary exceptions under its own authority.",
+      "Ordinary autonomous operation is designed around ADS compliance. The separate § 1i testing route may involve additional authorizations, but the cited provisions do not establish one broad autonomous-driving exemption power.",
     legalBasis: [
       { sourceId: "de-stvg", provision: "§ 1e(2), § 1i" },
       { sourceId: "de-afgbv", provision: "§ 16" },
     ],
     scopeLabel: "Ordinary operation distinguished from testing",
+    uncertaintyReason:
+      "Any departure from ordinary traffic requirements must be traced to the exact authority applicable to the test or operation; it cannot be inferred from § 1i and § 16 alone.",
+    atlasAnalysis:
+      "Atlas distinguishes the ordinary §§ 1d–1g compliance model from the separate § 1i testing route; it does not infer a general exemption from that distinction.",
   }),
   ads_rule_compliance: established({
     key: "ads_rule_compliance",
@@ -1211,7 +1320,7 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     label: "Technical standards",
     status: "Recognized compliance construction",
     summary:
-      "AFGBV references ISO 26262 and SOTIF in particular state-of-the-art presumptions and evidence pathways.",
+      "AFGBV Annex 1 references ISO 26262:2018 and ISO/PAS 21448:2019 in particular state-of-the-art presumptions and evidence pathways. The current ISO 21448:2022 publication is a separate standards object.",
     legalBasis: [{ sourceId: "de-afgbv", provision: "Annex 1, especially 7.2.1–7.2.2 and 10" }],
     scopeLabel: "Specific AFGBV safety and evidence requirements",
     atlasAnalysis:
@@ -1263,14 +1372,16 @@ const DE_CONCLUSIONS: Record<CompareFieldId, RegulatoryConclusion> = {
     ],
     scopeLabel: "Operation with the autonomous function",
   }),
-  incident_event_reporting: established({
+  incident_event_reporting: notIdentified({
     key: "incident_event_reporting",
     label: "Incident / event reporting",
-    status: "Event-triggered recording",
+    status: "Reporting duty not established by § 1g alone",
     summary:
-      "Intervention, accidents or near-accidents, unplanned lane changes/evasive manoeuvres and operational disruptions trigger data storage duties.",
+      "Section 1g establishes event-triggered data storage for intervention, accidents or near-accidents, unplanned lane changes/evasive manoeuvres and operational disruptions. That recording duty is not itself a general incident-reporting duty.",
     legalBasis: [{ sourceId: "de-stvg", provision: "§ 1g(2)" }],
-    scopeLabel: "Specified operational events",
+    searchScope:
+      "StVG § 1g and the associated AFGBV data provisions were reviewed for a distinct general incident-reporting obligation; the cited text establishes storage and authority-access duties instead.",
+    scopeLabel: "Specified operational events under § 1g",
     atlasAnalysis:
       "Event-triggered data recording should not be collapsed into a generic incident-reporting label.",
   }),
@@ -1369,6 +1480,30 @@ const BASE_JURISDICTION_PROFILES: JurisdictionProfile[] = [
       { label: "Road environment", value: "Public roads" },
       { label: "Automation target", value: "Driverless target scenario" },
     ],
+    selectedScenario: {
+      label: "Driverless passenger vehicles · public roads",
+      details: [
+        { label: "Vehicle", value: "Passenger vehicle" },
+        { label: "Road environment", value: "Public roads" },
+        { label: "Automation target", value: "Driverless target scenario" },
+      ],
+      systemClass: "automated_driving_system",
+      vehicleCategories: ["passenger_vehicle"],
+      useCases: ["testing", "operational_deployment", "passenger_service"],
+      operatingEnvironments: ["public_roads", "permit_defined_route"],
+      geographicScope: "Netherlands public-road framework and applicable EU approval layer",
+    },
+    researchCoverage: {
+      systemClasses: ["automated_driving_system"],
+      vehicleCategories: ["passenger_vehicle", "passenger_shuttle"],
+      useCases: ["testing", "operational_deployment", "passenger_service"],
+      operatingEnvironments: ["public_roads", "permit_defined_route"],
+      geographicScope: "Dutch national law plus applicable EU vehicle-approval instruments",
+      reviewStatus: "verified",
+      basis: "audited_source_inventory",
+      independentOfSelectedScenario: true,
+      note: "Coverage describes the researched source inventory; the selected Compare scenario is only one analytical slice of that inventory.",
+    },
     verifiedLabel: "Substantive legal verification · 31 Aug 2026",
     primaryMessage:
       "Testing with a bestuurder buiten het motorrijtuig is expressly supported under Dutch law. A general Dutch road-use regime for operation without a legally relevant human driver has not been identified.",
@@ -1614,6 +1749,35 @@ const BASE_JURISDICTION_PROFILES: JurisdictionProfile[] = [
       { label: "Road environment", value: "Public roads" },
       { label: "Automation target", value: "Driverless target scenario" },
     ],
+    selectedScenario: {
+      label: "Driverless passenger vehicles · public roads",
+      details: [
+        { label: "Vehicle", value: "Passenger vehicle" },
+        { label: "Road environment", value: "Public roads" },
+        { label: "Automation target", value: "Driverless target scenario" },
+      ],
+      systemClass: "autonomous_vehicle_legal_category",
+      vehicleCategories: ["passenger_vehicle"],
+      useCases: ["testing", "operational_deployment", "passenger_service"],
+      operatingEnvironments: ["public_roads", "approved_operating_area"],
+      geographicScope: "Germany · approved defined operating area",
+    },
+    researchCoverage: {
+      systemClasses: ["automated_driving_system", "autonomous_vehicle_legal_category"],
+      vehicleCategories: [
+        "passenger_vehicle",
+        "passenger_shuttle",
+        "goods_vehicle",
+        "public_transport_vehicle",
+      ],
+      useCases: ["testing", "operational_deployment", "passenger_service", "goods_service"],
+      operatingEnvironments: ["public_roads", "approved_operating_area"],
+      geographicScope: "German federal autonomous-operation and testing framework plus applicable EU approval instruments",
+      reviewStatus: "verified",
+      basis: "audited_source_inventory",
+      independentOfSelectedScenario: true,
+      note: "Coverage describes the researched source inventory; the selected Compare scenario remains passenger-focused and does not define overall product coverage.",
+    },
     verifiedLabel: "Substantive legal verification · 31 Aug 2026",
     primaryMessage:
       "Germany has a dedicated statutory framework for autonomous vehicles operating on public roads without a person performing the driving task. Operation is permitted within a genehmigter festgelegter Betriebsbereich where the statutory conditions are satisfied.",
@@ -1782,10 +1946,10 @@ const BASE_JURISDICTION_PROFILES: JurisdictionProfile[] = [
         title: "Approval is supported by structured safety and cybersecurity evidence",
         paragraphs: [
           "The German framework addresses a functional-safety concept, hazard analysis, evidence of autonomous-function safety, information-technology security, a functional vehicle description, test scenarios and digital-data-storage documentation.",
-          "AFGBV uses technical standards within particular compliance constructions. ISO 26262 therefore has regulatory significance in defined places, but should not be presented as universally mandatory for every purpose.",
+          "AFGBV uses technical standards within particular compliance constructions. Annex 1 cites the 2018 ISO 26262 series and ISO/PAS 21448:2019; those regulatory references must remain distinct from later/current editions of the standards.",
         ],
         takeaway:
-          "Technical standards may acquire regulatory significance where legislation or approval requirements recognize them as a means of demonstrating compliance.",
+          "Technical standards may acquire regulatory significance where legislation or approval requirements recognize a specified edition as a means of demonstrating compliance.",
         explain: ["iso-26262"],
         sources: [
           { sourceId: "de-stvg", provision: "§§ 1e–1f" },
@@ -1889,36 +2053,291 @@ export function isExposedSourceId(sourceId: string): sourceId is SourceId {
   return sourceId in REGULATORY_SOURCES;
 }
 
+assertQuarantinedSourcesNotExposed(
+  Object.keys(REGULATORY_SOURCES),
+  ["uk-commencement3-2026", "uk-marketing-regs-2026"],
+);
+
 function normalizeSourceReferences(
-  references: { sourceId: string; provision?: string }[],
+  references: {
+    sourceId: string;
+    provision?: string;
+    legalStatus?: Exclude<LegalStatus, "mixed">;
+    effectiveFrom?: string;
+    effectiveTo?: string;
+    regimeComponent?: string;
+  }[],
 ): SourceReference[] {
   return references
     .filter((reference) => isExposedSourceId(reference.sourceId))
     .map((reference) => ({
       ...reference,
       sourceId: reference.sourceId as SourceId,
-    }));
+  }));
+}
+
+type ExpansionProfileInput = Omit<
+  JurisdictionProfile,
+  "selectedScenario" | "researchCoverage" | "conclusions"
+> & {
+  conclusions: Record<
+    CompareFieldId,
+    Omit<RegulatoryConclusion, "review"> & { review?: ReviewMetadata }
+  >;
+};
+
+const EXPANSION_SCOPE_MODELS: Record<
+  Extract<JurisdictionSlug, "united-states" | "united-kingdom" | "russia">,
+  { selectedScenario: SelectedScenario; researchCoverage: ResearchCoverage }
+> = {
+  "united-states": {
+    selectedScenario: {
+      label: "Driverless passenger vehicles · federal + California layers",
+      details: [
+        { label: "Vehicle", value: "Passenger vehicle" },
+        { label: "Road environment", value: "California public roads" },
+        { label: "Legal stack", value: "US federal vehicle safety + California operation" },
+      ],
+      systemClass: "automated_driving_system",
+      vehicleCategories: ["passenger_vehicle"],
+      useCases: ["testing", "operational_deployment", "passenger_service"],
+      operatingEnvironments: ["public_roads", "permit_defined_route"],
+      geographicScope: "United States federal vehicle-safety law plus California road-use and passenger-service law",
+    },
+    researchCoverage: {
+      systemClasses: ["automated_driving_system", "driver_assistance"],
+      vehicleCategories: [
+        "passenger_vehicle",
+        "passenger_shuttle",
+        "goods_vehicle",
+        "public_transport_vehicle",
+      ],
+      useCases: ["testing", "operational_deployment", "passenger_service", "goods_service"],
+      operatingEnvironments: ["public_roads"],
+      geographicScope: "Federal motor-vehicle safety law and the audited California AV/CPUC layer",
+      reviewStatus: "partially_verified",
+      basis: "audited_source_inventory",
+      independentOfSelectedScenario: true,
+      note: "Coverage is wider than the selected passenger-vehicle scenario but remains limited to the federal + California stack; it is not a claim about all state law.",
+    },
+  },
+  "united-kingdom": {
+    selectedScenario: {
+      label: "Driverless passenger vehicles · Great Britain public roads",
+      details: [
+        { label: "Vehicle", value: "Passenger vehicle" },
+        { label: "Road environment", value: "Public roads" },
+        { label: "Legal stack", value: "Current pilot + staged AV Act framework" },
+      ],
+      systemClass: "automated_driving_system",
+      vehicleCategories: ["passenger_vehicle"],
+      useCases: ["testing", "operational_deployment", "passenger_service"],
+      operatingEnvironments: ["public_roads"],
+      geographicScope: "Great Britain — England, Scotland and Wales; not Northern Ireland",
+    },
+    researchCoverage: {
+      systemClasses: ["automated_driving_system", "driver_assistance"],
+      vehicleCategories: ["passenger_vehicle", "passenger_shuttle", "public_transport_vehicle"],
+      useCases: ["testing", "operational_deployment", "passenger_service"],
+      operatingEnvironments: ["public_roads"],
+      geographicScope: "Great Britain current pilot/APS instruments and enacted, staged AV Act architecture",
+      reviewStatus: "partially_verified",
+      basis: "audited_source_inventory",
+      independentOfSelectedScenario: true,
+      note: "Current pilot coverage and the future full authorisation framework are researched as separate legal-status layers.",
+    },
+  },
+  russia: {
+    selectedScenario: {
+      label: "Passenger VATS · experimental legal regime",
+      details: [
+        { label: "Vehicle", value: "Passenger vehicle" },
+        { label: "Road environment", value: "EPR-defined operation" },
+        { label: "Review", value: "Russian expert review required" },
+      ],
+      systemClass: "automated_driving_system",
+      vehicleCategories: ["passenger_vehicle"],
+      useCases: ["testing"],
+      operatingEnvironments: ["public_roads"],
+      geographicScope: "Existing Russia profile scope; substantive scope remains expert-gated",
+    },
+    researchCoverage: {
+      systemClasses: [],
+      vehicleCategories: [],
+      useCases: [],
+      operatingEnvironments: [],
+      geographicScope: "Russia substantive coverage held for qualified Russian-law expert review",
+      reviewStatus: "expert_review_required",
+      basis: "expert_review_pending",
+      independentOfSelectedScenario: true,
+      note: "No broader research-coverage claim is inferred from the selected scenario until expert review is complete.",
+    },
+  },
+};
+
+function applyExpansionAuditCorrection(
+  slug: ExpansionProfileInput["slug"],
+  key: CompareFieldId,
+  value: RegulatoryConclusion,
+): RegulatoryConclusion {
+  if (slug === "united-states" && key === "ads_rule_compliance") {
+    return {
+      ...value,
+      status: "Accountability assigned; ADS duty not identified",
+      tone: "conditional",
+      confidenceStatus: "not_identified",
+      summary:
+        "California assigns compliance and enforcement consequences through the manufacturer and permit-holder framework. The reviewed provisions do not create a general legal fiction that the ADS itself is the driver or legal duty-holder.",
+      searchScope:
+        "Current California Vehicle Code § 38750 and adopted DMV Articles 3.7–3.8 were reviewed for a direct legal assignment of conventional driver duties to the ADS itself.",
+      uncertaintyReason: undefined,
+    };
+  }
+
+  if (slug === "united-states" && key === "maintenance_inspection") {
+    return {
+      ...value,
+      status: "Permit-based; universal inspection cadence unclear",
+      tone: "watch",
+      confidenceStatus: "unclear",
+      summary:
+        "California requires safety-case and permit evidence addressing maintenance, damage tracking, inspections and return to service. The reviewed sources do not establish one universal Germany-style statutory inspection cadence.",
+      uncertaintyReason:
+        "The exact maintenance and inspection duties depend on the permit, vehicle and incorporated safety evidence; no single recurring statutory interval was identified for all covered AVs.",
+      searchScope: undefined,
+      legalBasis: [
+        {
+          sourceId: "us-ca-dmv-av-regulations",
+          provision: "13 CCR Articles 3.7–3.8 · safety-case maintenance evidence",
+          legalStatus: "in_force",
+          effectiveFrom: "2026-04-28",
+        },
+      ],
+    };
+  }
+
+  if (slug === "united-states" && key === "remote_driving_framework") {
+    return {
+      ...value,
+      status: "Defined roles under current California rules",
+      summary:
+        "California's adopted rules distinguish remote drivers from remote assistants and specify permit, qualification, training and functional requirements. The final regulations took effect on 28 April 2026; specified reporting duties became operative 120 days later.",
+      legalBasis: [
+        {
+          sourceId: "us-ca-dmv-av-regulations",
+          provision: "13 CCR §§ 227.38, 227.40 and 228.06",
+          legalStatus: "in_force",
+          effectiveFrom: "2026-04-28",
+          regimeComponent: "Remote-driver and remote-assistant rules",
+        },
+      ],
+      regimeComponents: [
+        {
+          component: "Remote-driver and remote-assistant rules",
+          legalStatus: "in_force",
+          effectiveFrom: "2026-04-28",
+          provision: "13 CCR §§ 227.38, 227.40 and 228.06",
+        },
+        {
+          component: "Specified testing-data reporting duties",
+          legalStatus: "in_force",
+          effectiveFrom: "2026-08-26",
+          provision: "13 CCR §§ 227.56–227.60 and 227.66",
+        },
+      ],
+    };
+  }
+
+  if (slug === "united-kingdom" && key === "holder_liability") {
+    return {
+      ...value,
+      summary:
+        "AEVA 2018 supplies an insurer-first liability route for accidents caused while a listed vehicle is driving itself. Other liability questions remain governed by the applicable general law and facts.",
+      atlasAnalysis:
+        "This is not a standalone strict keeper-liability model equivalent to Germany's Halter architecture.",
+    };
+  }
+
+  if (slug === "united-kingdom" && key === "principal_instruments") {
+    return {
+      ...value,
+      legalStatus: "mixed",
+      status: "Current pilot / APS rules + staged future framework",
+      summary:
+        "AEVA 2018 and the current pilot/APS instruments operate now. The Automated Vehicles Act 2024 is enacted, but its full authorisation and in-use framework remains subject to provision-specific commencement.",
+      regimeComponents: [
+        {
+          component: "AEVA insurer-liability and listing framework",
+          legalStatus: "in_force",
+          sourceId: "uk-aeva-2018",
+        },
+        {
+          component: "APS pilot permit framework",
+          legalStatus: "in_force",
+          effectiveFrom: "2026-05-15",
+          sourceId: "uk-aps-regs-2026",
+        },
+        {
+          component: "Full AV Act authorisation and in-use framework",
+          legalStatus: "adopted_not_yet_effective",
+          sourceId: "uk-av-act-2024",
+          note: "Commencement is provision-specific.",
+        },
+      ],
+    };
+  }
+
+  if (slug === "united-kingdom" && key === "technical_standards") {
+    return {
+      ...value,
+      legalStatus: "mixed",
+      status: "Current pilot evidence + draft future principles",
+      summary:
+        "Current pilot guidance describes the evidence assessed for pilot operation. The draft Statement of Safety Principles belongs to the future AV Act framework and remains consultation material, not a current binding technical standard.",
+      regimeComponents: [
+        {
+          component: "Pilot safety and approval evidence",
+          legalStatus: "guidance",
+          sourceId: "uk-vca-pilot",
+        },
+        {
+          component: "Draft Statement of Safety Principles",
+          legalStatus: "draft",
+          sourceId: "uk-sosp-consultation",
+          note: "Consultation material for the future full authorisation framework.",
+        },
+      ],
+    };
+  }
+
+  return value;
 }
 
 function normalizeExpansionProfile(input: unknown): JurisdictionProfile {
-  const profile = input as JurisdictionProfile;
+  const profile = input as ExpansionProfileInput;
+  const review =
+    profile.slug === "russia"
+      ? {
+          reviewedAt: "2026-09-03",
+          nextReviewAt: "2026-09-03",
+          reviewer: "Qualified Russian-law expert review pending",
+          reviewMethod: "expert_review" as const,
+          stale: true,
+        }
+      : claimReview("2026-09-03");
   const conclusions = Object.fromEntries(
     Object.entries(profile.conclusions).map(([key, value]) => {
-      if (value.confidenceStatus === "unclear" && !value.uncertaintyReason) {
-        throw new Error(`Unclear conclusion requires uncertaintyReason: ${key}`);
-      }
-
-      if (value.confidenceStatus === "not_identified" && !value.searchScope) {
-        throw new Error(`Not identified conclusion requires searchScope: ${key}`);
-      }
-
-      return [
-        key,
+      const normalized = applyExpansionAuditCorrection(
+        profile.slug,
+        key as CompareFieldId,
         {
           ...value,
           legalBasis: normalizeSourceReferences(value.legalBasis),
+          review: value.review ?? review,
         },
-      ];
+      );
+      validateConclusionRecord(normalized);
+      return [key, normalized];
     }),
   ) as Record<CompareFieldId, RegulatoryConclusion>;
 
@@ -1933,8 +2352,17 @@ function normalizeExpansionProfile(input: unknown): JurisdictionProfile {
     );
   }
 
-  return {
+  const scopeModel =
+    EXPANSION_SCOPE_MODELS[
+      profile.slug as keyof typeof EXPANSION_SCOPE_MODELS
+    ];
+  if (!scopeModel) {
+    throw new Error(`Missing scope model for ${profile.slug}`);
+  }
+
+  const normalizedProfile: JurisdictionProfile = {
     ...profile,
+    ...scopeModel,
     sections: profile.sections.map((section) => ({
       ...section,
       sources: normalizeSourceReferences(section.sources),
@@ -1942,6 +2370,8 @@ function normalizeExpansionProfile(input: unknown): JurisdictionProfile {
     conclusions,
     sourceIds: profile.sourceIds.filter(isExposedSourceId),
   };
+  validateProfileScope(normalizedProfile);
+  return normalizedProfile;
 }
 
 const EXPANSION_JURISDICTION_PROFILES = expansionSeed.profiles.map(
@@ -1952,6 +2382,8 @@ export const JURISDICTION_PROFILES: JurisdictionProfile[] = [
   ...BASE_JURISDICTION_PROFILES,
   ...EXPANSION_JURISDICTION_PROFILES,
 ];
+
+JURISDICTION_PROFILES.forEach(validateProfileScope);
 
 export function getJurisdictionProfile(slug: string) {
   return JURISDICTION_PROFILES.find((profile) => profile.slug === slug) ?? null;
@@ -1976,6 +2408,7 @@ export function legalStatusLabel(status: LegalStatus) {
     guidance: "Guidance",
     legislative_history: "Legislative history",
     case_law: "Case law",
+    mixed: "Staged / mixed legal status",
   };
 
   return labels[status];

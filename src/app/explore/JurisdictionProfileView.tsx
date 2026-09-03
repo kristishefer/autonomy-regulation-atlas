@@ -19,6 +19,7 @@ import { getCommonUiCopy, type CommonUiCopy } from "@/app/i18n/global-ui-copy";
 import { LanguageNotice } from "@/app/i18n/LanguageNotice";
 import { LanguageSwitcher } from "@/app/i18n/LanguageSwitcher";
 import type { Locale } from "@/app/i18n/locale";
+import { assertNoFutureMaterialInCurrentLaw } from "@/app/explore/regulatory-model";
 
 const toneClasses: Record<StatusTone, string> = {
   positive: "border-[#147c73]/20 bg-[#e7f1ed] text-[#11665f]",
@@ -52,6 +53,7 @@ const sourceStatusLabels: Record<LegalStatus, string> = {
   guidance: "Guidance",
   legislative_history: "Legislative history",
   case_law: "Case law",
+  mixed: "Staged / mixed legal status",
 };
 
 export function JurisdictionProfileView({
@@ -118,7 +120,7 @@ export function JurisdictionProfileView({
                 {profileName}
               </h1>
               <p className="mt-5 max-w-3xl text-sm leading-6 text-[#10264a]/65">
-                {profile.scenario}
+                {profile.selectedScenario.label}
               </p>
             </div>
 
@@ -162,7 +164,7 @@ export function JurisdictionProfileView({
                 {common.scenario}
               </p>
               <dl className="mt-3 divide-y divide-[#10264a]/10">
-                {profile.scenarioScope.map((item) => (
+                {profile.selectedScenario.details.map((item) => (
                   <div className="py-3 first:pt-0 last:pb-0" key={item.label}>
                     <dt className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#10264a]/55">
                       {item.label}
@@ -459,7 +461,7 @@ function SourceBasis({ references }: { references: SourceReference[] }) {
               </a>
               {reference.provision ? ` · ${reference.provision}` : ""}
               <span className="ml-2 text-[#10264a]/55">
-                {legalStatusLabel(source.legalStatus)}
+                {legalStatusLabel(reference.legalStatus ?? source.legalStatus)}
               </span>
             </li>
           );
@@ -487,15 +489,19 @@ function OfficialSources({
   const futureRules = sources.filter((source) =>
     ["adopted_not_yet_effective", "proposed", "draft"].includes(source.legalStatus),
   );
+  const stagedRules = sources.filter((source) => source.legalStatus === "mixed");
   const futureRuleIds = new Set(futureRules.map((source) => source.id));
+  const stagedRuleIds = new Set(stagedRules.map((source) => source.id));
   const interpretative = sources.filter(
     (source) =>
       !futureRuleIds.has(source.id) &&
+      !stagedRuleIds.has(source.id) &&
       (source.type === "regulator_material" ||
         ["guidance", "legislative_history", "case_law"].includes(
           source.legalStatus,
         )),
   );
+  assertNoFutureMaterialInCurrentLaw(currentLaw);
 
   return (
     <section className="scroll-mt-32 bg-white" id="official-sources">
@@ -510,8 +516,9 @@ function OfficialSources({
             <span>Open full official source index</span>
             <span aria-hidden="true" className="text-lg font-normal transition-transform group-open:rotate-45">+</span>
           </summary>
-          <div className="mt-7 grid gap-8 border-t border-[#10264a]/10 pt-7 lg:grid-cols-3">
+          <div className="mt-7 grid gap-8 border-t border-[#10264a]/10 pt-7 lg:grid-cols-2 xl:grid-cols-4">
             <SourceGroup sources={currentLaw} title="Current law" />
+            <SourceGroup sources={stagedRules} title="Staged / mixed instruments" />
             <SourceGroup sources={interpretative} title="Official guidance & regulator material" />
             <SourceGroup sources={futureRules} title="Future / proposed rules" />
           </div>

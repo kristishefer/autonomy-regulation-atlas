@@ -3,6 +3,15 @@ import {
   getRegulatorySource,
   type SourceId,
 } from "@/app/explore/regulatory-data";
+import {
+  validateReviewMetadata,
+  type ReviewMetadata,
+} from "@/app/explore/regulatory-model";
+
+export type SourceAccess =
+  | "public_abstract"
+  | "licensed_full_text"
+  | "official_legal_reference";
 
 export type KnowledgeConceptId =
   | "safety-assurance"
@@ -90,6 +99,8 @@ export type KnowledgeStandard = {
   officialSourceId: string;
   watchIds: string[];
   lastVerified: string;
+  sourceAccess: SourceAccess;
+  review: ReviewMetadata;
 };
 
 export type RealCase = {
@@ -141,6 +152,8 @@ export type StandardsWatchItem = {
   displayRule: string;
   sourceIds: string[];
   lastVerified: string;
+  nextReviewAt: string;
+  review: ReviewMetadata;
 };
 
 export type PortableSource = {
@@ -161,6 +174,8 @@ export type PortableSource = {
   status: string;
   url: string;
   lastVerified: string;
+  sourceAccess: SourceAccess;
+  review: ReviewMetadata;
 };
 
 type LearningSeed = {
@@ -193,6 +208,8 @@ export type LearningSource = {
   status: string;
   url: string;
   lastVerified: string;
+  sourceAccess: SourceAccess;
+  review: ReviewMetadata;
 };
 
 export type GlossaryEntry =
@@ -210,12 +227,55 @@ const explorerSourceAdapter: Partial<Record<string, SourceId>> = {
   "src-de-afgbv": "de-afgbv",
 };
 
+function learningReview(
+  reviewedAt: string,
+  reviewMethod: ReviewMetadata["reviewMethod"] = "official_public_text",
+): ReviewMetadata {
+  return {
+    reviewedAt,
+    nextReviewAt: "2026-10-01",
+    reviewer: "Atlas Learning audit",
+    reviewMethod,
+    stale: false,
+  };
+}
+
+function accessForPortableSource(source: PortableSource): SourceAccess {
+  if (
+    [
+      "standard",
+      "draft_standard",
+      "publicly_available_specification",
+      "draft_specification",
+    ].includes(source.type)
+  ) {
+    return "public_abstract";
+  }
+  return "official_legal_reference";
+}
+
+export const KNOWLEDGE_STANDARDS = seed.standards.map((standard) => ({
+  ...standard,
+  sourceAccess: "public_abstract" as const,
+  review: learningReview(standard.lastVerified),
+}));
+export const STANDARDS_WATCH = seed.standardsWatch.map((item) => ({
+  ...item,
+  nextReviewAt: "2026-10-01",
+  review: learningReview(item.lastVerified),
+}));
+const PORTABLE_SOURCES = seed.sources.map((source) => ({
+  ...source,
+  sourceAccess: accessForPortableSource(source),
+  review: learningReview(source.lastVerified),
+}));
+
 const conceptById = new Map(seed.concepts.map((item) => [item.id, item]));
-const standardById = new Map(seed.standards.map((item) => [item.id, item]));
+const standardById = new Map(KNOWLEDGE_STANDARDS.map((item) => [item.id, item]));
 const caseById = new Map(seed.realCases.map((item) => [item.id, item]));
 const overlayById = new Map(seed.jurisdictionOverlays.map((item) => [item.id, item]));
-const watchById = new Map(seed.standardsWatch.map((item) => [item.id, item]));
-const portableSourceById = new Map(seed.sources.map((item) => [item.id, item]));
+const watchById = new Map(STANDARDS_WATCH.map((item) => [item.id, item]));
+const portableSourceById = new Map(PORTABLE_SOURCES.map((item) => [item.id, item]));
 
 export const LEARNING_SEED_META = {
   schemaVersion: seed.schemaVersion,
@@ -225,10 +285,8 @@ export const LEARNING_SEED_META = {
 export const LEARNING_PATHS = seed.learningPaths;
 export const KNOWLEDGE_CONCEPTS = seed.concepts;
 export const KNOWLEDGE_TERMS = seed.terms;
-export const KNOWLEDGE_STANDARDS = seed.standards;
 export const REAL_CASE_LIBRARY = seed.realCases;
 export const JURISDICTION_OVERLAYS = seed.jurisdictionOverlays;
-export const STANDARDS_WATCH = seed.standardsWatch;
 
 export const GLOSSARY_ENTRIES: GlossaryEntry[] = [
   ...seed.concepts
@@ -302,6 +360,8 @@ export function resolveLearningSource(id: string): LearningSource {
       status: source.statusLabel,
       url: source.url,
       lastVerified: source.lastChecked,
+      sourceAccess: "official_legal_reference",
+      review: source.review ?? learningReview(source.lastChecked),
     };
   }
 
@@ -317,6 +377,8 @@ export function resolveLearningSource(id: string): LearningSource {
     status: source.status,
     url: source.url,
     lastVerified: source.lastVerified,
+    sourceAccess: source.sourceAccess,
+    review: source.review,
   };
 }
 
@@ -391,8 +453,9 @@ function validateSeed() {
     );
   }
 
-  for (const standard of seed.standards) {
+  for (const standard of KNOWLEDGE_STANDARDS) {
     checkSources(standard.id, [standard.officialSourceId]);
+    validateReviewMetadata(standard.review, standard.id);
     for (const id of standard.watchIds) {
       if (!watchById.has(id)) errors.push(`${standard.id}: missing watch item ${id}`);
     }
@@ -418,8 +481,13 @@ function validateSeed() {
     }
   }
 
-  for (const item of seed.standardsWatch) {
+  for (const item of STANDARDS_WATCH) {
     checkSources(item.id, item.sourceIds);
+    validateReviewMetadata(item.review, item.id);
+  }
+
+  for (const source of PORTABLE_SOURCES) {
+    validateReviewMetadata(source.review, source.id);
   }
 
   if (errors.length) {

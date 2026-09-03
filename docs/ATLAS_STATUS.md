@@ -98,14 +98,14 @@ Important limitations:
 
 ### USA / Russia / UK jurisdiction expansion
 
-Status: **DONE**
+Status: **TECHNICAL IMPLEMENTATION DONE · SUBSTANTIVE REVIEW IN PROGRESS**
 
-The Explorer includes substantive jurisdiction profiles for the United States, Russia and the United Kingdom alongside the Netherlands and Germany. The profiles participate in shared discovery, comparison and System Map jurisdiction context.
+The Explorer includes technical profile, discovery, comparison and System Map integration for the United States, Russia and the United Kingdom alongside the Netherlands and Germany. Non-Russia substantive audit remediation has been implemented and is pending final review. Russia remains a separate expert-review workstream and is not substantively approved.
 
 Important limitations:
 
 - United States coverage distinguishes the federal layer and California where specified.
-- Russia coverage is scoped to the researched passenger VATS experimental legal regime.
+- Russia content remains quarantined behind a qualified Russian-law expert review requirement. Existing conclusions are not approved for production and must not be broadened or corrected without that review.
 - United Kingdom coverage follows the reviewed Great Britain scope where stated.
 - Each profile is a source-backed regulatory view, not an exhaustive statement of all potentially applicable law.
 
@@ -143,11 +143,16 @@ Important limitations:
 
 ### Remaining review items
 
+- ASIL licensed/full-text verification
+- Independent German/Dutch source-language review
+- Homepage map and product-axis design holds
+- Manual verification of UK SI 2026/731 and SI 2026/733; both sources remain withheld until verified
+- Qualified Russian-law expert review of all Russia substantive conclusions, sources and terminology
+- Final post-remediation claim audit
 - Final cross-surface visual and responsive review
-- Final editorial and legal-content review, including source freshness
 - Preview sign-off before any production decision
 
-No known implementation blocker is currently recorded in this status document.
+Production status: **NOT APPROVED**
 
 ## Next steps
 

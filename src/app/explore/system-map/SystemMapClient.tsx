@@ -36,6 +36,7 @@ import {
 import {
   CLUSTERS,
   EDGES,
+  getSystemMapDimensions,
   JURISDICTION_CONTEXT_BINDINGS,
   NODES,
   NODE_TYPE_LABELS,
@@ -740,6 +741,7 @@ function NodeDrawer({
     .filter((item): item is SystemNode => Boolean(item));
   const learningNote = getSystemNodeLearning(node);
   const applicability = getNodeApplicability(node, jurisdiction);
+  const dimensions = getSystemMapDimensions(node);
 
   return (
     <div className="sticky top-[73px] max-h-[calc(100vh-73px)] overflow-y-auto p-6">
@@ -770,6 +772,19 @@ function NodeDrawer({
       <DetailBlock label="Issued by" text={node.issuingBody} />
       <DetailBlock label="Origin / reach" text={node.geography} />
       <DetailBlock label="Instrument-level legal effect" text={node.legalEffect} />
+
+      <div className="mt-6 rounded-2xl border border-[#10264a]/10 bg-[#f8f5ee] p-4">
+        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#10264a]/40">
+          Atlas classification dimensions
+        </div>
+        <dl className="mt-3 grid gap-2 text-xs leading-5 text-[#10264a]/62">
+          <DimensionLine label="Engineering relevance" value={dimensionLabel(dimensions.engineeringRelevance)} />
+          <DimensionLine label="Treaty relationship" value={dimensionLabel(dimensions.treatyRelationship)} />
+          <DimensionLine label="Domestic implementation" value={dimensionLabel(dimensions.domesticImplementation)} />
+          <DimensionLine label="Legal applicability" value={dimensionLabel(dimensions.legalApplicability)} />
+          <DimensionLine label="Atlas research status" value={dimensionLabel(dimensions.atlasResearchStatus)} />
+        </dl>
+      </div>
 
       {jurisdiction ? (
         <ApplicabilityBlock
@@ -812,14 +827,22 @@ function NodeDrawer({
       ) : null}
 
       {node.source ? (
-        <a
-          href={node.source}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#147c73] underline decoration-[#147c73]/30 underline-offset-4"
-        >
-          Instrument source <span>↗</span>
-        </a>
+        <div className="mt-7">
+          {node.sourceProvenance ? (
+            <p className="mb-2 text-[11px] leading-5 text-[#10264a]/45">
+              Source access: {dimensionLabel(node.sourceProvenance.access)} ·
+              Treatment: {dimensionLabel(node.sourceProvenance.treatment)}
+            </p>
+          ) : null}
+          <a
+            href={node.source}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#147c73] underline decoration-[#147c73]/30 underline-offset-4"
+          >
+            Instrument source <span>↗</span>
+          </a>
+        </div>
       ) : null}
     </div>
   );
@@ -1234,6 +1257,21 @@ function shortApplicabilityLabel(status: ApplicabilityStatus) {
     research_pending: "Research pending",
   };
   return labels[status];
+}
+
+function DimensionLine({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid gap-1 sm:grid-cols-[130px_1fr]">
+      <dt className="font-semibold text-[#10264a]/72">{label}</dt>
+      <dd>{value}</dd>
+    </div>
+  );
+}
+
+function dimensionLabel(value: string) {
+  return value.replaceAll("_", " ").replace(/^./, (character) =>
+    character.toUpperCase(),
+  );
 }
 
 function orderNodes(cluster: CoreClusterId, nodes: SystemNode[]) {

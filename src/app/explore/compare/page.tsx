@@ -140,6 +140,9 @@ export default async function ComparePage() {
                       <span className="mt-1 block font-serif text-2xl font-semibold group-hover:text-[#147c73]">
                         {profileNames[index]} ↗
                       </span>
+                      <span className="mt-2 block text-[10px] leading-4 text-[#10264a]/45">
+                        Selected scenario · {profile.selectedScenario.label}
+                      </span>
                     </Link>
                   </div>
                 ))}
@@ -271,6 +274,30 @@ function ConclusionCell({
         </details>
       ) : null}
 
+      {conclusion.regimeComponents?.length ? (
+        <details className="mt-3 border-t border-[#10264a]/8 pt-3">
+          <summary className="cursor-pointer list-none text-[11px] font-semibold text-[#147c73]">
+            Regime-component status +
+          </summary>
+          <ul className="mt-2 space-y-2 text-[10px] leading-4 text-[#10264a]/52">
+            {conclusion.regimeComponents.map((component) => (
+              <li key={`${component.component}-${component.provision ?? component.sourceId ?? "status"}`}>
+                <strong className="text-[#10264a]/68">{component.component}:</strong>{" "}
+                {formatComponentStatus(component.legalStatus)}
+                {component.effectiveFrom ? ` · from ${component.effectiveFrom}` : ""}
+                {component.note ? ` · ${component.note}` : ""}
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
+
+      {conclusion.review.stale ? (
+        <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8f5f13]">
+          Review required · {conclusion.review.reviewMethod.replaceAll("_", " ")}
+        </p>
+      ) : null}
+
       <ul className="mt-3 space-y-1.5">
         {conclusion.legalBasis.map((reference, index) => {
           const source = getRegulatorySource(reference.sourceId);
@@ -308,4 +335,10 @@ function localizeStatus(
   };
 
   return statusCopy[status] ?? status;
+}
+
+function formatComponentStatus(status: string) {
+  return status.replaceAll("_", " ").replace(/^./, (character) =>
+    character.toUpperCase(),
+  );
 }

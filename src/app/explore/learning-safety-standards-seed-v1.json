@@ -1546,11 +1546,10 @@
       "id": "overlay-de-sotif",
       "conceptId": "sotif",
       "jurisdictionId": "germany",
-      "confidenceStatus": "not_identified",
-      "summary": "German autonomous-driving law imposes safety and functional-performance requirements, but Atlas should not relabel those provisions as a statutory SOTIF regime.",
-      "legalContext": "StVG/AFGBV require safe performance in the approved operating area and specify functional requirements.",
-      "whatIsDifferentHere": "ISO 21448 may be relevant engineering evidence; it is not automatically the legal test.",
-      "searchScope": "German autonomous-driving provisions expressly adopting SOTIF/ISO 21448 as the legal requirement.",
+      "confidenceStatus": "established",
+      "summary": "AFGBV Annex 1 expressly references ISO/PAS 21448:2019 in specified state-of-the-art presumptions and safety-method constructions.",
+      "legalContext": "StVG/AFGBV impose binding safety and functional-performance requirements. The legal text points to the 2019 PAS in defined places; current ISO 21448:2022 is a separate published standards object.",
+      "whatIsDifferentHere": "Preserve the edition and legal construction: the AFGBV reference does not make every current SOTIF publication a universal German approval rule.",
       "instrumentRefs": [
         "StVG § 1e",
         "AFGBV Annex 1"
