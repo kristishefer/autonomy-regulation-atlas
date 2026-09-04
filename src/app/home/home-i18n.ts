@@ -7,12 +7,17 @@ export type HomeQuestionDemoCopy = {
   questionsLabel: string;
   previewLabel: string;
   layersLabel: string;
-  questions: [string, string, string, string];
+  questions: [
+    { label: string; frame: string },
+    { label: string; frame: string },
+    { label: string; frame: string },
+    { label: string; frame: string },
+  ];
   layers: Array<{
     id: "jurisdictions" | "compare" | "system-map" | "sources";
     label: string;
     body: string;
-    linkLabel?: string;
+    linkLabel: string;
   }>;
 };
 
@@ -161,40 +166,53 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     questionDemo: {
       eyebrow: "Connected research paths",
-      title: "Follow a regulatory question",
-      body: "See how one question can be investigated through connected Atlas layers.",
+      title: "From question to a traceable answer",
+      body: "Start with a real deployment question. Atlas exposes the legal gateway, system relationships, cross-jurisdiction differences and the exact evidence behind the conclusion.",
       questionsLabel: "Choose a regulatory question",
       previewLabel: "Selected question",
-      layersLabel: "Choose an Atlas layer",
+      layersLabel: "The Atlas research route",
       questions: [
-        "Can it operate without a driver?",
-        "What approval is required?",
-        "Who remains legally responsible?",
-        "What happens after an incident?",
+        {
+          label: "Can it operate without a driver?",
+          frame: "Driverless capability is only the starting fact. Atlas identifies the legal gateway for road use, the authorized operating domain, every legally relevant human role and the evidence supporting the answer.",
+        },
+        {
+          label: "What approval is required?",
+          frame: "“Approval” can refer to different legal objects. Atlas separates product or type approval from testing permission, road-use authorization, registration and any permission required for the service itself.",
+        },
+        {
+          label: "Who remains legally responsible?",
+          frame: "Responsibility is mapped actor by actor and event by event. Atlas distinguishes the owner or holder, manufacturer, permit holder, driver and remote human roles instead of collapsing them into a generic operator.",
+        },
+        {
+          label: "What happens after an incident?",
+          frame: "An incident opens several separate questions: immediate operational duties, notification and reporting, evidence preservation, regulatory consequences and potential liability.",
+        },
       ],
       layers: [
         {
           id: "jurisdictions",
           label: "Jurisdictions",
-          body: "See the source-native legal pathway in each jurisdiction.",
-          linkLabel: "Explore jurisdictions",
-        },
-        {
-          id: "compare",
-          label: "Compare",
-          body: "Compare the same regulatory question across jurisdictions.",
-          linkLabel: "Compare this question",
+          body: "Identify the applicable legal route, official terminology, territorial scope and whether it governs testing or operation.",
+          linkLabel: "Inspect legal gateways",
         },
         {
           id: "system-map",
           label: "System Map",
-          body: "Understand how the relevant legal, technical and regulatory concepts connect.",
-          linkLabel: "Open System Map",
+          body: "Connect the approval object, operating conditions, human roles, responsible actors and fallback duties.",
+          linkLabel: "Map the regulatory system",
+        },
+        {
+          id: "compare",
+          label: "Compare",
+          body: "Test the same question without treating different approvals, operating domains or human roles as equivalent.",
+          linkLabel: "Test non-equivalence",
         },
         {
           id: "sources",
           label: "Sources",
-          body: "Trace the conclusion to the underlying authority and legal status.",
+          body: "Resolve every material conclusion to the exact provision, legal status, source language and review date.",
+          linkLabel: "Verify the evidence chain",
         },
       ],
     },
@@ -307,45 +325,58 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     questionDemo: {
       eyebrow: "Verknüpfte Recherchewege",
-      title: "Einer regulatorischen Frage folgen",
+      title: "Von der Frage zur belegbaren Antwort",
       body:
-        "Sehen Sie, wie sich eine Frage über die verbundenen Ebenen von Atlas untersuchen lässt.",
+        "Beginnen Sie mit einer realen Einsatzfrage. Atlas legt den Rechtsweg, die Systemzusammenhänge, die Unterschiede zwischen Rechtsordnungen und die genauen Belege für die Schlussfolgerung offen.",
       questionsLabel: "Regulatorische Frage auswählen",
       previewLabel: "Ausgewählte Frage",
-      layersLabel: "Atlas-Ebene auswählen",
+      layersLabel: "Der Rechercheweg im Atlas",
       questions: [
-        "Kann das System ohne Fahrer betrieben werden?",
-        "Welche Genehmigung ist erforderlich?",
-        "Wer bleibt rechtlich verantwortlich?",
-        "Was geschieht nach einem Vorfall?",
+        {
+          label: "Kann das System ohne Fahrer betrieben werden?",
+          frame: "Technische Fahrerlosigkeit ist nur der Ausgangspunkt. Atlas ermittelt den Rechtsweg für die Straßennutzung, den genehmigten Betriebsbereich, jede rechtlich relevante menschliche Rolle und die Belege für die Antwort.",
+        },
+        {
+          label: "Welche Genehmigung ist erforderlich?",
+          frame: "„Genehmigung“ kann unterschiedliche Rechtsobjekte bezeichnen. Atlas trennt Produkt- oder Typgenehmigung von Erprobungserlaubnis, Erlaubnis zur Straßennutzung, Zulassung und einer etwaigen Genehmigung der Dienstleistung.",
+        },
+        {
+          label: "Wer bleibt rechtlich verantwortlich?",
+          frame: "Verantwortung wird nach Akteur und Ereignis zugeordnet. Atlas unterscheidet Halter, Hersteller, Genehmigungsinhaber, Fahrer und Remote-Rollen, statt sie unter einem allgemeinen „Betreiber“ zusammenzufassen.",
+        },
+        {
+          label: "Was geschieht nach einem Vorfall?",
+          frame: "Ein Vorfall löst mehrere getrennte Fragen aus: unmittelbare betriebliche Pflichten, Meldung und Berichterstattung, Beweissicherung, regulatorische Folgen und mögliche Haftung.",
+        },
       ],
       layers: [
         {
           id: "jurisdictions",
           label: "Rechtsordnungen",
           body:
-            "Sehen Sie den Rechtsweg mit den amtlichen Begriffen der jeweiligen Rechtsordnung.",
-          linkLabel: "Rechtsordnungen erkunden",
-        },
-        {
-          id: "compare",
-          label: "Vergleich",
-          body:
-            "Vergleichen Sie dieselbe regulatorische Frage über mehrere Rechtsordnungen hinweg.",
-          linkLabel: "Diese Frage vergleichen",
+            "Ermitteln Sie den anwendbaren Rechtsweg, die amtliche Terminologie, den räumlichen Geltungsbereich und ob er Erprobung oder Betrieb betrifft.",
+          linkLabel: "Rechtswege prüfen",
         },
         {
           id: "system-map",
           label: "Systemkarte",
           body:
-            "Verstehen Sie, wie die einschlägigen rechtlichen, technischen und regulatorischen Begriffe zusammenhängen.",
-          linkLabel: "Systemkarte öffnen",
+            "Verbinden Sie Genehmigungsgegenstand, Betriebsbedingungen, menschliche Rollen, verantwortliche Akteure und Rückfallpflichten.",
+          linkLabel: "Regulierungssystem abbilden",
+        },
+        {
+          id: "compare",
+          label: "Vergleich",
+          body:
+            "Vergleichen Sie dieselbe Frage, ohne unterschiedliche Genehmigungen, Betriebsbereiche oder menschliche Rollen gleichzusetzen.",
+          linkLabel: "Nichtgleichwertigkeit prüfen",
         },
         {
           id: "sources",
           label: "Quellen",
           body:
-            "Verfolgen Sie die Schlussfolgerung bis zur zugrunde liegenden Autorität und ihrem Rechtsstatus.",
+            "Führen Sie jede wesentliche Schlussfolgerung auf genaue Vorschrift, Rechtsstatus, Ausgangssprache und Prüfdaten zurück.",
+          linkLabel: "Belegkette prüfen",
         },
       ],
     },
@@ -464,45 +495,58 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     questionDemo: {
       eyebrow: "Verbonden onderzoeksroutes",
-      title: "Volg een regelgevingsvraag",
+      title: "Van vraag naar herleidbaar antwoord",
       body:
-        "Bekijk hoe één vraag via de verbonden Atlas-lagen kan worden onderzocht.",
+        "Begin met een echte implementatievraag. Atlas maakt de juridische route, de systeemrelaties, de verschillen tussen jurisdicties en het precieze bewijs achter de conclusie zichtbaar.",
       questionsLabel: "Kies een regelgevingsvraag",
       previewLabel: "Geselecteerde vraag",
-      layersLabel: "Kies een Atlas-laag",
+      layersLabel: "De onderzoeksroute van Atlas",
       questions: [
-        "Kan het systeem zonder bestuurder worden ingezet?",
-        "Welke goedkeuring is vereist?",
-        "Wie blijft juridisch verantwoordelijk?",
-        "Wat gebeurt er na een incident?",
+        {
+          label: "Kan het systeem zonder bestuurder worden ingezet?",
+          frame: "Bestuurderloze technische capaciteit is slechts het beginpunt. Atlas bepaalt de juridische route voor weggebruik, het toegestane operationele gebied, elke juridisch relevante menselijke rol en het bewijs voor het antwoord.",
+        },
+        {
+          label: "Welke goedkeuring is vereist?",
+          frame: "‘Goedkeuring’ kan naar verschillende juridische objecten verwijzen. Atlas scheidt product- of typegoedkeuring van testtoestemming, toestemming voor weggebruik, registratie en eventuele toestemming voor de dienst zelf.",
+        },
+        {
+          label: "Wie blijft juridisch verantwoordelijk?",
+          frame: "Verantwoordelijkheid wordt per actor en per gebeurtenis in kaart gebracht. Atlas onderscheidt eigenaar of houder, fabrikant, vergunninghouder, bestuurder en menselijke rollen op afstand, in plaats van ze samen te voegen tot één generieke operator.",
+        },
+        {
+          label: "Wat gebeurt er na een incident?",
+          frame: "Een incident opent meerdere afzonderlijke vragen: directe operationele plichten, melding en rapportage, bewaring van bewijs, gevolgen voor de vergunning en mogelijke aansprakelijkheid.",
+        },
       ],
       layers: [
         {
           id: "jurisdictions",
           label: "Jurisdicties",
           body:
-            "Bekijk het juridische traject met de officiële termen van elke jurisdictie.",
-          linkLabel: "Jurisdicties verkennen",
-        },
-        {
-          id: "compare",
-          label: "Vergelijken",
-          body:
-            "Vergelijk dezelfde regelgevingsvraag tussen jurisdicties.",
-          linkLabel: "Deze vraag vergelijken",
+            "Bepaal de toepasselijke juridische route, officiële terminologie, territoriale reikwijdte en of deze testen of operationeel gebruik regelt.",
+          linkLabel: "Juridische routes bekijken",
         },
         {
           id: "system-map",
           label: "Systeemkaart",
           body:
-            "Begrijp hoe de relevante juridische, technische en regelgevingsbegrippen samenhangen.",
-          linkLabel: "Systeemkaart openen",
+            "Verbind het goedkeuringsobject, de operationele voorwaarden, menselijke rollen, verantwoordelijke actoren en fallback-plichten.",
+          linkLabel: "Regelgevingssysteem uitwerken",
+        },
+        {
+          id: "compare",
+          label: "Vergelijken",
+          body:
+            "Toets dezelfde vraag zonder verschillende goedkeuringen, operationele gebieden of menselijke rollen als gelijkwaardig te behandelen.",
+          linkLabel: "Niet-gelijkwaardigheid toetsen",
         },
         {
           id: "sources",
           label: "Bronnen",
           body:
-            "Herleid de conclusie tot de onderliggende autoriteit en juridische status.",
+            "Herleid elke materiële conclusie tot de exacte bepaling, juridische status, brontaal en controledatum.",
+          linkLabel: "Bewijsketen controleren",
         },
       ],
     },
@@ -621,45 +665,58 @@ export const homeCopy: Record<Locale, HomeCopy> = {
     },
     questionDemo: {
       eyebrow: "Связанные пути исследования",
-      title: "Проследить регуляторный вопрос",
+      title: "От вопроса — к проверяемому выводу",
       body:
-        "Посмотрите, как один вопрос исследуется через связанные уровни Atlas.",
+        "Начните с реального вопроса о запуске. Atlas показывает правовой механизм, системные связи, различия между юрисдикциями и точные основания итогового вывода.",
       questionsLabel: "Выберите регуляторный вопрос",
       previewLabel: "Выбранный вопрос",
-      layersLabel: "Выберите уровень Atlas",
+      layersLabel: "Маршрут исследования в Atlas",
       questions: [
-        "Может ли система работать без водителя?",
-        "Какое разрешение требуется?",
-        "Кто сохраняет юридическую ответственность?",
-        "Что происходит после инцидента?",
+        {
+          label: "Может ли система работать без водителя?",
+          frame: "Техническая возможность движения без водителя — только исходный факт. Atlas определяет правовой механизм допуска к дорогам, разрешённую территорию эксплуатации, каждую юридически значимую человеческую роль и доказательства для ответа.",
+        },
+        {
+          label: "Какое разрешение требуется?",
+          frame: "Слово «разрешение» может обозначать разные правовые объекты. Atlas отделяет одобрение продукции или типа от разрешения на испытания, допуска к дорогам, регистрации и отдельного разрешения на оказание услуги.",
+        },
+        {
+          label: "Кто сохраняет юридическую ответственность?",
+          frame: "Ответственность исследуется отдельно для каждого участника и каждого события. Atlas различает собственника или владельца, изготовителя, держателя разрешения, водителя и дистанционные человеческие роли, не объединяя их в абстрактного «оператора».",
+        },
+        {
+          label: "Что происходит после инцидента?",
+          frame: "Инцидент запускает несколько отдельных вопросов: немедленные эксплуатационные обязанности, уведомление и отчётность, сохранение доказательств, регуляторные последствия и возможная ответственность.",
+        },
       ],
       layers: [
         {
           id: "jurisdictions",
           label: "Юрисдикции",
           body:
-            "Посмотрите правовой путь в каждой юрисдикции с её официальной терминологией.",
-          linkLabel: "Изучить юрисдикции",
-        },
-        {
-          id: "compare",
-          label: "Сравнение",
-          body:
-            "Сравните один и тот же регуляторный вопрос в разных юрисдикциях.",
-          linkLabel: "Сравнить этот вопрос",
+            "Определите применимый правовой механизм, официальную терминологию, территориальный охват и относится ли режим к испытаниям или эксплуатации.",
+          linkLabel: "Проверить правовые механизмы",
         },
         {
           id: "system-map",
           label: "Системная карта",
           body:
-            "Разберитесь, как связаны соответствующие правовые, технические и регуляторные понятия.",
-          linkLabel: "Открыть системную карту",
+            "Свяжите объект разрешения, условия эксплуатации, человеческие роли, ответственных участников и обязанности при отказе системы.",
+          linkLabel: "Собрать регуляторную систему",
+        },
+        {
+          id: "compare",
+          label: "Сравнение",
+          body:
+            "Сопоставьте один вопрос, не признавая автоматически эквивалентными разные разрешения, территории эксплуатации и человеческие роли.",
+          linkLabel: "Проверить неэквивалентность",
         },
         {
           id: "sources",
           label: "Источники",
           body:
-            "Проследите вывод до первичного источника и его юридического статуса.",
+            "Свяжите каждый существенный вывод с точным положением, юридическим статусом, языком источника и датой проверки.",
+          linkLabel: "Проверить цепочку оснований",
         },
       ],
     },

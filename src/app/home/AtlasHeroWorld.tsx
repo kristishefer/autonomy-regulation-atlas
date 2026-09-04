@@ -44,10 +44,14 @@ function approvedStarPoints(
   height: number,
 ): readonly SignaturePoint[] {
   return stars.map(([xPercent, yPercent], index) => {
-    const x = 66 - width / 2 + (xPercent / 100) * width;
-    const y = 48 - height / 2 + (yPercent / 100) * height;
+    const shapeX = 66 - width / 2 + (xPercent / 100) * width;
+    const shapeY = 48 - height / 2 + (yPercent / 100) * height;
+    const angle = index * 2.399963229728653;
+    const radius = 4 + (index % 9) * 1.35;
+    const restX = 66 + Math.cos(angle) * radius;
+    const restY = 48 + Math.sin(angle) * radius * 0.72;
     const size = index % 7 === 0 ? 3 : index % 3 === 0 ? 2.5 : 2;
-    return [x, y, x, y, size] as const;
+    return [restX, restY, shapeX, shapeY, size] as const;
   });
 }
 

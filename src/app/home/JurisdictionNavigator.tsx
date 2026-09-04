@@ -199,7 +199,7 @@ export function JurisdictionNavigator({
               </h3>
             </div>
 
-            <p className="mt-7 text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(24,50,74,0.46)]">
+            <p className="mt-7 text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(24,50,74,0.64)]">
               {copy.scopeLabel}
             </p>
             <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--atlas-ink-muted)]">
@@ -208,7 +208,7 @@ export function JurisdictionNavigator({
           </div>
 
           <div className="border-t border-[rgba(24,50,74,0.08)] px-1 py-7 sm:px-6 lg:border-t-0 lg:pl-10 lg:pr-0" data-navigator-detail>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(24,50,74,0.46)]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(24,50,74,0.64)]">
               {copy.overviewLabel}
             </p>
             <p className="atlas-editorial mt-3 max-w-3xl text-xl font-semibold leading-8 sm:text-2xl sm:leading-9">
@@ -221,20 +221,20 @@ export function JurisdictionNavigator({
           className="border-t border-[rgba(24,50,74,0.08)] px-1 py-7 sm:px-6 lg:px-0"
           data-navigator-detail
         >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(24,50,74,0.46)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[rgba(24,50,74,0.64)]">
             {copy.snapshotLabel}
           </p>
           <dl className="mt-4 grid border-b border-[rgba(24,50,74,0.08)] sm:grid-cols-2 sm:divide-x sm:divide-[rgba(24,50,74,0.08)]">
             {selected.snapshot.map((item) => (
               <div className="border-t border-[rgba(24,50,74,0.08)] px-0 py-4 sm:px-6 sm:first:pl-0" key={item.label}>
-                <dt className="text-xs font-semibold text-[rgba(24,50,74,0.56)]">
+                <dt className="text-xs font-semibold text-[rgba(24,50,74,0.68)]">
                   {item.label}
                 </dt>
                 <dd className={`mt-1.5 text-sm font-semibold ${snapshotToneClasses[item.tone]}`}>
                   {item.status}
                 </dd>
                 {item.scope ? (
-                  <p className="mt-1 text-xs leading-5 text-[rgba(24,50,74,0.52)]">
+                  <p className="mt-1 text-xs leading-5 text-[rgba(24,50,74,0.64)]">
                     {item.scope}
                   </p>
                 ) : null}

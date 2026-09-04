@@ -83,12 +83,13 @@ export default async function Home() {
       />
 
       <HomepageReveal className="atlas-entry-section bg-[var(--atlas-field-warm)]">
-        <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+        <span aria-hidden="true" className="atlas-entry-guide-star" />
+        <div className="atlas-entry-shell mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
           <div className="mb-6">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--atlas-teal)]">
               {t.hero.atlaslings}
             </p>
-            <h2 className="mt-2 font-serif text-2xl font-semibold sm:text-3xl">
+            <h2 className="atlas-section-title mt-2 font-serif text-2xl font-semibold sm:text-3xl">
               {t.modes.title}
             </h2>
           </div>
@@ -121,20 +122,20 @@ export default async function Home() {
       </HomepageReveal>
 
       <HomepageReveal
-        className="scroll-mt-20 bg-[var(--atlas-field-blue)]"
+        className="atlas-content-section atlas-navigator-section scroll-mt-20 bg-[var(--atlas-field-blue)]"
         id="map"
       >
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+        <div className="atlas-section-shell mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
           <div className="mb-8 grid gap-5 lg:grid-cols-[0.9fr_0.7fr] lg:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--atlas-teal)]">
                 {t.navigator.eyebrow}
               </p>
-              <h2 className="mt-3 max-w-3xl text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
+              <h2 className="atlas-section-title mt-3 max-w-3xl font-serif text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
                 {t.navigator.title}
               </h2>
             </div>
-            <p className="max-w-xl text-sm leading-6 text-[var(--atlas-ink-muted)] lg:justify-self-end">
+            <p className="atlas-section-lede max-w-xl text-sm leading-6 text-[var(--atlas-ink-muted)] lg:justify-self-end">
               {t.navigator.body}
             </p>
           </div>
@@ -147,20 +148,20 @@ export default async function Home() {
       </HomepageReveal>
 
       <HomepageReveal
-        className="atlas-question-section scroll-mt-20 bg-[var(--atlas-field-sage)]"
+        className="atlas-content-section atlas-question-section scroll-mt-20 bg-[var(--atlas-field-sage)]"
         id="questions"
       >
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+        <div className="atlas-section-shell mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
           <div className="mb-8 grid gap-5 lg:grid-cols-[0.9fr_0.7fr] lg:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--atlas-teal)]">
                 {t.questionDemo.eyebrow}
               </p>
-              <h2 className="mt-3 max-w-3xl font-serif text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
+              <h2 className="atlas-section-title mt-3 max-w-3xl font-serif text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl">
                 {t.questionDemo.title}
               </h2>
             </div>
-            <p className="max-w-xl text-sm leading-6 text-[var(--atlas-ink-muted)] lg:justify-self-end">
+            <p className="atlas-section-lede max-w-xl text-sm leading-6 text-[var(--atlas-ink-muted)] lg:justify-self-end">
               {t.questionDemo.body}
             </p>
           </div>
@@ -170,19 +171,19 @@ export default async function Home() {
       </HomepageReveal>
 
       <HomepageReveal
-        className="scroll-mt-20 bg-[var(--atlas-paper)]"
+        className="atlas-content-section atlas-method-section scroll-mt-20 bg-[var(--atlas-paper)]"
         id="method"
       >
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
+        <div className="atlas-section-shell mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-[300px_1fr] lg:items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--atlas-teal)]">
                 {t.method.eyebrow}
               </p>
-              <h2 className="mt-3 font-serif text-4xl font-semibold leading-none tracking-[-0.04em]">
+              <h2 className="atlas-section-title mt-3 font-serif text-4xl font-semibold leading-none tracking-[-0.04em]">
                 {t.method.title}
               </h2>
-              <p className="mt-5 text-sm leading-6 text-[var(--atlas-ink-muted)]">
+              <p className="atlas-section-lede mt-5 text-sm leading-6 text-[var(--atlas-ink-muted)]">
                 {t.method.body}
               </p>
             </div>

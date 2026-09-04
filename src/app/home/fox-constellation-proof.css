@@ -180,28 +180,49 @@
    remain reserved for the complete image on direct hover/focus. */
 @media (hover: hover) and (pointer: fine) {
   [data-atlas-hero-world]:hover [data-atlas-guide-star] {
-    animation: atlas-guide-star-route 18s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+    animation: atlas-guide-star-route 18s cubic-bezier(0.45, 0, 0.25, 1) 1 both;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="fox"] > i {
-    animation: atlasling-guide-fox 18s ease-in-out infinite !important;
+    animation: atlasling-guide-fox 17s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="cat"] > i {
-    animation: atlasling-guide-cat 18s ease-in-out infinite !important;
+    animation: atlasling-guide-cat 17s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="dog"] > i {
-    animation: atlasling-guide-dog 18s ease-in-out infinite !important;
+    animation: atlasling-guide-dog 17s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
     animation-delay: var(--point-build-delay) !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster] > span:first-child {
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster="fox"] > span:first-child {
+    animation: atlasling-guide-fox-art 17s ease-in-out 1 both !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster="cat"] > span:first-child {
+    animation: atlasling-guide-cat-art 17s ease-in-out 1 both !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster="dog"] > span:first-child {
+    animation: atlasling-guide-dog-art 17s ease-in-out 1 both !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > i,
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:focus-visible > i {
     animation: none !important;
     opacity: 0 !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > span:first-child,
+  [data-atlas-hero-world]:hover [data-atlasling-cluster]:focus-visible > span:first-child {
+    animation: none !important;
   }
 
   [data-atlas-hero-world]:has([data-atlasling-cluster="fox"]:is(:hover, :focus-visible)) [data-atlas-guide-star] {
@@ -230,7 +251,7 @@
 }
 
 @keyframes atlas-guide-star-route {
-  0%, 100% { left: 59%; opacity: 0.58; top: 42%; transform: translate(-50%, -50%) rotate(9deg) scale(0.92); }
+  0% { left: 59%; opacity: 0.58; top: 42%; transform: translate(-50%, -50%) rotate(9deg) scale(0.92); }
   7% { left: 70%; opacity: 0.72; top: 25%; transform: translate(-50%, -50%) rotate(38deg) scale(1); }
   13% { left: 84%; opacity: 0.98; top: 9%; transform: translate(-50%, -50%) rotate(72deg) scale(1.12); }
   24% { left: 87%; opacity: 0.9; top: 18%; transform: translate(-50%, -50%) rotate(103deg) scale(1.02); }
@@ -239,7 +260,9 @@
   53% { left: 84%; opacity: 0.86; top: 79%; transform: translate(-50%, -50%) rotate(207deg) scale(1.02); }
   65% { left: 70%; opacity: 0.98; top: 77%; transform: translate(-50%, -50%) rotate(251deg) scale(1.12); }
   77% { left: 61%; opacity: 0.86; top: 73%; transform: translate(-50%, -50%) rotate(294deg) scale(1.02); }
-  88% { left: 55%; opacity: 0.66; top: 58%; transform: translate(-50%, -50%) rotate(334deg) scale(0.94); }
+  88% { left: 57%; opacity: 0.72; top: 86%; transform: translate(-50%, -50%) rotate(334deg) scale(0.98); }
+  96% { left: 59%; opacity: 0.88; top: 96%; transform: translate(-50%, -50%) rotate(360deg) scale(1.06); }
+  100% { left: 59%; opacity: 0; top: 99%; transform: translate(-50%, -50%) rotate(372deg) scale(0.82); }
 }
 
 @keyframes atlas-guide-star-breathe {
@@ -254,15 +277,15 @@
   }
   14% {
     opacity: 0.98;
-    transform: translate(-50%, -50%) scale(1.35);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1.35);
   }
   18%, 24% {
     opacity: 0.86;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1);
   }
   29% {
     opacity: 0.18;
-    transform: translate(-50%, -50%) scale(0.82);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(0.82);
   }
 }
 
@@ -273,15 +296,15 @@
   }
   44% {
     opacity: 0.98;
-    transform: translate(-50%, -50%) scale(1.35);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1.35);
   }
   48%, 52% {
     opacity: 0.86;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1);
   }
   57% {
     opacity: 0.18;
-    transform: translate(-50%, -50%) scale(0.82);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(0.82);
   }
 }
 
@@ -292,20 +315,35 @@
   }
   70% {
     opacity: 0.98;
-    transform: translate(-50%, -50%) scale(1.35);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1.35);
   }
   74%, 79% {
     opacity: 0.86;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1);
   }
   84% {
     opacity: 0.18;
-    transform: translate(-50%, -50%) scale(0.82);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(0.82);
   }
   87% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
+    transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(0.5);
   }
+}
+
+@keyframes atlasling-guide-fox-art {
+  0%, 15%, 31%, 100% { opacity: 0; }
+  20%, 25% { opacity: 0.2; }
+}
+
+@keyframes atlasling-guide-cat-art {
+  0%, 45%, 59%, 100% { opacity: 0; }
+  49%, 53% { opacity: 0.19; }
+}
+
+@keyframes atlasling-guide-dog-art {
+  0%, 71%, 87%, 100% { opacity: 0; }
+  75%, 80% { opacity: 0.2; }
 }
 
 @media (max-width: 900px) {
