@@ -48,21 +48,52 @@
 }
 
 [data-atlasling-cluster="fox"] {
-  --cluster-build-offset: 0s;
   --atlasling-star: #d8a748;
   --atlasling-glow: rgba(216, 167, 72, 0.34);
 }
 
 [data-atlasling-cluster="cat"] {
-  --cluster-build-offset: -2.1s;
   --atlasling-star: #777da0;
   --atlasling-glow: rgba(119, 125, 160, 0.28);
 }
 
 [data-atlasling-cluster="dog"] {
-  --cluster-build-offset: -4.2s;
   --atlasling-star: #638e87;
   --atlasling-glow: rgba(99, 142, 135, 0.28);
+}
+
+/* Guide Star is the meta-guide through the Atlas, not a fourth mascot.
+   Its movement is the only connective cue: no additional trail or route line. */
+[data-atlas-guide-star] {
+  height: 13px;
+  left: 59%;
+  opacity: 0.58;
+  pointer-events: none;
+  position: absolute;
+  top: 42%;
+  transform: translate(-50%, -50%) rotate(9deg);
+  width: 13px;
+  z-index: 9;
+}
+
+[data-atlas-guide-star]::before {
+  animation: atlas-guide-star-breathe 2.8s ease-in-out infinite;
+  background: radial-gradient(circle, #fffdf3 0 18%, #f4ce7a 44%, rgba(218, 167, 72, 0.08) 74%);
+  clip-path: polygon(50% 0, 58% 39%, 100% 50%, 60% 60%, 50% 100%, 41% 61%, 0 50%, 42% 40%);
+  content: "";
+  filter: drop-shadow(0 0 4px rgba(255, 244, 205, 0.98)) drop-shadow(0 0 11px rgba(216, 167, 72, 0.72));
+  inset: -3px;
+  position: absolute;
+}
+
+[data-atlas-guide-star]::after {
+  border: 1px solid rgba(216, 167, 72, 0.3);
+  border-radius: 50%;
+  content: "";
+  inset: -8px;
+  opacity: 0.48;
+  position: absolute;
+  transform: scale(0.72);
 }
 
 [data-atlasling-cluster]::after {
@@ -145,12 +176,26 @@
 }
 
 /* The ambient state uses star coordinates sampled from each approved asset.
-   Staggered point light builds the silhouette; authored connector lines remain
-   reserved for the complete image on direct hover/focus. */
+   The Guide Star activates one silhouette at a time; authored connector lines
+   remain reserved for the complete image on direct hover/focus. */
 @media (hover: hover) and (pointer: fine) {
-  [data-atlas-hero-world]:hover [data-atlasling-cluster] > i {
-    animation: atlasling-point-build 6.2s ease-in-out infinite !important;
-    animation-delay: calc(var(--point-build-delay) + var(--cluster-build-offset)) !important;
+  [data-atlas-hero-world]:hover [data-atlas-guide-star] {
+    animation: atlas-guide-star-route 18s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster="fox"] > i {
+    animation: atlasling-guide-fox 18s ease-in-out infinite !important;
+    animation-delay: var(--point-build-delay) !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster="cat"] > i {
+    animation: atlasling-guide-cat 18s ease-in-out infinite !important;
+    animation-delay: var(--point-build-delay) !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster="dog"] > i {
+    animation: atlasling-guide-dog 18s ease-in-out infinite !important;
+    animation-delay: var(--point-build-delay) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > i,
@@ -158,18 +203,98 @@
     animation: none !important;
     opacity: 0 !important;
   }
+
+  [data-atlas-hero-world]:has([data-atlasling-cluster="fox"]:is(:hover, :focus-visible)) [data-atlas-guide-star] {
+    animation: none;
+    left: 88%;
+    opacity: 0.94;
+    top: 8%;
+    transform: translate(-50%, -50%) rotate(18deg) scale(1.08);
+  }
+
+  [data-atlas-hero-world]:has([data-atlasling-cluster="cat"]:is(:hover, :focus-visible)) [data-atlas-guide-star] {
+    animation: none;
+    left: 93%;
+    opacity: 0.94;
+    top: 70%;
+    transform: translate(-50%, -50%) rotate(18deg) scale(1.08);
+  }
+
+  [data-atlas-hero-world]:has([data-atlasling-cluster="dog"]:is(:hover, :focus-visible)) [data-atlas-guide-star] {
+    animation: none;
+    left: 70%;
+    opacity: 0.94;
+    top: 77%;
+    transform: translate(-50%, -50%) rotate(18deg) scale(1.08);
+  }
 }
 
-@keyframes atlasling-point-build {
-  0%, 7%, 100% {
+@keyframes atlas-guide-star-route {
+  0%, 100% { left: 59%; opacity: 0.58; top: 42%; transform: translate(-50%, -50%) rotate(9deg) scale(0.92); }
+  7% { left: 70%; opacity: 0.72; top: 25%; transform: translate(-50%, -50%) rotate(38deg) scale(1); }
+  13% { left: 84%; opacity: 0.98; top: 9%; transform: translate(-50%, -50%) rotate(72deg) scale(1.12); }
+  24% { left: 87%; opacity: 0.9; top: 18%; transform: translate(-50%, -50%) rotate(103deg) scale(1.02); }
+  34% { left: 90%; opacity: 0.76; top: 53%; transform: translate(-50%, -50%) rotate(138deg) scale(0.96); }
+  43% { left: 93%; opacity: 0.98; top: 70%; transform: translate(-50%, -50%) rotate(171deg) scale(1.12); }
+  53% { left: 84%; opacity: 0.86; top: 79%; transform: translate(-50%, -50%) rotate(207deg) scale(1.02); }
+  65% { left: 70%; opacity: 0.98; top: 77%; transform: translate(-50%, -50%) rotate(251deg) scale(1.12); }
+  77% { left: 61%; opacity: 0.86; top: 73%; transform: translate(-50%, -50%) rotate(294deg) scale(1.02); }
+  88% { left: 55%; opacity: 0.66; top: 58%; transform: translate(-50%, -50%) rotate(334deg) scale(0.94); }
+}
+
+@keyframes atlas-guide-star-breathe {
+  0%, 100% { opacity: 0.8; transform: scale(0.82); }
+  48% { opacity: 1; transform: scale(1.12); }
+}
+
+@keyframes atlasling-guide-fox {
+  0%, 8%, 32%, 100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.35);
   }
-  17% {
+  14% {
     opacity: 0.98;
     transform: translate(-50%, -50%) scale(1.35);
   }
-  29%, 68% {
+  18%, 24% {
+    opacity: 0.86;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  29% {
+    opacity: 0.18;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+}
+
+@keyframes atlasling-guide-cat {
+  0%, 38%, 59%, 100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  44% {
+    opacity: 0.98;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+  48%, 52% {
+    opacity: 0.86;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  57% {
+    opacity: 0.18;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+}
+
+@keyframes atlasling-guide-dog {
+  0%, 64%, 87%, 100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  70% {
+    opacity: 0.98;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+  74%, 79% {
     opacity: 0.86;
     transform: translate(-50%, -50%) scale(1);
   }
@@ -177,13 +302,21 @@
     opacity: 0.18;
     transform: translate(-50%, -50%) scale(0.82);
   }
-  93% {
+  87% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.5);
   }
 }
 
 @media (max-width: 900px) {
+  [data-atlas-guide-star] {
+    height: 10px;
+    left: 49%;
+    opacity: 0.5;
+    top: 72%;
+    width: 10px;
+  }
+
   [data-atlasling-cluster]::before {
     height: 10px;
     width: 10px;
@@ -213,6 +346,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  [data-atlas-guide-star],
+  [data-atlas-guide-star]::before {
+    animation: none !important;
+  }
+
   [data-atlasling-cluster] > span:first-child,
   [data-atlasling-cluster] > i,
   [data-atlasling-cluster]::before {
@@ -221,8 +359,8 @@
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster] > i {
     animation: none !important;
-    opacity: 0.48 !important;
-    transform: translate(-50%, -50%) scale(1) !important;
+    opacity: 0 !important;
+    transform: translate(-50%, -50%) scale(0.35) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > i,

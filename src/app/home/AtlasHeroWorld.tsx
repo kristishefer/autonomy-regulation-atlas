@@ -185,7 +185,7 @@ function AtlaslingCluster({ cluster }: { cluster: SignatureCluster }) {
         <i
           className={styles.clusterPoint}
           key={`${cluster.id}-${index}`}
-          style={{ "--cluster-point-size": `${size}px`, "--point-build-delay": `${index * 0.065}s`, "--rest-x": `${restX}px`, "--rest-y": `${restY}px`, "--shape-dx": `${shapeX - restX}px`, "--shape-dy": `${shapeY - restY}px` } as CSSProperties}
+          style={{ "--cluster-point-size": `${size}px`, "--point-build-delay": `${index * 0.025}s`, "--rest-x": `${restX}px`, "--rest-y": `${restY}px`, "--shape-dx": `${shapeX - restX}px`, "--shape-dy": `${shapeY - restY}px` } as CSSProperties}
         />
       ))}
     </div>
@@ -254,6 +254,8 @@ export function AtlasHeroWorld({ body, eyebrow, line1, line2, line3 }: AtlasHero
 
         <div aria-hidden="true" className={`${styles.deepCluster} ${styles.deepClusterOne}`}><i /><i /><i /><i /><span /></div>
         <div aria-hidden="true" className={`${styles.deepCluster} ${styles.deepClusterTwo}`}><i /><i /><i /><span /></div>
+
+        <span aria-hidden="true" data-atlas-guide-star />
 
         <div aria-hidden="true" className={styles.cloudSignature} data-cloud-signature>
           <span className={styles.cloudLight} />
