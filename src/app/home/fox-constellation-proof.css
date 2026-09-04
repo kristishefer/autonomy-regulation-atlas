@@ -91,26 +91,14 @@
   width: 150px !important;
 }
 
-/* Dog: subtract a slightly smaller copy of the same alpha mask from the outer
-   copy. This leaves a thin outer contour rather than a filled mascot. */
+/* Dog: approved whippet constellation artwork with its sky removed. */
 [data-atlasling-cluster="dog"] > span:first-child {
-  background: var(--atlasling-star) !important;
-  filter: drop-shadow(0 0 6px var(--atlasling-glow));
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  transform: translate(-50%, -50%) scale(0.78) !important;
+  background: url("/atlaslings/dog-constellation-approved.webp") center / contain no-repeat !important;
+  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.28));
+  height: 165px !important;
+  transform: translate(-50%, -50%) scale(0.76) !important;
   transform-origin: 50% 50% !important;
-}
-
-[data-atlasling-cluster="dog"] > span:first-child {
-  height: 118px !important;
-  -webkit-mask:
-    url("/atlaslings/dog-whippet.png") center / contain no-repeat,
-    url("/atlaslings/dog-whippet.png") center / 92% 92% no-repeat;
-  mask:
-    url("/atlaslings/dog-whippet.png") center / contain no-repeat,
-    url("/atlaslings/dog-whippet.png") center / 92% 92% no-repeat;
-  width: 118px !important;
+  width: 210px !important;
 }
 
 [data-atlasling-cluster]:hover::before,
@@ -135,8 +123,8 @@
 
 [data-atlasling-cluster="dog"]:hover > span:first-child,
 [data-atlasling-cluster="dog"]:focus-visible > span:first-child {
-  filter: drop-shadow(0 0 9px var(--atlasling-glow));
-  opacity: 0.56 !important;
+  filter: drop-shadow(0 0 8px rgba(255, 231, 169, 0.42));
+  opacity: 0.86 !important;
   transform: translate(-50%, -50%) scale(1) !important;
 }
 
@@ -157,8 +145,8 @@
   }
 
   [data-atlasling-cluster="dog"] > span:first-child {
-    height: 76px !important;
-    width: 76px !important;
+    height: 91px !important;
+    width: 116px !important;
   }
 
   /* Touch devices have no meaningful hover: keep the map quiet. */
