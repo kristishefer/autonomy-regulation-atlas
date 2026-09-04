@@ -190,7 +190,7 @@
   animation: orbit-arrive 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards, orbit-breathe 23s ease-in-out 2.2s infinite;
   opacity: 0;
   stroke: url(#atlas-world-orbit-v2);
-  stroke-width: 1.45;
+  stroke-width: 1.2;
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -198,27 +198,27 @@
 .orbit2 {
   animation-delay: 0.18s, 6s;
   animation-duration: 1.5s, 27s;
-  stroke-width: 1.8;
+  stroke-width: 1.45;
 }
 
 .orbit3 {
   animation-delay: 0.4s, 8.5s;
   animation-duration: 1.65s, 29s;
-  stroke-width: 1.25;
+  stroke-width: 1;
 }
 
 .orbit4 {
   animation-delay: 0.62s, 3.5s;
   animation-duration: 1.75s, 25s;
   opacity: 0.66;
-  stroke-width: 1.1;
+  stroke-width: 0.9;
 }
 
 .secondaryPath {
   animation: fine-arrive 1.1s ease-out 0.75s forwards;
   opacity: 0;
   stroke: url(#atlas-world-fine-v2);
-  stroke-width: 0.85;
+  stroke-width: 0.7;
 }
 
 .secondary2 { animation-delay: 0.92s; }
@@ -230,7 +230,7 @@
   animation: relation-arrive 0.9s ease-out 0.78s forwards;
   opacity: 0;
   stroke: url(#atlas-world-relation-v2);
-  stroke-width: 1.35;
+  stroke-width: 1.05;
   transition: opacity 320ms ease, stroke-width 320ms ease;
 }
 
@@ -243,20 +243,20 @@
 }
 
 .phaseQUIET {
-  opacity: 0.48;
+  opacity: 0.3;
 }
 
 .related {
   animation: relation-focus-draw 0.78s cubic-bezier(0.18, 0.72, 0.22, 1) forwards;
-  opacity: 1;
+  opacity: 0.74;
   stroke-dasharray: 320;
   stroke-dashoffset: 0;
-  stroke-width: 1.75;
+  stroke-width: 1.4;
 }
 
 .unrelated {
   animation: none;
-  opacity: 0.24;
+  opacity: 0.16;
 }
 
 .latentField {
@@ -291,7 +291,7 @@
 
 .deepCluster {
   height: 66px;
-  opacity: 0.62;
+  opacity: 0.5;
   pointer-events: none;
   position: absolute;
   width: 116px;
@@ -323,9 +323,9 @@
 }
 
 .deepCluster i {
-  background: rgba(211, 227, 234, 0.86);
+  background: rgba(211, 227, 234, 0.72);
   border-radius: 50%;
-  box-shadow: 0 0 7px rgba(231, 240, 241, 0.7);
+  box-shadow: 0 0 6px rgba(231, 240, 241, 0.52);
   height: 2px;
   position: absolute;
   width: 2px;
@@ -339,7 +339,7 @@
 
 .deepCluster span {
   border-radius: 50%;
-  border-top: 1px solid rgba(177, 200, 213, 0.38);
+  border-top: 1px solid rgba(177, 200, 213, 0.26);
   height: 54px;
   inset: 10px 2px auto;
   position: absolute;
@@ -349,6 +349,7 @@
 .cloudSignature {
   height: 142px;
   left: 45%;
+  opacity: 0.64;
   pointer-events: none;
   position: absolute;
   top: 60%;
@@ -604,6 +605,7 @@
 
 .anchorOrbit {
   border-radius: 50%;
+  opacity: 0.56;
   transform: translate(-50%, -50%);
 }
 
@@ -620,12 +622,13 @@
 .anchorCore {
   border-radius: 50%;
   height: 9px;
-  transform: translate(-50%, -50%);
+  opacity: 0.84;
+  transform: translate(-50%, -50%) scale(0.9);
   width: 9px;
 }
 
 .anchorSpark {
-  background: rgba(255, 255, 250, 0.9);
+  background: rgba(255, 255, 250, 0.7);
   border-radius: 50%;
   height: 3px;
   transform: translate(2px, -7px);
@@ -635,9 +638,10 @@
 .anchorLabel {
   color: #29485f;
   font-family: var(--font-geist-mono), monospace;
-  font-size: 8px;
+  font-size: 7.2px;
   font-weight: 700;
-  letter-spacing: 0.19em;
+  letter-spacing: 0.17em;
+  opacity: 0.72;
   top: -57px;
   transform: translateX(-50%);
   white-space: nowrap;
@@ -671,24 +675,25 @@
 .source .anchorCore { background: #6d6b9a; box-shadow: 0 0 13px rgba(105, 103, 151, 0.72); height: 11px; width: 11px; }
 .source .anchorLabel { color: #57567f; top: 48px; }
 
-.context .anchorAtmosphere { animation: none; background: radial-gradient(circle, rgba(248, 251, 250, 0.74), rgba(106, 142, 164, 0.2) 38%, transparent 72%); height: 76px; width: 76px; }
+.context .anchorAtmosphere { animation: none; background: radial-gradient(circle, rgba(248, 251, 250, 0.62), rgba(106, 142, 164, 0.15) 38%, transparent 72%); height: 76px; opacity: 0.62; width: 76px; }
 .context .anchorOrbitOuter { border-left: 1px solid rgba(82, 116, 140, 0.66); border-top: 1px solid rgba(82, 116, 140, 0.66); height: 28px; transform: translate(-50%, -50%) rotate(28deg); width: 28px; }
 .context .anchorOrbitInner,
 .context .anchorSpark { display: none; }
 .context .anchorCore { background: #67859a; height: 4px; width: 4px; }
-.context .anchorLabel { color: rgba(42, 71, 91, 0.76); font-size: 7px; top: 28px; }
+.context .anchorLabel { color: rgba(42, 71, 91, 0.68); font-size: 6.5px; top: 28px; }
 .system { animation: anchor-arrive 0.55s ease-out 1s forwards, system-drift 21s ease-in-out 3s infinite; }
 .scope { animation: anchor-arrive 0.55s ease-out 1.12s forwards, scope-drift 24s ease-in-out 6s infinite; }
 .status { animation: anchor-arrive 0.55s ease-out 1.2s forwards, status-drift 19s ease-in-out 4.5s infinite; }
 
-.anchorFocused { animation: none; filter: saturate(1.12); opacity: 1; z-index: 8; }
-.anchorFocused .anchorAtmosphere { animation: none; opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-.anchorReceded { animation: none; opacity: 0.42; }
+.anchorFocused { animation: none; filter: saturate(1.06); opacity: 0.88; z-index: 8; }
+.anchorFocused .anchorAtmosphere { animation: none; opacity: 0.78; transform: translate(-50%, -50%) scale(1.06); }
+.anchorReceded { animation: none; opacity: 0.3; }
 
 .handoffField {
   bottom: 0;
   height: 126px;
   inset-inline: 0;
+  opacity: 0.72;
   pointer-events: none;
   position: absolute;
   z-index: 9;
@@ -725,23 +730,23 @@
 @keyframes haze-teal { 0%, 100% { opacity: 0.7; transform: scale(0.98); } 50% { opacity: 0.96; transform: translate(1%, -1.2%) scale(1.04); } }
 @keyframes haze-violet { 0%, 100% { opacity: 0.72; transform: scale(1); } 50% { opacity: 0.98; transform: translate(-1.1%, 0.8%) scale(1.035); } }
 @keyframes lens-breathe { 0%, 100% { opacity: 0.76; transform: scale(0.995); } 50% { opacity: 1; transform: scale(1.018); } }
-@keyframes orbit-arrive { to { opacity: 0.88; } }
-@keyframes fine-arrive { to { opacity: 0.6; } }
-@keyframes relation-arrive { to { opacity: 0.62; } }
-@keyframes relation-focus-draw { from { opacity: 0.28; stroke-dashoffset: 320; } to { opacity: 1; stroke-dashoffset: 0; } }
+@keyframes orbit-arrive { to { opacity: 0.58; } }
+@keyframes fine-arrive { to { opacity: 0.34; } }
+@keyframes relation-arrive { to { opacity: 0.42; } }
+@keyframes relation-focus-draw { from { opacity: 0.2; stroke-dashoffset: 320; } to { opacity: 0.74; stroke-dashoffset: 0; } }
 @keyframes cluster-arrive { to { opacity: 0.66; } }
 @keyframes cluster-guide-label-enter { to { opacity: 1; transform: translateY(0); } }
 @keyframes cluster-guide-text-resolve { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes cluster-guide-dots { 0% { clip-path: inset(0 100% 0 0); opacity: 0; } 35%, 72% { opacity: 1; } 100% { clip-path: inset(0 0 0 0); opacity: 0.18; } }
 @keyframes cluster-guide-arrow { to { opacity: 0.9; transform: translateY(0); } }
 @keyframes anchor-arrive { from { opacity: 0; scale: 0.76; } to { opacity: 1; scale: 1; } }
-@keyframes point-arrive { to { opacity: 0.48; } }
+@keyframes point-arrive { to { opacity: 0.34; } }
 @keyframes orbit-breathe { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(0.18%, -0.32%) scale(1.005, 1.018); } }
-@keyframes anchor-light { 0%, 100% { opacity: 0.58; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.86; transform: translate(-50%, -50%) scale(1.075); } }
+@keyframes anchor-light { 0%, 100% { opacity: 0.38; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.58; transform: translate(-50%, -50%) scale(1.055); } }
 @keyframes cloud-breathe { 0%, 100% { opacity: 0.66; transform: scale(0.98); } 50% { opacity: 0.96; transform: scale(1.035); } }
 @keyframes point-shimmer { 0%, 100% { opacity: 0.18; transform: scale(1); } 43% { opacity: 0.7; transform: scale(1.16); } 64% { opacity: 0.26; transform: scale(1); } }
-@keyframes semantic-a { 0%, 18%, 36%, 100% { opacity: 0.6; } 23%, 31% { opacity: 0.98; } 68%, 78% { opacity: 0.34; } }
-@keyframes semantic-b { 0%, 18%, 36%, 100% { opacity: 0.6; } 23%, 31% { opacity: 0.34; } 68%, 78% { opacity: 0.98; } }
+@keyframes semantic-a { 0%, 18%, 36%, 100% { opacity: 0.4; } 23%, 31% { opacity: 0.62; } 68%, 78% { opacity: 0.22; } }
+@keyframes semantic-b { 0%, 18%, 36%, 100% { opacity: 0.4; } 23%, 31% { opacity: 0.22; } 68%, 78% { opacity: 0.62; } }
 @keyframes question-drift { 0%, 100% { translate: 0 0; } 35% { translate: 7px -4px; } 70% { translate: -5px 5px; } }
 @keyframes jurisdiction-drift { 0%, 100% { translate: 0 0; } 33% { translate: 5px 6px; } 68% { translate: -5px -3px; } }
 @keyframes rule-drift { 0%, 100% { translate: 0 0; } 38% { translate: -7px 4px; } 72% { translate: 5px -5px; } }
@@ -764,11 +769,11 @@
     animation: none;
   }
 
-  .orbitPath { opacity: 0.88; }
-  .secondaryPath { opacity: 0.6; }
-  .relationship { opacity: 0.62; }
-  .latentPoint { opacity: 0.48; transform: none; }
-  .cloudLight { opacity: 0.82; transform: none; }
+  .orbitPath { opacity: 0.58; }
+  .secondaryPath { opacity: 0.34; }
+  .relationship { opacity: 0.42; }
+  .latentPoint { opacity: 0.34; transform: none; }
+  .cloudLight { opacity: 0.58; transform: none; }
   .atlaslingCluster { opacity: 0.66; }
   .atlaslingCluster:hover .clusterGuideLabel,
   .atlaslingCluster:focus-visible .clusterGuideLabel,
@@ -785,7 +790,7 @@
   .atlaslingCluster:hover .clusterGuideArrow,
   .atlaslingCluster:focus-visible .clusterGuideArrow { opacity: 0.9; transform: none; }
   .anchor { opacity: 1; scale: 1; translate: 0 0; }
-  .anchorAtmosphere { opacity: 0.74; transform: translate(-50%, -50%); }
+  .anchorAtmosphere { opacity: 0.55; transform: translate(-50%, -50%); }
   .clusterAura,
   .clusterArc,
   .clusterPoint { transition: none; }

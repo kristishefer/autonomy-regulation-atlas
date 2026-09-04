@@ -127,7 +127,7 @@ const shimmerPoints = new Set([4, 9, 15, 23, 29, 33, 37, 41]);
 
 const signatureClusters: readonly SignatureCluster[] = [
   {
-    id: "fox", label: "Fox · Explore", guideLabel: "FOX · EXPLORE", href: "#guide-explore", x: 82, y: 13, mobileX: 73, mobileY: 7,
+    id: "fox", label: "Explore guide", guideLabel: "EXPLORE", href: "#guide-explore", x: 82, y: 13, mobileX: 73, mobileY: 7,
     paths: ["M18 26Q27 10 38 31", "M62 31Q75 10 82 28", "M28 45L50 68L72 45", "M73 59Q95 60 84 79"],
     points: approvedStarPoints([
       [6.5, 35.2], [12.9, 15.1], [14.2, 59.5], [25.9, 92.2], [30, 75.3], [30.1, 93.9], [30.5, 27.3], [34.2, 80],
@@ -137,7 +137,7 @@ const signatureClusters: readonly SignatureCluster[] = [
     ], 222, 170),
   },
   {
-    id: "cat", label: "Cat · Learn", guideLabel: "CAT · LEARN", href: "#guide-learn", x: 88, y: 76, mobileX: 76, mobileY: 78,
+    id: "cat", label: "Learn guide", guideLabel: "LEARN", href: "#guide-learn", x: 88, y: 76, mobileX: 76, mobileY: 78,
     paths: ["M22 34L31 17L41 34", "M59 34L70 17L78 36", "M30 47L50 69L72 47", "M72 62Q91 60 89 80"],
     points: approvedStarPoints([
       [6.1, 37.5], [6.2, 17.6], [7.4, 29.2], [13.7, 94.4], [13.9, 57.6], [14.3, 50], [14.5, 44.7], [14.8, 22],
@@ -149,7 +149,7 @@ const signatureClusters: readonly SignatureCluster[] = [
     ], 150, 174),
   },
   {
-    id: "dog", label: "Whippet · Deploy", guideLabel: "WHIPPET · DEPLOY", href: "#guide-deploy", x: 63, y: 84, mobileX: 28, mobileY: 88,
+    id: "dog", label: "Deploy guide", guideLabel: "DEPLOY", href: "#guide-deploy", x: 63, y: 84, mobileX: 28, mobileY: 88,
     paths: ["M18 31Q28 20 38 38", "M62 38Q73 20 82 32", "M30 46L49 69", "M49 69L70 46", "M40 72Q57 83 76 70"],
     points: approvedStarPoints([
       [3.8, 71.3], [16.7, 90.5], [17.3, 94.5], [17.7, 80.9], [17.9, 74.9], [18.8, 83], [19.7, 95], [24.6, 60.9],
