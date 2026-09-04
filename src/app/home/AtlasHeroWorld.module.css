@@ -377,6 +377,8 @@
 
 .atlaslingCluster {
   animation: cluster-arrive 0.8s ease-out 1.25s forwards;
+  color: rgba(246, 250, 249, 0.9);
+  cursor: pointer;
   height: 96px;
   left: var(--cluster-x);
   opacity: 0;
@@ -387,6 +389,85 @@
   transition: filter 360ms ease, opacity 360ms ease;
   width: 132px;
   z-index: 5;
+}
+
+.clusterGuideLabel {
+  align-items: center;
+  display: flex;
+  font-family: var(--font-atlas-sans), Arial, Helvetica, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 750;
+  gap: 0.42rem;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: auto;
+  position: absolute;
+  text-decoration: none;
+  text-shadow: 0 0 10px rgba(238, 247, 247, 0.54);
+  transform: translateY(4px);
+  white-space: nowrap;
+  z-index: 7;
+}
+
+.fox .clusterGuideLabel {
+  right: calc(100% + 1.35rem);
+  top: 1.35rem;
+}
+
+.cat .clusterGuideLabel {
+  right: calc(100% + 1rem);
+  top: 3.45rem;
+}
+
+.dog .clusterGuideLabel {
+  left: calc(100% + 1rem);
+  top: 3.4rem;
+}
+
+.clusterGuideText {
+  color: rgba(246, 250, 249, 0.9);
+  clip-path: inset(0 100% 0 0);
+  display: inline-block;
+  position: relative;
+}
+
+.clusterGuideText::before {
+  background: radial-gradient(circle, rgba(255, 253, 243, 0.98) 0 0.8px, transparent 1.2px) 0 50% / 3px 3px;
+  background-clip: text;
+  color: transparent;
+  content: attr(data-label);
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+  -webkit-background-clip: text;
+}
+
+.clusterGuideArrow {
+  color: var(--atlasling-star);
+  opacity: 0;
+  text-shadow: 0 0 8px var(--atlasling-glow);
+  transform: translateY(-5px);
+}
+
+.atlaslingCluster:hover .clusterGuideLabel,
+.atlaslingCluster:focus-visible .clusterGuideLabel {
+  animation: cluster-guide-label-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.atlaslingCluster:hover .clusterGuideText,
+.atlaslingCluster:focus-visible .clusterGuideText {
+  animation: cluster-guide-text-resolve 430ms ease-out 110ms forwards;
+}
+
+.atlaslingCluster:hover .clusterGuideText::before,
+.atlaslingCluster:focus-visible .clusterGuideText::before {
+  animation: cluster-guide-dots 360ms ease-out forwards;
+}
+
+.atlaslingCluster:hover .clusterGuideArrow,
+.atlaslingCluster:focus-visible .clusterGuideArrow {
+  animation: cluster-guide-arrow 280ms cubic-bezier(0.22, 1, 0.36, 1) 330ms forwards;
 }
 
 .atlaslingCluster::after {
@@ -649,6 +730,10 @@
 @keyframes relation-arrive { to { opacity: 0.62; } }
 @keyframes relation-focus-draw { from { opacity: 0.28; stroke-dashoffset: 320; } to { opacity: 1; stroke-dashoffset: 0; } }
 @keyframes cluster-arrive { to { opacity: 0.66; } }
+@keyframes cluster-guide-label-enter { to { opacity: 1; transform: translateY(0); } }
+@keyframes cluster-guide-text-resolve { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes cluster-guide-dots { 0% { clip-path: inset(0 100% 0 0); opacity: 0; } 35%, 72% { opacity: 1; } 100% { clip-path: inset(0 0 0 0); opacity: 0.18; } }
+@keyframes cluster-guide-arrow { to { opacity: 0.9; transform: translateY(0); } }
 @keyframes anchor-arrive { from { opacity: 0; scale: 0.76; } to { opacity: 1; scale: 1; } }
 @keyframes point-arrive { to { opacity: 0.48; } }
 @keyframes orbit-breathe { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(0.18%, -0.32%) scale(1.005, 1.018); } }
@@ -685,6 +770,20 @@
   .latentPoint { opacity: 0.48; transform: none; }
   .cloudLight { opacity: 0.82; transform: none; }
   .atlaslingCluster { opacity: 0.66; }
+  .atlaslingCluster:hover .clusterGuideLabel,
+  .atlaslingCluster:focus-visible .clusterGuideLabel,
+  .atlaslingCluster:hover .clusterGuideText,
+  .atlaslingCluster:focus-visible .clusterGuideText,
+  .atlaslingCluster:hover .clusterGuideText::before,
+  .atlaslingCluster:focus-visible .clusterGuideText::before,
+  .atlaslingCluster:hover .clusterGuideArrow,
+  .atlaslingCluster:focus-visible .clusterGuideArrow { animation: none; }
+  .atlaslingCluster:hover .clusterGuideLabel,
+  .atlaslingCluster:focus-visible .clusterGuideLabel { opacity: 1; transform: none; }
+  .atlaslingCluster:hover .clusterGuideText,
+  .atlaslingCluster:focus-visible .clusterGuideText { clip-path: none; }
+  .atlaslingCluster:hover .clusterGuideArrow,
+  .atlaslingCluster:focus-visible .clusterGuideArrow { opacity: 0.9; transform: none; }
   .anchor { opacity: 1; scale: 1; translate: 0 0; }
   .anchorAtmosphere { opacity: 0.74; transform: translate(-50%, -50%); }
   .clusterAura,
@@ -740,10 +839,12 @@
 
   .atlaslingCluster {
     left: var(--cluster-mobile-x);
-    pointer-events: none;
+    pointer-events: auto;
     top: var(--cluster-mobile-y);
     transform: translate(-50%, -50%) scale(0.62);
   }
+
+  .clusterGuideLabel { display: none; }
 
   .fox { top: 22%; }
   .orbitPath { animation-duration: 1.4s, 30s; stroke-width: 1.2; }

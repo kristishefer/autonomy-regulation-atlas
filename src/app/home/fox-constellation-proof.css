@@ -113,7 +113,7 @@
   inset: auto !important;
   left: 50% !important;
   opacity: 0;
-  pointer-events: none !important;
+  pointer-events: auto !important;
   position: absolute !important;
   top: 50% !important;
   transition:

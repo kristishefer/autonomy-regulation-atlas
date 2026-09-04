@@ -99,6 +99,7 @@ export default async function Home() {
               action={t.modes.exploreCta}
               body={t.modes.exploreBody}
               href="/explore/system-map"
+              id="guide-explore"
               image="/atlaslings/fox.png"
               name="Explore"
               tone="green"
@@ -107,6 +108,7 @@ export default async function Home() {
               action={t.modes.learnCta}
               body={t.modes.learnBody}
               href="/learn"
+              id="guide-learn"
               image="/atlaslings/cat.png"
               name="Learn"
               tone="blue"
@@ -116,6 +118,7 @@ export default async function Home() {
           <DeployGuideLink
             action={t.modes.deployCta}
             body={t.modes.deployBody}
+            id="guide-deploy"
             title={t.modes.deployTitle}
           />
         </div>
@@ -231,6 +234,7 @@ export default async function Home() {
 }
 
 function PrimaryGuideLink({
+  id,
   href,
   image,
   name,
@@ -238,6 +242,7 @@ function PrimaryGuideLink({
   action,
   tone,
 }: {
+  id: "guide-explore" | "guide-learn";
   href: string;
   image: string;
   name: "Explore" | "Learn";
@@ -261,8 +266,9 @@ function PrimaryGuideLink({
 
   return (
     <Link
-      className={`atlas-primary-entry atlas-${tone === "green" ? "explore" : "learn"}-entry group relative grid min-h-[190px] grid-cols-[1fr_112px] items-center gap-4 rounded-2xl border p-5 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-2 sm:min-h-[220px] sm:grid-cols-[1fr_156px] sm:p-7 ${color.bg} ${color.border}`}
+      className={`atlas-guide-card atlas-primary-entry atlas-${tone === "green" ? "explore" : "learn"}-entry group relative grid min-h-[190px] grid-cols-[1fr_112px] items-center gap-4 rounded-2xl border p-5 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-2 sm:min-h-[220px] sm:grid-cols-[1fr_156px] sm:p-7 ${color.bg} ${color.border}`}
       href={href}
+      id={id}
     >
       {tone === "green" ? <ExplorePathMotif /> : <LearnStructureMotif />}
 
@@ -298,16 +304,19 @@ function PrimaryGuideLink({
 function DeployGuideLink({
   action,
   body,
+  id,
   title,
 }: {
   action: string;
   body: string;
+  id: "guide-deploy";
   title: string;
 }) {
   return (
     <Link
-      className="atlas-deploy-entry group relative mx-auto mt-5 grid max-w-3xl grid-cols-[82px_1fr] items-center gap-4 rounded-xl border border-[rgba(86,112,131,0.14)] bg-[var(--atlas-field-blue)] px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-2 sm:grid-cols-[104px_1fr_auto] sm:gap-5 sm:px-5"
+      className="atlas-guide-card atlas-deploy-entry group relative mx-auto mt-5 grid max-w-3xl grid-cols-[82px_1fr] items-center gap-4 rounded-xl border border-[rgba(86,112,131,0.14)] bg-[var(--atlas-field-blue)] px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--atlas-teal)] focus-visible:ring-offset-2 sm:grid-cols-[104px_1fr_auto] sm:gap-5 sm:px-5"
       href="/deploy"
+      id={id}
     >
       <DeployDecisionMotif />
       <div className="relative z-10 top-2 flex h-[82px] items-end justify-center sm:h-[88px]">
