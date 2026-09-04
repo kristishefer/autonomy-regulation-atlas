@@ -94,11 +94,13 @@
 /* Dog: approved whippet constellation artwork with its sky removed. */
 [data-atlasling-cluster="dog"] > span:first-child {
   background: url("/atlaslings/dog-constellation-approved.webp") center / contain no-repeat !important;
-  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.28));
-  height: 165px !important;
+  filter:
+    drop-shadow(0 0 1px rgba(255, 244, 207, 0.74))
+    drop-shadow(0 0 5px rgba(218, 168, 72, 0.38));
+  height: 174px !important;
   transform: translate(-50%, -50%) scale(0.76) !important;
   transform-origin: 50% 50% !important;
-  width: 210px !important;
+  width: 222px !important;
 }
 
 [data-atlasling-cluster]:hover::before,
@@ -123,8 +125,11 @@
 
 [data-atlasling-cluster="dog"]:hover > span:first-child,
 [data-atlasling-cluster="dog"]:focus-visible > span:first-child {
-  filter: drop-shadow(0 0 8px rgba(255, 231, 169, 0.42));
-  opacity: 0.86 !important;
+  filter:
+    drop-shadow(0 0 1px rgba(255, 248, 218, 0.96))
+    drop-shadow(0 0 5px rgba(218, 168, 72, 0.62))
+    drop-shadow(0 0 10px rgba(255, 231, 169, 0.36));
+  opacity: 0.94 !important;
   transform: translate(-50%, -50%) scale(1) !important;
 }
 
@@ -145,8 +150,8 @@
   }
 
   [data-atlasling-cluster="dog"] > span:first-child {
-    height: 91px !important;
-    width: 116px !important;
+    height: 96px !important;
+    width: 122px !important;
   }
 
   /* Touch devices have no meaningful hover: keep the map quiet. */
