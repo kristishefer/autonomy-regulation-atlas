@@ -1,5 +1,5 @@
 .hero {
-  background: #f1eee7;
+  background: #e7e3dc;
   isolation: isolate;
   min-height: 720px;
   overflow: hidden;
@@ -8,11 +8,11 @@
 
 .hero::before {
   background:
-    radial-gradient(ellipse 36% 44% at 64% 84%, rgba(78, 126, 153, 0.42), transparent 82%),
-    radial-gradient(ellipse 58% 118% at 103% 48%, rgba(72, 111, 147, 0.54), rgba(116, 151, 177, 0.4) 42%, rgba(187, 207, 216, 0.2) 70%, transparent 88%),
-    radial-gradient(ellipse 48% 92% at 76% 65%, rgba(113, 174, 166, 0.2), transparent 78%),
-    radial-gradient(ellipse 54% 92% at 50% 43%, rgba(249, 247, 241, 0.58), rgba(230, 232, 228, 0.28) 56%, transparent 86%),
-    linear-gradient(102deg, rgba(245, 242, 235, 0.18), rgba(219, 226, 226, 0.34) 43%, rgba(128, 159, 181, 0.42) 73%, rgba(81, 120, 153, 0.5));
+    radial-gradient(ellipse 36% 44% at 64% 84%, rgba(58, 108, 138, 0.5), transparent 82%),
+    radial-gradient(ellipse 58% 118% at 103% 48%, rgba(47, 86, 124, 0.66), rgba(92, 130, 160, 0.5) 42%, rgba(165, 190, 204, 0.24) 70%, transparent 88%),
+    radial-gradient(ellipse 48% 92% at 76% 65%, rgba(82, 148, 141, 0.26), transparent 78%),
+    radial-gradient(ellipse 54% 92% at 50% 43%, rgba(238, 235, 227, 0.52), rgba(211, 218, 216, 0.28) 56%, transparent 86%),
+    linear-gradient(102deg, rgba(232, 227, 218, 0.28), rgba(199, 211, 214, 0.42) 43%, rgba(101, 139, 166, 0.52) 73%, rgba(53, 92, 128, 0.62));
   content: "";
   inset: 0;
   pointer-events: none;
@@ -21,8 +21,8 @@
 
 .hero::after {
   background:
-    radial-gradient(ellipse 29% 118% at 64% 112%, rgba(92, 136, 157, 0.24), transparent 74%),
-    linear-gradient(to bottom, transparent, rgba(243, 238, 230, 0.5) 52%, rgba(245, 239, 230, 0.98));
+    radial-gradient(ellipse 29% 118% at 64% 112%, rgba(73, 119, 143, 0.3), transparent 74%),
+    linear-gradient(to bottom, transparent, rgba(235, 229, 220, 0.54) 52%, rgba(238, 231, 222, 0.98));
   bottom: 0;
   content: "";
   height: 224px;
@@ -115,7 +115,7 @@
 
 .hazeDawn {
   animation: haze-dawn 24s ease-in-out 2s infinite;
-  background: rgba(255, 252, 242, 0.66);
+  background: rgba(250, 246, 235, 0.58);
   height: 56%;
   left: 43%;
   top: 18%;
@@ -124,7 +124,7 @@
 
 .hazeBlue {
   animation: haze-blue 22s ease-in-out 4s infinite;
-  background: rgba(91, 133, 167, 0.3);
+  background: rgba(68, 113, 150, 0.36);
   height: 88%;
   left: 62%;
   top: -4%;
@@ -133,7 +133,7 @@
 
 .hazeTeal {
   animation: haze-teal 27s ease-in-out 7s infinite;
-  background: rgba(100, 166, 158, 0.2);
+  background: rgba(75, 149, 141, 0.24);
   height: 47%;
   left: 59%;
   top: 47%;
@@ -142,7 +142,7 @@
 
 .hazeViolet {
   animation: haze-violet 26s ease-in-out 1s infinite;
-  background: rgba(111, 109, 158, 0.22);
+  background: rgba(93, 91, 145, 0.26);
   height: 54%;
   left: 83%;
   top: 33%;
@@ -152,11 +152,11 @@
 .worldLens {
   animation: lens-breathe 28s ease-in-out 1.8s infinite;
   background:
-    radial-gradient(ellipse at 35% 44%, rgba(251, 250, 246, 0.58), transparent 28%),
-    radial-gradient(ellipse at 64% 54%, rgba(151, 190, 207, 0.28), transparent 54%),
-    radial-gradient(ellipse at 90% 62%, rgba(69, 109, 145, 0.26), transparent 68%);
+    radial-gradient(ellipse at 35% 44%, rgba(245, 242, 234, 0.46), transparent 28%),
+    radial-gradient(ellipse at 64% 54%, rgba(125, 171, 192, 0.32), transparent 54%),
+    radial-gradient(ellipse at 90% 62%, rgba(47, 88, 126, 0.34), transparent 68%);
   border: 0;
-  box-shadow: inset 0 0 132px rgba(241, 247, 246, 0.36);
+  box-shadow: inset 0 0 132px rgba(224, 235, 234, 0.28);
   height: 126%;
   left: 34%;
   top: -17%;
@@ -291,7 +291,7 @@
 
 .deepCluster {
   height: 66px;
-  opacity: 0.46;
+  opacity: 0.62;
   pointer-events: none;
   position: absolute;
   width: 116px;
@@ -310,9 +310,22 @@
   transform: rotate(9deg);
 }
 
+.deepClusterThree {
+  left: 50%;
+  top: 7%;
+  transform: rotate(18deg) scale(0.86);
+}
+
+.deepClusterFour {
+  left: 94%;
+  top: 39%;
+  transform: rotate(-22deg) scale(0.78);
+}
+
 .deepCluster i {
-  background: rgba(87, 121, 148, 0.68);
+  background: rgba(211, 227, 234, 0.86);
   border-radius: 50%;
+  box-shadow: 0 0 7px rgba(231, 240, 241, 0.7);
   height: 2px;
   position: absolute;
   width: 2px;
@@ -322,10 +335,11 @@
 .deepCluster i:nth-child(2) { left: 34px; top: 11px; }
 .deepCluster i:nth-child(3) { left: 72px; top: 20px; }
 .deepCluster i:nth-child(4) { right: 2px; top: 51px; }
+.deepCluster i:nth-child(5) { left: 57px; top: 47px; }
 
 .deepCluster span {
   border-radius: 50%;
-  border-top: 1px solid rgba(121, 150, 172, 0.28);
+  border-top: 1px solid rgba(177, 200, 213, 0.38);
   height: 54px;
   inset: 10px 2px auto;
   position: absolute;

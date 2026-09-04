@@ -23,7 +23,7 @@ body {
 }
 
 .atlas-home {
-  --atlas-paper: #f9f7f2;
+  --atlas-paper: #f1eee8;
   --atlas-ink: #18324a;
   --atlas-ink-muted: #48677b;
   --atlas-teal: #4f8f82;
@@ -36,9 +36,9 @@ body {
   --atlas-jurisdiction: #6484a3;
   --atlas-rule-node: #39877f;
   --atlas-source: #74749d;
-  --atlas-field-blue: #eaf1f4;
-  --atlas-field-sage: #edf2ec;
-  --atlas-field-warm: #f5efe6;
+  --atlas-field-blue: #dfe9ed;
+  --atlas-field-sage: #e3ebe4;
+  --atlas-field-warm: #eee7de;
   --atlas-footer: #12283e;
   font-family: var(--font-atlas-sans), Arial, Helvetica, sans-serif;
 }
@@ -127,7 +127,7 @@ summary {
 .atlas-entry-section {
   background-image: linear-gradient(
     to bottom,
-    rgba(245, 239, 230, 0.98) 0%,
+    rgba(238, 231, 222, 0.98) 0%,
     var(--atlas-field-warm) 86%,
     rgba(234, 241, 244, 0.82) 100%
   );
@@ -188,15 +188,15 @@ summary {
 }
 
 .atlas-navigator-section {
-  background: linear-gradient(180deg, var(--atlas-field-blue), #edf3f4 82%, var(--atlas-field-sage));
+  background: linear-gradient(180deg, var(--atlas-field-blue), #e1eaec 82%, var(--atlas-field-sage));
 }
 
 .atlas-question-section {
-  background: linear-gradient(180deg, var(--atlas-field-sage), #eef3ee 78%, var(--atlas-paper));
+  background: linear-gradient(180deg, var(--atlas-field-sage), #e4ebe5 78%, var(--atlas-paper));
 }
 
 .atlas-method-section {
-  background: linear-gradient(180deg, var(--atlas-paper), #f8f5ef);
+  background: linear-gradient(180deg, var(--atlas-paper), #ece9e3);
 }
 
 .atlas-section-shell {

@@ -49,17 +49,17 @@
 
 [data-atlasling-cluster="fox"] {
   --atlasling-star: #d8a748;
-  --atlasling-glow: rgba(216, 167, 72, 0.34);
+  --atlasling-glow: rgba(216, 167, 72, 0.36);
 }
 
 [data-atlasling-cluster="cat"] {
-  --atlasling-star: #777da0;
-  --atlasling-glow: rgba(119, 125, 160, 0.28);
+  --atlasling-star: #a7abc6;
+  --atlasling-glow: rgba(167, 171, 198, 0.36);
 }
 
 [data-atlasling-cluster="dog"] {
-  --atlasling-star: #638e87;
-  --atlasling-glow: rgba(99, 142, 135, 0.28);
+  --atlasling-star: #8fb8b1;
+  --atlasling-glow: rgba(143, 184, 177, 0.36);
 }
 
 /* Guide Star is the meta-guide through the Atlas, not a fourth mascot.
@@ -127,7 +127,7 @@
    the authored constellation geometry is unchanged. */
 [data-atlasling-cluster="fox"] > span:first-child {
   background: url("/atlaslings/fox-constellation-figma.webp") center / contain no-repeat !important;
-  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.28));
+  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.3));
   height: 170px !important;
   transform: translate(-50%, -50%) scale(0.76) !important;
   transform-origin: 50% 50% !important;
@@ -138,7 +138,7 @@
    source and exported with a real alpha channel. */
 [data-atlasling-cluster="cat"] > span:first-child {
   background: url("/atlaslings/cat-constellation-approved.webp") center / contain no-repeat !important;
-  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.28));
+  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.3));
   height: 174px !important;
   transform: translate(-50%, -50%) scale(0.76) !important;
   transform-origin: 50% 50% !important;
@@ -171,13 +171,13 @@
 [data-atlasling-cluster="cat"]:hover > span:first-child,
 [data-atlasling-cluster="cat"]:focus-visible > span:first-child {
   filter: drop-shadow(0 0 8px rgba(255, 231, 169, 0.42));
-  opacity: 0.86 !important;
+  opacity: 0.88 !important;
   transform: translate(-50%, -50%) scale(1) !important;
 }
 
 [data-atlasling-cluster="dog"]:hover > span:first-child,
 [data-atlasling-cluster="dog"]:focus-visible > span:first-child {
-  filter: drop-shadow(0 0 8px rgba(255, 231, 169, 0.44));
+  filter: drop-shadow(0 0 8px rgba(255, 231, 169, 0.42));
   opacity: 0.88 !important;
   transform: translate(-50%, -50%) scale(1) !important;
 }
@@ -187,25 +187,25 @@
    remain reserved for the complete image on direct hover/focus. */
 @media (hover: hover) and (pointer: fine) {
   [data-atlas-hero-world]:hover [data-atlas-guide-star] {
-    animation: atlas-guide-star-route 10s linear 1 both;
+    animation: atlas-guide-star-route 10s linear infinite;
   }
 
   [data-atlas-hero-world]:hover [data-atlas-guide-star]::after {
-    animation: atlas-guide-star-flight-tail 10s linear 1 both;
+    animation: atlas-guide-star-flight-tail 10s linear infinite;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="fox"] > i {
-    animation: atlasling-guide-fox 9.4s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
+    animation: atlasling-guide-fox 10s cubic-bezier(0.22, 0.75, 0.22, 1) infinite both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="cat"] > i {
-    animation: atlasling-guide-cat 9.4s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
+    animation: atlasling-guide-cat 10s cubic-bezier(0.22, 0.75, 0.22, 1) infinite both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="dog"] > i {
-    animation: atlasling-guide-dog 9.4s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
+    animation: atlasling-guide-dog 10s cubic-bezier(0.22, 0.75, 0.22, 1) infinite both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
@@ -214,15 +214,15 @@
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="fox"] > span:first-child {
-    animation: atlasling-guide-fox-art 9.4s ease-in-out 1 both !important;
+    animation: atlasling-guide-fox-art 10s ease-in-out infinite both !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="cat"] > span:first-child {
-    animation: atlasling-guide-cat-art 9.4s ease-in-out 1 both !important;
+    animation: atlasling-guide-cat-art 10s ease-in-out infinite both !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="dog"] > span:first-child {
-    animation: atlasling-guide-dog-art 9.4s ease-in-out 1 both !important;
+    animation: atlasling-guide-dog-art 10s ease-in-out infinite both !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > i,
@@ -380,7 +380,7 @@
 
 @keyframes atlasling-guide-cat-art {
   0%, 41%, 58%, 100% { opacity: 0; }
-  45%, 53% { opacity: 0.21; }
+  45%, 53% { opacity: 0.22; }
 }
 
 @keyframes atlasling-guide-dog-art {
