@@ -1,6 +1,7 @@
 /* Atlasling constellation silhouettes.
-   Resting state: trigger stars only. Hover/focus: airy recognisable silhouettes.
-   No filled mascot bodies, no facial detail reconstruction, no row layout. */
+   Resting state: trigger stars only. World hover: approved constellation stars
+   assemble without connector lines. Direct mascot hover/focus: the complete
+   approved constellation holds still. */
 
 [data-atlasling-cluster] {
   animation: none !important;
@@ -8,9 +9,21 @@
   z-index: 8 !important;
 }
 
-[data-atlasling-cluster] > svg,
-[data-atlasling-cluster] > i {
+[data-atlasling-cluster] > svg {
   display: none !important;
+}
+
+[data-atlasling-cluster] > i {
+  animation: none !important;
+  background: radial-gradient(circle, rgba(255, 255, 252, 1) 0 28%, var(--atlasling-star) 34% 62%, transparent 72%) !important;
+  box-shadow: 0 0 5px 1px var(--atlasling-glow), 0 0 11px 2px rgba(248, 250, 246, 0.54) !important;
+  display: block !important;
+  height: calc(var(--cluster-point-size) * 1.45) !important;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.35);
+  transition: none !important;
+  width: calc(var(--cluster-point-size) * 1.45) !important;
+  z-index: 2;
 }
 
 /* One quiet trigger-star per mascot. The cluster positions remain the authored
@@ -35,16 +48,19 @@
 }
 
 [data-atlasling-cluster="fox"] {
+  --cluster-build-offset: 0s;
   --atlasling-star: #d8a748;
   --atlasling-glow: rgba(216, 167, 72, 0.34);
 }
 
 [data-atlasling-cluster="cat"] {
+  --cluster-build-offset: -2.1s;
   --atlasling-star: #777da0;
   --atlasling-glow: rgba(119, 125, 160, 0.28);
 }
 
 [data-atlasling-cluster="dog"] {
+  --cluster-build-offset: -4.2s;
   --atlasling-star: #638e87;
   --atlasling-glow: rgba(99, 142, 135, 0.28);
 }
@@ -94,9 +110,7 @@
 /* Dog: approved whippet constellation artwork with its sky removed. */
 [data-atlasling-cluster="dog"] > span:first-child {
   background: url("/atlaslings/dog-constellation-approved.webp") center / contain no-repeat !important;
-  filter:
-    drop-shadow(0 0 1px rgba(255, 244, 207, 0.74))
-    drop-shadow(0 0 5px rgba(218, 168, 72, 0.38));
+  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.3));
   height: 174px !important;
   transform: translate(-50%, -50%) scale(0.76) !important;
   transform-origin: 50% 50% !important;
@@ -125,12 +139,48 @@
 
 [data-atlasling-cluster="dog"]:hover > span:first-child,
 [data-atlasling-cluster="dog"]:focus-visible > span:first-child {
-  filter:
-    drop-shadow(0 0 1px rgba(255, 248, 218, 0.96))
-    drop-shadow(0 0 5px rgba(218, 168, 72, 0.62))
-    drop-shadow(0 0 10px rgba(255, 231, 169, 0.36));
-  opacity: 0.94 !important;
+  filter: drop-shadow(0 0 8px rgba(255, 231, 169, 0.44));
+  opacity: 0.88 !important;
   transform: translate(-50%, -50%) scale(1) !important;
+}
+
+/* The ambient state uses star coordinates sampled from each approved asset.
+   Staggered point light builds the silhouette; authored connector lines remain
+   reserved for the complete image on direct hover/focus. */
+@media (hover: hover) and (pointer: fine) {
+  [data-atlas-hero-world]:hover [data-atlasling-cluster] > i {
+    animation: atlasling-point-build 6.2s ease-in-out infinite !important;
+    animation-delay: calc(var(--point-build-delay) + var(--cluster-build-offset)) !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > i,
+  [data-atlas-hero-world]:hover [data-atlasling-cluster]:focus-visible > i {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+@keyframes atlasling-point-build {
+  0%, 7%, 100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  17% {
+    opacity: 0.98;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+  29%, 68% {
+    opacity: 0.86;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  84% {
+    opacity: 0.18;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+  93% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
 }
 
 @media (max-width: 900px) {
@@ -164,7 +214,19 @@
 
 @media (prefers-reduced-motion: reduce) {
   [data-atlasling-cluster] > span:first-child,
+  [data-atlasling-cluster] > i,
   [data-atlasling-cluster]::before {
     transition: none !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster] > i {
+    animation: none !important;
+    opacity: 0.48 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > i,
+  [data-atlas-hero-world]:hover [data-atlasling-cluster]:focus-visible > i {
+    opacity: 0 !important;
   }
 }

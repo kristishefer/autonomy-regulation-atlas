@@ -38,6 +38,19 @@ type SignatureCluster = {
   y: number;
 };
 
+function approvedStarPoints(
+  stars: readonly (readonly [xPercent: number, yPercent: number])[],
+  width: number,
+  height: number,
+): readonly SignaturePoint[] {
+  return stars.map(([xPercent, yPercent], index) => {
+    const x = 66 - width / 2 + (xPercent / 100) * width;
+    const y = 48 - height / 2 + (yPercent / 100) * height;
+    const size = index % 7 === 0 ? 3 : index % 3 === 0 ? 2.5 : 2;
+    return [x, y, x, y, size] as const;
+  });
+}
+
 const anchors: readonly AnchorDefinition[] = [
   { id: "question", label: "QUESTION", x: 52, y: 48, mobileX: 16, mobileY: 49, depth: "major" },
   { id: "jurisdiction", label: "JURISDICTION", x: 68, y: 20, mobileX: 39, mobileY: 32, depth: "major" },
@@ -110,17 +123,36 @@ const signatureClusters: readonly SignatureCluster[] = [
   {
     id: "fox", label: "Fox constellation", x: 82, y: 13, mobileX: 73, mobileY: 7,
     paths: ["M18 26Q27 10 38 31", "M62 31Q75 10 82 28", "M28 45L50 68L72 45", "M73 59Q95 60 84 79"],
-    points: [[12, 47, 18, 26, 3], [39, 8, 38, 31, 2], [72, 14, 62, 31, 2.5], [109, 43, 82, 28, 3], [29, 78, 28, 45, 2], [65, 63, 72, 45, 2.5], [91, 84, 50, 68, 3], [119, 65, 84, 79, 1.8]],
+    points: approvedStarPoints([
+      [6.5, 35.2], [12.9, 15.1], [14.2, 59.5], [25.9, 92.2], [30, 75.3], [30.1, 93.9], [30.5, 27.3], [34.2, 80],
+      [36.1, 9.7], [37.8, 58.4], [41.4, 32], [43.6, 49.6], [47.3, 71.4], [50.6, 64.8], [54.9, 47.6], [56.9, 93.4],
+      [65.1, 69.5], [67.2, 7.1], [67.5, 18.8], [67.9, 42.5], [69.1, 25.2], [72.9, 75.4], [74.3, 81.6], [76.4, 14.6],
+      [78.3, 61.6], [78.3, 93.9], [79.9, 67.5], [80.4, 7], [81.5, 83.2], [81.9, 36.8], [85.5, 20.7], [92.1, 30],
+    ], 222, 170),
   },
   {
     id: "cat", label: "Cat constellation", x: 88, y: 76, mobileX: 76, mobileY: 78,
     paths: ["M22 34L31 17L41 34", "M59 34L70 17L78 36", "M30 47L50 69L72 47", "M72 62Q91 60 89 80"],
-    points: [[12, 34, 22, 34, 2.5], [35, 9, 31, 17, 2], [68, 12, 41, 34, 3], [112, 32, 70, 17, 2], [27, 76, 78, 36, 2.5], [61, 63, 30, 47, 1.8], [90, 84, 72, 47, 3], [119, 67, 50, 69, 2], [79, 28, 89, 80, 1.8]],
+    points: approvedStarPoints([
+      [6.1, 37.5], [6.2, 17.6], [7.4, 29.2], [13.7, 94.4], [13.9, 57.6], [14.3, 50], [14.5, 44.7], [14.8, 22],
+      [17.5, 70], [18.1, 94.9], [18.2, 81.6], [19.6, 89.6], [23.5, 66.2], [25.5, 20.8], [26.6, 94.5], [30.9, 82.8],
+      [31.7, 14.6], [35, 39], [35.1, 73.2], [35.1, 94.3], [39.3, 30.7], [41.6, 88.5], [42.1, 48.7], [46.4, 70],
+      [53.7, 58.9], [55.6, 18.4], [58.9, 94.3], [59.2, 10], [62.2, 54.5], [64.2, 87.3], [69.9, 38.7], [72, 5.2],
+      [72, 69.5], [73.5, 16], [74.1, 51.3], [78.4, 65.4], [80.4, 84.2], [81.4, 29.1], [82.4, 76.8], [86.3, 39.1],
+      [87.6, 10.4], [94.2, 21.7],
+    ], 150, 174),
   },
   {
     id: "dog", label: "Dog constellation", x: 63, y: 84, mobileX: 28, mobileY: 88,
     paths: ["M18 31Q28 20 38 38", "M62 38Q73 20 82 32", "M30 46L49 69", "M49 69L70 46", "M40 72Q57 83 76 70"],
-    points: [[10, 48, 18, 31, 2], [33, 11, 38, 38, 2.5], [69, 14, 62, 38, 2], [109, 40, 82, 32, 3], [24, 78, 30, 46, 2], [61, 64, 70, 46, 2.5], [91, 83, 49, 69, 3], [118, 65, 40, 72, 1.8], [78, 27, 76, 70, 2]],
+    points: approvedStarPoints([
+      [3.8, 71.3], [16.7, 90.5], [17.3, 94.5], [17.7, 80.9], [17.9, 74.9], [18.8, 83], [19.7, 95], [24.6, 60.9],
+      [25.2, 46.8], [25.5, 76.5], [26.7, 82.8], [27.2, 90.4], [28.6, 93.5], [30, 64.2], [31.1, 93.6], [31.5, 37.5],
+      [36, 49.3], [37.2, 60.5], [37.9, 50.5], [41.5, 44.9], [61.3, 31.9], [63.3, 83], [63.7, 91.4], [64.4, 57.6],
+      [64.5, 94.7], [65.5, 30.1], [68.9, 66.1], [69.9, 83.3], [71.5, 80.6], [72.2, 93.9], [73.6, 43.3], [74, 53.4],
+      [74.4, 5], [74.8, 94], [75.1, 9.8], [76.9, 41.9], [77.1, 4.3], [80.4, 15.5], [83.3, 4.9], [85.8, 7],
+      [86.1, 15.1], [95.9, 14.8],
+    ], 222, 174),
   },
 ];
 
@@ -153,7 +185,7 @@ function AtlaslingCluster({ cluster }: { cluster: SignatureCluster }) {
         <i
           className={styles.clusterPoint}
           key={`${cluster.id}-${index}`}
-          style={{ "--cluster-point-size": `${size}px`, "--rest-x": `${restX}px`, "--rest-y": `${restY}px`, "--shape-dx": `${shapeX - restX}px`, "--shape-dy": `${shapeY - restY}px` } as CSSProperties}
+          style={{ "--cluster-point-size": `${size}px`, "--point-build-delay": `${index * 0.065}s`, "--rest-x": `${restX}px`, "--rest-y": `${restY}px`, "--shape-dx": `${shapeX - restX}px`, "--shape-dy": `${shapeY - restY}px` } as CSSProperties}
         />
       ))}
     </div>
@@ -183,7 +215,7 @@ export function AtlasHeroWorld({ body, eyebrow, line1, line2, line3 }: AtlasHero
 
   return (
     <section className={styles.hero}>
-      <div className={styles.world} data-active-anchor={activeAnchor ?? undefined} onPointerLeave={() => setActiveAnchor(null)} onPointerMove={handlePointerMove}>
+      <div className={styles.world} data-active-anchor={activeAnchor ?? undefined} data-atlas-hero-world onPointerLeave={() => setActiveAnchor(null)} onPointerMove={handlePointerMove}>
         <div aria-hidden="true" className={styles.atmosphericCanvas}>
           <span className={`${styles.haze} ${styles.hazeDawn}`} />
           <span className={`${styles.haze} ${styles.hazeBlue}`} />
