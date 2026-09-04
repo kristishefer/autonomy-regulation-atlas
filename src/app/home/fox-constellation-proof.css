@@ -80,9 +80,19 @@
   width: 222px !important;
 }
 
-/* Cat/Dog: subtract a slightly smaller copy of the same alpha mask from the
-   outer copy. This leaves a thin outer contour rather than a filled mascot. */
-[data-atlasling-cluster="cat"] > span:first-child,
+/* Cat: approved constellation artwork, cropped directly from the approved
+   source and exported with a real alpha channel. */
+[data-atlasling-cluster="cat"] > span:first-child {
+  background: url("/atlaslings/cat-constellation-approved.webp") center / contain no-repeat !important;
+  filter: drop-shadow(0 0 5px rgba(255, 231, 169, 0.28));
+  height: 174px !important;
+  transform: translate(-50%, -50%) scale(0.76) !important;
+  transform-origin: 50% 50% !important;
+  width: 150px !important;
+}
+
+/* Dog: subtract a slightly smaller copy of the same alpha mask from the outer
+   copy. This leaves a thin outer contour rather than a filled mascot. */
 [data-atlasling-cluster="dog"] > span:first-child {
   background: var(--atlasling-star) !important;
   filter: drop-shadow(0 0 6px var(--atlasling-glow));
@@ -90,17 +100,6 @@
   mask-composite: exclude;
   transform: translate(-50%, -50%) scale(0.78) !important;
   transform-origin: 50% 50% !important;
-}
-
-[data-atlasling-cluster="cat"] > span:first-child {
-  height: 116px !important;
-  -webkit-mask:
-    url("/atlaslings/cat.png") center / contain no-repeat,
-    url("/atlaslings/cat.png") center / 93% 93% no-repeat;
-  mask:
-    url("/atlaslings/cat.png") center / contain no-repeat,
-    url("/atlaslings/cat.png") center / 93% 93% no-repeat;
-  width: 136px !important;
 }
 
 [data-atlasling-cluster="dog"] > span:first-child {
@@ -128,7 +127,12 @@
 }
 
 [data-atlasling-cluster="cat"]:hover > span:first-child,
-[data-atlasling-cluster="cat"]:focus-visible > span:first-child,
+[data-atlasling-cluster="cat"]:focus-visible > span:first-child {
+  filter: drop-shadow(0 0 8px rgba(255, 231, 169, 0.42));
+  opacity: 0.86 !important;
+  transform: translate(-50%, -50%) scale(1) !important;
+}
+
 [data-atlasling-cluster="dog"]:hover > span:first-child,
 [data-atlasling-cluster="dog"]:focus-visible > span:first-child {
   filter: drop-shadow(0 0 9px var(--atlasling-glow));
@@ -148,8 +152,8 @@
   }
 
   [data-atlasling-cluster="cat"] > span:first-child {
-    height: 74px !important;
-    width: 88px !important;
+    height: 96px !important;
+    width: 84px !important;
   }
 
   [data-atlasling-cluster="dog"] > span:first-child {
