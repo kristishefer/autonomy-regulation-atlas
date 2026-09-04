@@ -189,7 +189,7 @@ function AtlaslingCluster({ cluster }: { cluster: SignatureCluster }) {
         <i
           className={styles.clusterPoint}
           key={`${cluster.id}-${index}`}
-          style={{ "--cluster-point-size": `${size}px`, "--point-build-delay": `${index * 0.025}s`, "--rest-x": `${restX}px`, "--rest-y": `${restY}px`, "--shape-dx": `${shapeX - restX}px`, "--shape-dy": `${shapeY - restY}px` } as CSSProperties}
+          style={{ "--cluster-point-size": `${size}px`, "--point-build-delay": `${index * 0.012}s`, "--rest-x": `${restX}px`, "--rest-y": `${restY}px`, "--shape-dx": `${shapeX - restX}px`, "--shape-dy": `${shapeY - restY}px` } as CSSProperties}
         />
       ))}
     </div>

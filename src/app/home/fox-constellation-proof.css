@@ -65,33 +65,35 @@
 /* Guide Star is the meta-guide through the Atlas, not a fourth mascot.
    Its movement is the only connective cue: no additional trail or route line. */
 [data-atlas-guide-star] {
-  height: 13px;
+  height: 15px;
   left: 59%;
-  opacity: 0.58;
+  opacity: 0.72;
   pointer-events: none;
   position: absolute;
   top: 42%;
   transform: translate(-50%, -50%) rotate(9deg);
-  width: 13px;
+  width: 15px;
+  will-change: left, top, transform, opacity;
   z-index: 9;
 }
 
 [data-atlas-guide-star]::before {
-  animation: atlas-guide-star-breathe 2.8s ease-in-out infinite;
+  animation: atlas-guide-star-breathe 1.8s ease-in-out infinite;
   background: radial-gradient(circle, #fffdf3 0 18%, #f4ce7a 44%, rgba(218, 167, 72, 0.08) 74%);
   clip-path: polygon(50% 0, 58% 39%, 100% 50%, 60% 60%, 50% 100%, 41% 61%, 0 50%, 42% 40%);
   content: "";
-  filter: drop-shadow(0 0 4px rgba(255, 244, 205, 0.98)) drop-shadow(0 0 11px rgba(216, 167, 72, 0.72));
-  inset: -3px;
+  filter: drop-shadow(0 0 5px rgba(255, 244, 205, 1)) drop-shadow(0 0 14px rgba(216, 167, 72, 0.82));
+  inset: -4px;
   position: absolute;
 }
 
 [data-atlas-guide-star]::after {
+  animation: atlas-guide-star-rest-signal 2.6s cubic-bezier(0.22, 0.75, 0.22, 1) infinite;
   border: 1px solid rgba(216, 167, 72, 0.3);
   border-radius: 50%;
   content: "";
   inset: -8px;
-  opacity: 0.48;
+  opacity: 0.58;
   position: absolute;
   transform: scale(0.72);
 }
@@ -180,21 +182,25 @@
    remain reserved for the complete image on direct hover/focus. */
 @media (hover: hover) and (pointer: fine) {
   [data-atlas-hero-world]:hover [data-atlas-guide-star] {
-    animation: atlas-guide-star-route 18s cubic-bezier(0.45, 0, 0.25, 1) 1 both;
+    animation: atlas-guide-star-route 10s cubic-bezier(0.2, 0.72, 0.22, 1) 1 both;
+  }
+
+  [data-atlas-hero-world]:hover [data-atlas-guide-star]::after {
+    animation: atlas-guide-star-arrival-signal 10s linear 1 both;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="fox"] > i {
-    animation: atlasling-guide-fox 17s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
+    animation: atlasling-guide-fox 9.4s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="cat"] > i {
-    animation: atlasling-guide-cat 17s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
+    animation: atlasling-guide-cat 9.4s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="dog"] > i {
-    animation: atlasling-guide-dog 17s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
+    animation: atlasling-guide-dog 9.4s cubic-bezier(0.22, 0.75, 0.22, 1) 1 both !important;
     animation-delay: var(--point-build-delay) !important;
   }
 
@@ -203,15 +209,15 @@
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="fox"] > span:first-child {
-    animation: atlasling-guide-fox-art 17s ease-in-out 1 both !important;
+    animation: atlasling-guide-fox-art 9.4s ease-in-out 1 both !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="cat"] > span:first-child {
-    animation: atlasling-guide-cat-art 17s ease-in-out 1 both !important;
+    animation: atlasling-guide-cat-art 9.4s ease-in-out 1 both !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster="dog"] > span:first-child {
-    animation: atlasling-guide-dog-art 17s ease-in-out 1 both !important;
+    animation: atlasling-guide-dog-art 9.4s ease-in-out 1 both !important;
   }
 
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > i,
@@ -223,6 +229,12 @@
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:hover > span:first-child,
   [data-atlas-hero-world]:hover [data-atlasling-cluster]:focus-visible > span:first-child {
     animation: none !important;
+  }
+
+  [data-atlas-hero-world]:has([data-atlasling-cluster]:is(:hover, :focus-visible)) [data-atlas-guide-star]::after {
+    animation: none;
+    opacity: 0.66;
+    transform: scale(0.88);
   }
 
   [data-atlas-hero-world]:has([data-atlasling-cluster="fox"]:is(:hover, :focus-visible)) [data-atlas-guide-star] {
@@ -251,54 +263,66 @@
 }
 
 @keyframes atlas-guide-star-route {
-  0% { left: 59%; opacity: 0.58; top: 42%; transform: translate(-50%, -50%) rotate(9deg) scale(0.92); }
-  7% { left: 70%; opacity: 0.72; top: 25%; transform: translate(-50%, -50%) rotate(38deg) scale(1); }
-  13% { left: 84%; opacity: 0.98; top: 9%; transform: translate(-50%, -50%) rotate(72deg) scale(1.12); }
-  24% { left: 87%; opacity: 0.9; top: 18%; transform: translate(-50%, -50%) rotate(103deg) scale(1.02); }
-  34% { left: 90%; opacity: 0.76; top: 53%; transform: translate(-50%, -50%) rotate(138deg) scale(0.96); }
-  43% { left: 93%; opacity: 0.98; top: 70%; transform: translate(-50%, -50%) rotate(171deg) scale(1.12); }
-  53% { left: 84%; opacity: 0.86; top: 79%; transform: translate(-50%, -50%) rotate(207deg) scale(1.02); }
-  65% { left: 70%; opacity: 0.98; top: 77%; transform: translate(-50%, -50%) rotate(251deg) scale(1.12); }
-  77% { left: 61%; opacity: 0.86; top: 73%; transform: translate(-50%, -50%) rotate(294deg) scale(1.02); }
-  88% { left: 57%; opacity: 0.72; top: 86%; transform: translate(-50%, -50%) rotate(334deg) scale(0.98); }
-  96% { left: 59%; opacity: 0.88; top: 96%; transform: translate(-50%, -50%) rotate(360deg) scale(1.06); }
+  0% { left: 59%; opacity: 0.72; top: 42%; transform: translate(-50%, -50%) rotate(9deg) scale(0.94); }
+  4% { left: 70%; opacity: 0.86; top: 25%; transform: translate(-50%, -50%) rotate(38deg) scale(1.04); }
+  10% { left: 84%; opacity: 1; top: 9%; transform: translate(-50%, -50%) rotate(72deg) scale(1.22); }
+  22% { left: 87%; opacity: 0.92; top: 18%; transform: translate(-50%, -50%) rotate(103deg) scale(1.04); }
+  31% { left: 90%; opacity: 0.84; top: 53%; transform: translate(-50%, -50%) rotate(138deg) scale(1); }
+  39% { left: 93%; opacity: 1; top: 70%; transform: translate(-50%, -50%) rotate(171deg) scale(1.22); }
+  51% { left: 84%; opacity: 0.9; top: 79%; transform: translate(-50%, -50%) rotate(207deg) scale(1.04); }
+  66% { left: 70%; opacity: 1; top: 77%; transform: translate(-50%, -50%) rotate(251deg) scale(1.22); }
+  77% { left: 61%; opacity: 0.9; top: 73%; transform: translate(-50%, -50%) rotate(294deg) scale(1.04); }
+  88% { left: 57%; opacity: 0.82; top: 86%; transform: translate(-50%, -50%) rotate(334deg) scale(1); }
+  96% { left: 59%; opacity: 0.94; top: 96%; transform: translate(-50%, -50%) rotate(360deg) scale(1.12); }
   100% { left: 59%; opacity: 0; top: 99%; transform: translate(-50%, -50%) rotate(372deg) scale(0.82); }
 }
 
 @keyframes atlas-guide-star-breathe {
-  0%, 100% { opacity: 0.8; transform: scale(0.82); }
-  48% { opacity: 1; transform: scale(1.12); }
+  0%, 100% { opacity: 0.84; transform: scale(0.86); }
+  48% { opacity: 1; transform: scale(1.18); }
+}
+
+@keyframes atlas-guide-star-rest-signal {
+  0% { opacity: 0.48; transform: scale(0.64); }
+  58% { opacity: 0.34; transform: scale(1.08); }
+  100% { opacity: 0; transform: scale(1.72); }
+}
+
+@keyframes atlas-guide-star-arrival-signal {
+  0%, 7%, 36%, 63%, 100% { opacity: 0; transform: scale(0.64); }
+  9%, 38%, 65% { opacity: 0.92; transform: scale(0.76); }
+  15%, 44%, 71% { opacity: 0; transform: scale(2.25); }
 }
 
 @keyframes atlasling-guide-fox {
-  0%, 8%, 32%, 100% {
+  0%, 5%, 30%, 100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.35);
   }
-  14% {
+  10% {
     opacity: 0.98;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1.35);
   }
-  18%, 24% {
+  14%, 23% {
     opacity: 0.86;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1);
   }
-  29% {
+  28% {
     opacity: 0.18;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(0.82);
   }
 }
 
 @keyframes atlasling-guide-cat {
-  0%, 38%, 59%, 100% {
+  0%, 35%, 58%, 100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.35);
   }
-  44% {
+  40% {
     opacity: 0.98;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1.35);
   }
-  48%, 52% {
+  44%, 52% {
     opacity: 0.86;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1);
   }
@@ -309,19 +333,19 @@
 }
 
 @keyframes atlasling-guide-dog {
-  0%, 64%, 87%, 100% {
+  0%, 62%, 86%, 100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.35);
   }
-  70% {
+  67% {
     opacity: 0.98;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1.35);
   }
-  74%, 79% {
+  71%, 80% {
     opacity: 0.86;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(1);
   }
-  84% {
+  85% {
     opacity: 0.18;
     transform: translate(calc(-50% + var(--shape-dx)), calc(-50% + var(--shape-dy))) scale(0.82);
   }
@@ -332,18 +356,18 @@
 }
 
 @keyframes atlasling-guide-fox-art {
-  0%, 15%, 31%, 100% { opacity: 0; }
-  20%, 25% { opacity: 0.2; }
+  0%, 11%, 30%, 100% { opacity: 0; }
+  15%, 24% { opacity: 0.22; }
 }
 
 @keyframes atlasling-guide-cat-art {
-  0%, 45%, 59%, 100% { opacity: 0; }
-  49%, 53% { opacity: 0.19; }
+  0%, 41%, 58%, 100% { opacity: 0; }
+  45%, 53% { opacity: 0.21; }
 }
 
 @keyframes atlasling-guide-dog-art {
-  0%, 71%, 87%, 100% { opacity: 0; }
-  75%, 80% { opacity: 0.2; }
+  0%, 68%, 86%, 100% { opacity: 0; }
+  72%, 81% { opacity: 0.22; }
 }
 
 @media (max-width: 900px) {
@@ -385,7 +409,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   [data-atlas-guide-star],
-  [data-atlas-guide-star]::before {
+  [data-atlas-guide-star]::before,
+  [data-atlas-guide-star]::after {
     animation: none !important;
   }
 
